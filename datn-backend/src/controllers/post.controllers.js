@@ -254,28 +254,24 @@ export const portControllers = {
       });
     }
   },
-
   getInteractPost: async (req, res) => {
     try {
       const { id } = req.params;
       const { status } = req.query;
       const dataRactPost = await Post.findById(id);
-      var dataReact = dataRactPost.like.concat(dataRactPost.tym);
-
       const dataLike = dataRactPost.like;
       const dataTym = dataRactPost.tym;
       const userReactLike = await User.find({ _id: { $in: dataLike } }).select('-refreshToken');
       const userReactTym = await User.find({ _id: { $in: dataTym } }).select('-refreshToken');
-      const getAll = await User.find({ _id: { $in: dataReact } }).select('-refreshToken');
       switch (status) {
         // get all
         case '0':
-          // for(let i = 0; i < getAll.length -1; i++) {
-          //   getAll[i]._id ==
-          // }
           return res.status(200).json({
             message: 'all react',
-            data: getAll,
+            data: {
+              like : userReactLike,
+              tym : userReactTym
+            },
           });
         // like
         case '1':
