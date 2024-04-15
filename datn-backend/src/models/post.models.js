@@ -14,7 +14,12 @@ const postSchema = new mongoose.Schema(
     like: [],
     tym: [],
     desc: [],
-    cmt: [],
+    cmt: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'commentPost',
+      },
+    ],
     users: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     status: {
       type: String,

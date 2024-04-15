@@ -1,3 +1,4 @@
+import commentPost from '../models/commentPost.model.js';
 import Post from '../models/post.models.js';
 import User from '../models/user.model.js';
 
@@ -138,6 +139,161 @@ export const portControllers = {
       data.posts.sort((a, b) => b.updatedAt - a.updatedAt);
 
       return res.json(data.posts);
+    } catch (error) {
+      return res.status(500).json({
+        message: error.message,
+      });
+    }
+  },
+  likePostByUser: async (req, res) => {
+    console.log('1');
+    try {
+      const { id } = req.params;
+      const { idUser, tym, like } = req.query;
+      if (like == 1) {
+        const dataPost = await Post.findById(id);
+        const indexUser = dataPost.like.findIndex((items) => items == idUser);
+        const indexUserTym = dataPost.tym.findIndex((items) => items == idUser);
+        if (indexUser != -1) {
+          dataPost.like.splice(indexUser, 1);
+          dataPost.tym.splice(indexUserTym, 1);
+        } else {
+          dataPost.like.push(idUser);
+          dataPost.tym.splice(indexUserTym, 1);
+        }
+        await dataPost.save();
+        return res.json({
+          message: 'success update like',
+          data: dataPost,
+        });
+      } else if (tym == 1) {
+        const dataPost = await Post.findById(id);
+        const indexUserTym = dataPost.tym.findIndex((items) => items == idUser);
+        const indexUser = dataPost.like.findIndex((items) => items == idUser);
+        if (indexUserTym != -1) {
+          dataPost.like.splice(indexUser, 1);
+          dataPost.tym.splice(indexUserTym, 1);
+        } else {
+          dataPost.tym.push(idUser);
+          dataPost.like.splice(indexUser, 1);
+        }
+        await dataPost.save();
+        return res.json({
+          message: 'success update tym',
+          data: dataPost,
+        });
+      }
+    } catch (error) {
+      return res.status(500).json({
+        message: error.message,
+      });
+    }
+  },
+  commentPostByUser: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { message, idUser, image } = req.query;
+      console.log(message, idUser);
+      const dataPost = await Post.findById(id);
+      const newComment = await new commentPost({
+        comment: message,
+        image: image,
+        idPost: id,
+        idUser: idUser,
+      }).save();
+      await dataPost.cmt.push(newComment.id);
+      await dataPost.save();
+      return res.json({ data: dataPost });
+    } catch (error) {
+      return res.status(500).json({
+        message: error.message,
+      });
+    }
+  },
+  removeComment: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { idPost } = req.query;
+      await commentPost.findByIdAndDelete(id);
+      const dataPost = await Post.findById(idPost);
+      const checkIdComment = dataPost.cmt.findIndex((items) => items == id);
+      if (checkIdComment != -1) {
+        dataPost.cmt.splice(checkIdComment, 1);
+      }
+      await dataPost.save();
+      return res.status(200).json({
+        message: 'delete successfully',
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: error.message,
+      });
+    }
+  },
+  editCommend: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { comment, image } = req.query;
+
+      const newComment = await commentPost.findByIdAndUpdate(
+        id,
+        {
+          $set: {
+            comment: comment,
+            image: image,
+          },
+        },
+        {
+          new: true,
+        }
+      );
+      return res.status(200).json(newComment);
+    } catch (error) {
+      return res.status(500).json({
+        message: error.message,
+      });
+    }
+  },
+
+  getInteractPost: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { status } = req.query;
+      const dataRactPost = await Post.findById(id);
+      var dataReact = dataRactPost.like.concat(dataRactPost.tym);
+
+      const dataLike = dataRactPost.like;
+      const dataTym = dataRactPost.tym;
+      const userReactLike = await User.find({ _id: { $in: dataLike } }).select('-refreshToken');
+      const userReactTym = await User.find({ _id: { $in: dataTym } }).select('-refreshToken');
+      const getAll = await User.find({ _id: { $in: dataReact } }).select('-refreshToken');
+      switch (status) {
+        // get all
+        case '0':
+          // for(let i = 0; i < getAll.length -1; i++) {
+          //   getAll[i]._id ==
+          // }
+          return res.status(200).json({
+            message: 'all react',
+            data: getAll,
+          });
+        // like
+        case '1':
+          return res.status(200).json({
+            message: 'like post',
+            data: userReactLike,
+          });
+        // tym
+        case '2':
+          return res.status(200).json({
+            message: 'tym post',
+            data: userReactTym,
+          });
+        default:
+          return res.status(400).json({
+            message: 'Invalid status',
+          });
+      }
     } catch (error) {
       return res.status(500).json({
         message: error.message,
