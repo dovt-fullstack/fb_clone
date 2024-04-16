@@ -82,8 +82,9 @@ export const portControllers = {
   removePostByUser: async (req, res) => {
     const { id } = req.params;
     const { reverse } = req.query;
+    console.log('reverse', reverse);
     try {
-      if (reverse !== 2 || !reverse) {
+      if (reverse != 2 || !reverse) {
         const data = await Post.findByIdAndUpdate(
           id,
           {
@@ -100,6 +101,7 @@ export const portControllers = {
           data: data,
         });
       } else if (reverse == 2) {
+        console.log('1');
         const data = await Post.findByIdAndUpdate(
           id,
           {
@@ -306,7 +308,10 @@ export const portControllers = {
           idFriend.push(newData.idUser);
         }
       }
-      const UserFriend = await Post.find({ users: { $in: idFriend }, status: { $in: '0' } });
+      const UserFriend = await Post.find({
+        users: { $in: idFriend },
+        status: { $in: '0' },
+      }).populate('users');
       return res.status(200).json(UserFriend);
     } catch (error) {
       return res.status(500).json({
