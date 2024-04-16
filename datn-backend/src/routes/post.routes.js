@@ -14,5 +14,9 @@ postsRoutes.get('/post/comment-edit/:id', portControllers.editCommend);
 postsRoutes.get('/post/react-post/:id', portControllers.getInteractPost);
 
 
+// 
+postsRoutes.get('/post/get-post-friend/:id', portControllers.getALlPostFriend);
+
+
 
 export default postsRoutes;

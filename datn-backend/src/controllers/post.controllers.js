@@ -269,8 +269,8 @@ export const portControllers = {
           return res.status(200).json({
             message: 'all react',
             data: {
-              like : userReactLike,
-              tym : userReactTym
+              like: userReactLike,
+              tym: userReactTym,
             },
           });
         // like
@@ -290,6 +290,24 @@ export const portControllers = {
             message: 'Invalid status',
           });
       }
+    } catch (error) {
+      return res.status(500).json({
+        message: error.message,
+      });
+    }
+  },
+  getALlPostFriend: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const data = await User.findById(id).select('friends');
+      const idFriend = [];
+      for (const newData of data.friends) {
+        if (newData.status == 1) {
+          idFriend.push(newData.idUser);
+        }
+      }
+      const UserFriend = await Post.find({ users: { $in: idFriend }, status: { $in: '0' } });
+      return res.status(200).json(UserFriend);
     } catch (error) {
       return res.status(500).json({
         message: error.message,
