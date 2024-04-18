@@ -11,7 +11,7 @@ const LeftSidebar: React.FC = () => {
           <div>
             <img
               className="w-8 h-8 rounded-full"
-              src="https://random.imagecdn.app/200/200"
+              src={user?.avatar}
               alt="user"
             />
           </div>

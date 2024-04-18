@@ -194,7 +194,7 @@ export const portControllers = {
   commentPostByUser: async (req, res) => {
     try {
       const { id } = req.params;
-      const { message, idUser, image } = req.query;
+      const { message, idUser, image } = req.body;
       console.log(message, idUser);
       const dataPost = await Post.findById(id);
       const newComment = await new commentPost({
@@ -235,7 +235,7 @@ export const portControllers = {
   editCommend: async (req, res) => {
     try {
       const { id } = req.params;
-      const { comment, image } = req.query;
+      const { comment, image } = req.body;
 
       const newComment = await commentPost.findByIdAndUpdate(
         id,
@@ -250,6 +250,26 @@ export const portControllers = {
         }
       );
       return res.status(200).json(newComment);
+    } catch (error) {
+      return res.status(500).json({
+        message: error.message,
+      });
+    }
+  },
+  getCommentThisPost: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const data = await Post.findById(id)
+        .select('-image')
+        .populate([
+          {
+            path: 'cmt',
+            populate: {
+              path: 'idUser',
+            },
+          },
+        ]);
+      return res.status(200).json(data.cmt);
     } catch (error) {
       return res.status(500).json({
         message: error.message,
@@ -313,6 +333,17 @@ export const portControllers = {
         status: { $in: '0' },
       }).populate('users');
       return res.status(200).json(UserFriend);
+    } catch (error) {
+      return res.status(500).json({
+        message: error.message,
+      });
+    }
+  },
+  getIdCommentPost: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const data = await commentPost.findById(id);
+      return res.status(200).json(data);
     } catch (error) {
       return res.status(500).json({
         message: error.message,

@@ -8,7 +8,6 @@ const commentPostSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      required: true,
     },
     idUser: {
       type: mongoose.Schema.Types.ObjectId,

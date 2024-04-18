@@ -33,7 +33,6 @@ const ProfilePage: React.FC = () => {
       reader.onloadend = () => {
         const base64String = reader.result as string;
         setDataFile(base64String);
-        console.log(base64String, base64String);
       };
       reader.readAsDataURL(file);
     }
