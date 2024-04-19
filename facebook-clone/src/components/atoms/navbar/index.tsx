@@ -1,32 +1,48 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../../store';
 import { RootState } from '@reduxjs/toolkit/query';
+import axios from 'axios';
+import { useLogoutMutation } from '../../../api/Auth';
 
 const Navbar: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [data, setData] = useState<any>({});
+  const [logout] = useLogoutMutation();
+
   const { user } = useAppSelector((state: any) => state.persistedReducer.auth);
+  console.log(user);
   const pathName = location?.pathname.split('/')[1];
   const [isClick, setIsClick] = useState(false);
   const logOut = () => {
     localStorage.clear();
-    navigate('/');
+    logout()
+      .unwrap()
+      .then(() => {
+        window.location.href = '/login';
+      });
   };
+  useEffect(() => {
+    const getDataUser = async () => {
+      const dataIdUser = await axios.get(
+        'http://localhost:8000/api/users/' + user._id
+      );
+      setData(dataIdUser.data.user);
+      console.log(dataIdUser.data.user, 'data.user');
+    };
+    getDataUser();
+  }, [user._id]);
   return (
     <div className="relative">
       {isClick && (
         <div className="flex justify-end absolute top-[62px] right-0">
-          <div className="w-[400px] h-[200px] bg-[#1c1e21] rounded-md z-50">
+          <div className="w-[400px] h-[200px] bg-[#a7a8ab] rounded-md z-50">
             <div
-              onClick={() => navigate('/profile')}
+              onClick={() => navigate('/profile/' + user._id)}
               className="flex cursor-pointer mt-3 border-b border-[#ccc] gap-5 items-center ml-5 mb-3"
             >
-              <img
-                className="w-[70px] rounded-full"
-                src="https://scontent.fhan14-5.fna.fbcdn.net/v/t39.30808-1/355121918_990997998757696_2712294092599606392_n.jpg?stp=cp6_dst-jpg_p120x120&_nc_cat=104&ccb=1-7&_nc_sid=5f2048&_nc_ohc=c7nUQGn8QX4Ab7kaGt1&_nc_ht=scontent.fhan14-5.fna&oh=00_AfAYzThmmIM75RslMUAGMo7xYcGwZkqF9l7VTfC2N6cxhQ&oe=66201DC7"
-                alt=""
-              />
+              <img className="w-[60px] rounded-full" src={data.avatar} alt="" />
               <p className="text-lg text-white font-bold">{user?.username}</p>
             </div>
             <div className="flex cursor-pointer mt-5 border-b border-[#ccc] gap-5 items-center ml-5 mb-3">
@@ -44,7 +60,6 @@ const Navbar: React.FC = () => {
                     height: 20,
                     backgroundRepeat: 'no-repeat',
                     display: 'inline-block',
-                    backgroundColor: 'white',
                   }}
                 />
               </div>

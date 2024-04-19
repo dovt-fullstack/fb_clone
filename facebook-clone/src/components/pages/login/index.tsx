@@ -14,7 +14,6 @@ const LoginPage: React.FC = () => {
     account: yup.string().required('Email or phone required'),
     password: yup.string().required('Password required'),
   });
-
   return (
     <div className="w-full h-full flex items-center justify-center">
       <div className="w-96 h-auto bg-white rounded-md shadow-md p-4">
