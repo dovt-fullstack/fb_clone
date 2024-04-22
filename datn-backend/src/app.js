@@ -66,7 +66,54 @@ app.get('/', (req, res) => {
     res.end('Refresh Token not found');
   }
 });
+app.get('/conversations/:id', async (req, res) => {
+  try {
+    console.log('User:', req.params.id);
+    const userId = req.params.id;
+    const conversations = await Conversation.find({ members: userId }).populate('members');
+    return res.json(conversations);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
+app.get('/conversations-details/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const conversation = await Conversation.findById(id);
+    const messages = await Message.find({ conversationId: id });
+    const conversationDetail = {
+      conversation,
+      messages,
+    };
+    res.json(conversationDetail);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+app.get('/messages-cra', async (req, res) => {
+  try {
+    const { senderId, receiverId, content } = req.query;
+    let conversation = await Conversation.findOne({
+      members: { $all: [senderId, receiverId] },
+    });
+    if (!conversation) {
+      conversation = await Conversation.create({ type: 'public', members: [senderId, receiverId] });
+    }
+    const message = await Message.create({
+      conversationId: conversation._id,
+      senderId,
+      receiverId,
+      content,
+    });
+    res.json(message);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 app.use(morgan('common'));
 app.use(cookieParser());
 app.use(express.json());
@@ -434,6 +481,7 @@ app.post('/update/description-user/:id', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
 app.use(notFound);
 app.use(errHandler);
 
@@ -468,3 +516,70 @@ server.listen(port, async () => {
     console.log(error);
   }
 });
+import mongoose from 'mongoose';
+const { Schema } = mongoose;
+// Định nghĩa schema cho các collection
+const conversationSchema = new Schema({
+  type: String,
+  members: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+});
+const messageSchema = new Schema({
+  conversationId: { type: Schema.Types.ObjectId, ref: 'Conversation' },
+  senderId: { type: Schema.Types.ObjectId, ref: 'User' },
+  receiverId: { type: Schema.Types.ObjectId, ref: 'User' },
+  content: String,
+  timestamp: Date,
+});
+const Conversation = mongoose.model('Conversation', conversationSchema);
+const Message = mongoose.model('Message2', messageSchema);
+async function getUserById(userId) {
+  try {
+    const user = await User.findById(userId);
+    return user;
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    throw error;
+  }
+}
+async function createConversation(type, members) {
+  try {
+    console.log(type, members, 'type, members');
+    const conversation = await Conversation.create({ type, members });
+    return conversation;
+  } catch (error) {
+    console.error('Error creating conversation:', error);
+    throw error;
+  }
+}
+async function sendMessage(conversationId, senderId, content) {
+  try {
+    const message = await Message.create({
+      conversationId,
+      senderId,
+      content,
+    });
+    return message;
+  } catch (error) {
+    console.error('Error sending message:', error);
+    throw error;
+  }
+}
+
+const userId = '6527baf2654b2fa462bd84e8';
+// getUserById(userId)
+//   .then((user) => {
+//     console.log('User:', user);
+//     const newObjectId = new mongoose.Types.ObjectId(userId);
+//     console.log('newObjectId:', newObjectId);
+//     return createConversation('private', newObjectId);
+//   })
+//   .then((conversation) => {
+//     console.log('Conversation:', conversation);
+//     return sendMessage(conversation._id, userId, 'Hello!');
+//   })
+//   .then((message) => {
+//     console.log('Message sent:', message);
+//   })
+//   .catch((error) => {
+//     console.error('Error:', error);
+//   });
