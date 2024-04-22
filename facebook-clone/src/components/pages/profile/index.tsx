@@ -13,6 +13,7 @@ const ProfilePage: React.FC = () => {
   const [postsView, setPostsView] = useState<TPostView>('listView');
   const { user } = useAppSelector((state: any) => state.persistedReducer.auth);
   const [data, setData] = useState<any>({});
+
   const [dataFile, setDataFile] = useState<any>(null);
   const [checkHover, setCheckHover] = useState(false);
   const [statusFriend, setStatusFriend] = useState('0');
@@ -164,6 +165,11 @@ const ProfilePage: React.FC = () => {
     }
   };
   const showMessageFriend = () => {
+    navigate({
+      search: createSearchParams({
+        chat : id as string
+      }).toString()
+    })
     setOpen(!open);
   };
   const items: MenuProps['items'] = [

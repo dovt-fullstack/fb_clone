@@ -4,13 +4,19 @@ import { useAppSelector } from '../../../store';
 import { RootState } from '@reduxjs/toolkit/query';
 import axios from 'axios';
 import { useLogoutMutation } from '../../../api/Auth';
+import { Button, Drawer, Space } from 'antd';
 
 const Navbar: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [data, setData] = useState<any>({});
   const [logout] = useLogoutMutation();
-
+  const [open, setOpen] = useState(false);
+   const showDrawer = () => {
+    setOpen(true);
+  };const onClose = () => {
+    setOpen(false);
+  };
   const { user } = useAppSelector((state: any) => state.persistedReducer.auth);
   console.log(user);
   const pathName = location?.pathname.split('/')[1];
@@ -35,6 +41,22 @@ const Navbar: React.FC = () => {
   }, [user._id]);
   return (
     <div className="relative">
+      <Drawer
+        title="Danh sách tin nhăns"
+        placement={'right'}
+        width={500}
+        onClose={onClose}
+        open={open}
+        extra={
+          <Space>
+            <Button onClick={onClose}>Cancel</Button>
+          </Space>
+        }
+      >
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Drawer>
       {isClick && (
         <div className="flex justify-end absolute top-[62px] right-0">
           <div className="w-[400px] h-[200px] bg-[#a7a8ab] rounded-md z-50">
@@ -188,7 +210,7 @@ const Navbar: React.FC = () => {
             <button className="w-10 h-10 bg-gray-200 focus:outline-none hover:bg-gray-300 rounded-full">
               <i className="fas fa-plus"></i>
             </button>
-            <button className="w-10 h-10 bg-gray-200 focus:outline-none hover:bg-gray-300 rounded-full">
+            <button onClick={showDrawer} className="w-10 h-10 bg-gray-200 focus:outline-none hover:bg-gray-300 rounded-full">
               <i className="fab fa-facebook-messenger"></i>
             </button>
             <button className="w-10 h-10 bg-gray-200 focus:outline-none hover:bg-gray-300 rounded-full">

@@ -32,7 +32,7 @@ import Order from './models/order.model.js';
 import { portControllers } from './controllers/post.controllers.js';
 import Post from './models/post.models.js';
 // import Order from './models/order.model.js';
-
+import bodyParser from 'body-parser';
 //lấy  jwt
 
 dotenv.config();
@@ -47,7 +47,7 @@ const __dirname = path.dirname(__filename);
 //
 
 const app = express();
-
+app.use(bodyParser.json());
 app.get('/', (req, res) => {
   const cookies = cookie.parse(req.headers.cookie || '');
 
@@ -66,6 +66,27 @@ app.get('/', (req, res) => {
     res.end('Refresh Token not found');
   }
 });
+app.use(
+  cors({
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3000/',
+      'http://10.73.131.60',
+      'http://10.73.131.60:84',
+      'http://10.73.131.60:8080',
+      'http://10.73.131.60:9999/',
+      'http://10.73.131.60:9999',
+      'http://localhost:3456/',
+      'http://localhost:3456',
+      'http://localhost:4173',
+      'http://localhost:4173/',
+      'http://localhost:5173',
+      'http://localhost:5173/',
+    ],
+    credentials: true,
+  })
+);
+
 app.get('/conversations/:id', async (req, res) => {
   try {
     console.log('User:', req.params.id);
@@ -81,21 +102,17 @@ app.get('/conversations/:id', async (req, res) => {
 app.get('/conversations-details/:id', async (req, res) => {
   try {
     const id = req.params.id;
-    const conversation = await Conversation.findById(id);
-    const messages = await Message.find({ conversationId: id });
-    const conversationDetail = {
-      conversation,
-      messages,
-    };
-    res.json(conversationDetail);
+    const messages = await Message.find({ conversationId: id }).populate('senderId receiverId');
+    return res.json(messages);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: error.message });
   }
 });
-app.get('/messages-cra', async (req, res) => {
+app.post('/messages-cra', async (req, res) => {
   try {
-    const { senderId, receiverId, content } = req.query;
+    console.log(req.body);
+    const { senderId, receiverId, content } = req.body;
     let conversation = await Conversation.findOne({
       members: { $all: [senderId, receiverId] },
     });
@@ -108,16 +125,31 @@ app.get('/messages-cra', async (req, res) => {
       receiverId,
       content,
     });
-    res.json(message);
+    return res.json(message);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: error.message });
+  }
+});
+app.get('/get-user-chat-message', async (req, res) => {
+  try {
+    const { senderId, receiverId } = req.query;
+
+    const conversation = await Conversation.findOne({
+      members: { $all: [senderId, receiverId] },
+    });
+    if (!conversation) {
+      return res.status(200).json({ message: 'no message' });
+    } else {
+      return res.status(200).json(conversation);
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
   }
 });
 app.use(morgan('common'));
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors({ origin: true, credentials: true }));
 
 app.use(
   session({
@@ -133,7 +165,11 @@ app.use(helmet());
 app.use(compression());
 app.use(passport.initialize());
 app.use(passport.session());
-
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 passport.serializeUser((user, done) => {
   return done(null, user._id);
 });
@@ -302,35 +338,6 @@ app.get('/get-status-friend/:id', async (req, res) => {
     });
   }
 });
-
-// cron.schedule(
-//   '0 0 * * *',
-//   async () => {
-//     // Chạy vào lúc 00:00 hàng ngày
-//     try {
-//       const today = new Date();
-//       const sevenDaysLater = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
-//       const orders = await Order.find({ scheduledAt: sevenDaysLater.toISOString() });
-//       if (orders.length === 0) {
-//         // Tạo đơn hàng mới
-//         const order = new Order({ userId: 'userId', scheduledAt: sevenDaysLater });
-//         await order.save();
-//         console.log('Đã tạo đơn hàng mới sau 7 ngày.');
-//       } else {
-//         console.log('Đã có đơn hàng được tạo trước đó.');
-//       }
-//     } catch (error) {
-//       console.error('Lỗi khi tạo đơn hàng:', error);
-//     }
-//   },
-//   {
-//     scheduled: true,
-//     timezone: 'Asia/Ho_Chi_Minh', // Đặt múi giờ cho cron job
-//   }
-// );
-// thống kê
-
-//
 
 app.post('/send-request-makefriend/:id', async (req, res) => {
   console.log('1');
@@ -523,13 +530,18 @@ const conversationSchema = new Schema({
   type: String,
   members: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 });
-const messageSchema = new Schema({
-  conversationId: { type: Schema.Types.ObjectId, ref: 'Conversation' },
-  senderId: { type: Schema.Types.ObjectId, ref: 'User' },
-  receiverId: { type: Schema.Types.ObjectId, ref: 'User' },
-  content: String,
-  timestamp: Date,
-});
+const messageSchema = new Schema(
+  {
+    conversationId: { type: Schema.Types.ObjectId, ref: 'Conversation' },
+    senderId: { type: Schema.Types.ObjectId, ref: 'User' },
+    receiverId: { type: Schema.Types.ObjectId, ref: 'User' },
+    content: String,
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+  }
+);
 const Conversation = mongoose.model('Conversation', conversationSchema);
 const Message = mongoose.model('Message2', messageSchema);
 async function getUserById(userId) {
