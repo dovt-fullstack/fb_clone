@@ -4,6 +4,7 @@ import { useAppSelector } from '../../../../store/hooks';
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
+import { Image } from 'antd';
 interface ChatContentProps {
   messages: Message[];
 }
@@ -14,22 +15,32 @@ export const ChatContent = ({ messages }: ChatContentProps) => {
   );
   const [queryParameters] = useSearchParams();
   const dataPageQuery: any = queryParameters.get('chat');
-
+  const [dataUserChat, setDataUserChat] = useState<any>();
   const [dataChat, setDataChat] = useState<any[]>([]);
   const [checkErrorMessage, setCheckErrorMessage] = useState(false);
+
+  useEffect(() => {
+    const getDataUser = async () => {
+      const dataIdUser = await axios.get(
+        'http://localhost:8000/api/users/' + dataPageQuery
+      );
+      setDataUserChat(dataIdUser.data.user);
+    };
+    getDataUser();
+  }, [dataPageQuery]);
   useEffect(() => {
     const handelGetMessageUser = async () => {
       const config = {
         headers: {
-          'Access-Control-Allow-Origin': '*'
-        }
+          'Access-Control-Allow-Origin': '*',
+        },
       };
       const { data } = await axios.get(
         'http://localhost:8000/get-user-chat-message?senderId=' +
           userData._id +
           '&receiverId=' +
-        dataPageQuery,
-config
+          dataPageQuery,
+        config
       );
       console.log(data);
       if (data.message == 'no message') {
@@ -65,7 +76,7 @@ config
             >
               {/* avata */}
               <div className="relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full">
-                {message.senderId._id == userData._id && (
+                {message.senderId._id == userData._id ? (
                   <img
                     src={
                       userData
@@ -75,14 +86,22 @@ config
                     className="w-12 object-cover h-12 text-gray-400"
                     alt="bot"
                   />
-                )}
-                {!message.senderId._id == userData._id && (
+                ) : (
                   <img
-                    src="https://cdn.dribbble.com/users/464600/screenshots/2863054/bot-emotions-principle.gif"
+                    src={dataUserChat.avatar}
                     className="w-12 object-cover h-12 text-gray-400"
                     alt="bot"
                   />
                 )}
+                {/* {message.receiverId._id == dataUserChat._id && (
+                  <>
+                    <img
+                      src={dataUserChat.avatar}
+                      className="w-12 object-cover h-12 text-gray-400"
+                      alt="bot"
+                    />
+                  </>
+                )} */}
               </div>
             </div>
             <div
@@ -99,6 +118,15 @@ config
                 })}
               </span>
               <span className="text-md">{parse(message.content)}</span>
+              <div>
+                {message.image && (
+                  <Image
+                    className="!w-[100px] !h-[100px]"
+                    src={message.image}
+                    alt=""
+                  />
+                )}
+              </div>
             </div>
           </div>
         );

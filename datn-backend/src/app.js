@@ -118,7 +118,7 @@ app.get('/conversations-details/:id', async (req, res) => {
 app.post('/messages-cra', async (req, res) => {
   try {
     console.log(req.body);
-    const { senderId, receiverId, content } = req.body;
+    const { senderId, receiverId, content, image } = req.body;
     let conversation = await Conversation.findOne({
       members: { $all: [senderId, receiverId] },
     });
@@ -130,6 +130,7 @@ app.post('/messages-cra', async (req, res) => {
       senderId,
       receiverId,
       content,
+      image,
     });
     return res.json(message);
   } catch (error) {
@@ -545,6 +546,7 @@ const messageSchema = new Schema(
     senderId: { type: Schema.Types.ObjectId, ref: 'User' },
     receiverId: { type: Schema.Types.ObjectId, ref: 'User' },
     content: String,
+    image: String,
   },
   {
     timestamps: true,
