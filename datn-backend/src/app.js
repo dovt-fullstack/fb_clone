@@ -47,6 +47,18 @@ const __dirname = path.dirname(__filename);
 //
 
 const app = express();
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  next();
+});
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+  })
+);
 app.use(bodyParser.json());
 app.get('/', (req, res) => {
   const cookies = cookie.parse(req.headers.cookie || '');
@@ -66,33 +78,27 @@ app.get('/', (req, res) => {
     res.end('Refresh Token not found');
   }
 });
-app.use(
-  cors({
-    origin: [
-      'http://localhost:3000',
-      'http://localhost:3000/',
-      'http://10.73.131.60',
-      'http://10.73.131.60:84',
-      'http://10.73.131.60:8080',
-      'http://10.73.131.60:9999/',
-      'http://10.73.131.60:9999',
-      'http://localhost:3456/',
-      'http://localhost:3456',
-      'http://localhost:4173',
-      'http://localhost:4173/',
-      'http://localhost:5173',
-      'http://localhost:5173/',
-    ],
-    credentials: true,
-  })
-);
 
 app.get('/conversations/:id', async (req, res) => {
   try {
     console.log('User:', req.params.id);
     const userId = req.params.id;
     const conversations = await Conversation.find({ members: userId }).populate('members');
-    return res.json(conversations);
+    const newData = [];
+    for (const result of conversations) {
+      const nextResult = result.members.filter((items) => items.id !== userId);
+      for (const item of result.members) {
+        if (item._id != userId) {
+          newData.push({
+            account: item.account,
+            _id: item._id,
+            username: item.username,
+            avatar: item.avatar,
+          });
+        }
+      }
+    }
+    return res.json(newData);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
@@ -165,11 +171,7 @@ app.use(helmet());
 app.use(compression());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
+
 passport.serializeUser((user, done) => {
   return done(null, user._id);
 });
@@ -515,6 +517,13 @@ server = http.createServer(app);
 
 // const server = http.createServer(app);
 const io = new SocketIo(server);
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  next();
+});
 server.listen(port, async () => {
   try {
     socket(io);

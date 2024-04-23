@@ -2,9 +2,11 @@ interface ChatHeaderProps {
   name: string
   numberOfMessages: number
   showDrawer: () => void
+  showDrawerChat? : () => void
 }
 import React from "react"
-export const ChatHeader = ({ name, numberOfMessages = 0, showDrawer }: ChatHeaderProps) => {
+export const ChatHeader = ({ name, numberOfMessages = 0, showDrawer ,showDrawerChat }: ChatHeaderProps) => {
+  console.log(showDrawerChat)
   return (
     <div className='border-b-gray-200 flex flex-row items-center justify-between py-3 px-5 border-b-2'>
       <div className='flex flex-row items-center space-x-1.5'>
@@ -26,7 +28,12 @@ export const ChatHeader = ({ name, numberOfMessages = 0, showDrawer }: ChatHeade
           </div>
         </div>
       </div>
-      <div className='cursor-pointer' onClick={showDrawer}>
+      <div className='cursor-pointer' onClick={()=>{
+        showDrawer()
+        if (showDrawerChat) {
+          showDrawerChat()
+        }
+      }}>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           fill='none'

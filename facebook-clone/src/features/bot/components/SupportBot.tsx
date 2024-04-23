@@ -5,10 +5,11 @@ import { Message } from '../types'
 import React,{ useState } from 'react'
 import ReactDOM from 'react-dom'
 type SupportBotProps = {
-  showDrawer: () => void
+  showDrawer: () => void,
+  showDrawerChat? : () => void,
 }
 
-export const SupportBot = ({ showDrawer }: SupportBotProps) => {
+export const SupportBot = ({ showDrawer ,showDrawerChat }: SupportBotProps) => {
   const [chatMessages, setChatMessages] = useState<Message[]>([])
   if (typeof document === 'undefined') return <div></div>
   const bodyElement = document.querySelector('#root')
@@ -21,7 +22,7 @@ export const SupportBot = ({ showDrawer }: SupportBotProps) => {
 
   return ReactDOM.createPortal(
     <div className='rounded-xl fixed bottom-4 shadow border border-gray-100 z-[10000] right-20 w-full max-w-lg h-full max-h-[80vh] flex flex-col bg-white'>
-      <ChatHeader name={'Nhắn tin '} numberOfMessages={chatMessages.length} showDrawer={showDrawer} />
+      <ChatHeader name={'Nhắn tin '} numberOfMessages={chatMessages.length} showDrawer={showDrawer} showDrawerChat={showDrawerChat}/>
       <ChatContent messages={chatMessages} />
       <ChatInputBox sendANewMessage={sendANewMessage} />
     </div>,

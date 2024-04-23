@@ -1,24 +1,45 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import {
+  createSearchParams,
+  Link,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 import { useAppSelector } from '../../../store';
 import { RootState } from '@reduxjs/toolkit/query';
 import axios from 'axios';
 import { useLogoutMutation } from '../../../api/Auth';
 import { Button, Drawer, Space } from 'antd';
+import { SupportBot } from '../../../features';
 
 const Navbar: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [openChat, setOpenChat] = useState(false);
+
   const [data, setData] = useState<any>({});
   const [logout] = useLogoutMutation();
   const [open, setOpen] = useState(false);
-   const showDrawer = () => {
-    setOpen(true);
-  };const onClose = () => {
+  const [dataChat, setDataChat] = useState([]);
+  // conversations
+  const showDrawer = () => {
+    setOpen(!open);
+
+  };
+  const showDrawerChat = () => {
+    setOpenChat(!openChat);
+  };
+  const onClose = () => {
     setOpen(false);
+    setOpenChat(false)
+    navigate({
+      search: createSearchParams({
+        chat: "",
+      }).toString(),
+    });
   };
   const { user } = useAppSelector((state: any) => state.persistedReducer.auth);
-  console.log(user);
+
   const pathName = location?.pathname.split('/')[1];
   const [isClick, setIsClick] = useState(false);
   const logOut = () => {
@@ -39,8 +60,28 @@ const Navbar: React.FC = () => {
     };
     getDataUser();
   }, [user._id]);
+  useEffect(() => {
+    const getDataChatUser = async () => {
+      const dataIdUser = await axios.get(
+        'http://localhost:8000/conversations/' + user._id
+      );
+      console.log(dataIdUser.data, 'getDataChatUser');
+      setDataChat(dataIdUser.data);
+    };
+    getDataChatUser();
+  }, [user._id]);
+  const showMessageFriend = (id: string) => {
+    navigate({
+      search: createSearchParams({
+        chat: id as string,
+      }).toString(),
+    });
+    setOpen(false);
+    setOpenChat(!openChat);
+  };
   return (
     <div className="relative">
+      {openChat && <SupportBot showDrawer={showDrawerChat} showDrawerChat={showDrawerChat}/>}
       <Drawer
         title="Danh sách tin nhăns"
         placement={'right'}
@@ -53,9 +94,28 @@ const Navbar: React.FC = () => {
           </Space>
         }
       >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        {dataChat &&
+          dataChat.map((dataChat: any, index: number) => {
+            return (
+              <div key={index} className=" mt-5">
+                <div
+                  onClick={() => {
+                    showMessageFriend(dataChat._id);
+                  }}
+                  className="flex cursor-pointer mt-5  border border-[#ccc] rounded-md p-2 gap-5 items-center ml-5 mb-5"
+                >
+                  <img
+                    className="w-[60px] rounded-full"
+                    src={dataChat.avatar}
+                    alt=""
+                  />
+                  <p className="text-lg text-black font-bold">
+                    {dataChat?.username}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
       </Drawer>
       {isClick && (
         <div className="flex justify-end absolute top-[62px] right-0">
@@ -210,7 +270,10 @@ const Navbar: React.FC = () => {
             <button className="w-10 h-10 bg-gray-200 focus:outline-none hover:bg-gray-300 rounded-full">
               <i className="fas fa-plus"></i>
             </button>
-            <button onClick={showDrawer} className="w-10 h-10 bg-gray-200 focus:outline-none hover:bg-gray-300 rounded-full">
+            <button
+              onClick={showDrawer}
+              className="w-10 h-10 bg-gray-200 focus:outline-none hover:bg-gray-300 rounded-full"
+            >
               <i className="fab fa-facebook-messenger"></i>
             </button>
             <button className="w-10 h-10 bg-gray-200 focus:outline-none hover:bg-gray-300 rounded-full">
