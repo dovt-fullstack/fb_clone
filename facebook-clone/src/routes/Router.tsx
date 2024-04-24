@@ -23,6 +23,8 @@ import {
   REGISTER,
   WATCH,
 } from './routes';
+import ChangePassword from '../components/pages/ChangePassword';
+import ForgotPassword from '../components/pages/ForgotPassword';
 
 const Routers: React.FC = () => {
   return (
@@ -61,6 +63,18 @@ const Routers: React.FC = () => {
           <PrivateRoute layout={GamingPageLayout}>
             <GamingPage />
           </PrivateRoute>
+        }
+      />
+      <Route
+        path={'/change-pass'}
+        element={
+          <ChangePassword/>
+        }
+      />
+      <Route
+        path={'/forgot-password'}
+        element={
+          <ForgotPassword/>
         }
       />
 

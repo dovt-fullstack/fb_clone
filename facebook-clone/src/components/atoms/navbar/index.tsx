@@ -127,6 +127,12 @@ const Navbar: React.FC = () => {
               <img className="w-[60px] rounded-full" src={data.avatar} alt="" />
               <p className="text-lg text-white font-bold">{user?.username}</p>
             </div>
+       
+              <div className='flex cursor-pointer mt-5 border-b border-[#ccc] gap-5 items-center ml-5 mb-3'>
+              <Link to={'/change-pass'}  className="text-lg text-white font-bold">
+                Đổi mật khẩu
+              </Link>
+              </div>
             <div className="flex cursor-pointer mt-5 border-b border-[#ccc] gap-5 items-center ml-5 mb-3">
               <div className="text-white">
                 <i
@@ -145,10 +151,13 @@ const Navbar: React.FC = () => {
                   }}
                 />
               </div>
+             
               <p onClick={logOut} className="text-lg text-white font-bold">
                 Đăng xuất
               </p>
+
             </div>
+
           </div>
         </div>
       )}

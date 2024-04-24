@@ -25,7 +25,7 @@ router.patch(
   //  authMiddleware.verifyToken,
   userController.updateUser
 );
-router.patch('/user/updatePassword', authMiddleware.verifyToken, userController.updatePassword);
+router.post('/user/updatePassword',  userController.updatePassword);
 
 router.route('/changeRoleUser/:id/:role').put(userController.changeRoleUser);
 // post
