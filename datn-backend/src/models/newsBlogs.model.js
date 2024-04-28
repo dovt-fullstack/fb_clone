@@ -26,6 +26,11 @@ const newsBlog = new Schema(
       type: Boolean,
       default: true,
     },
+    id_user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    comments: [],
   },
   { timestamps: true, versionKey: false }
 );

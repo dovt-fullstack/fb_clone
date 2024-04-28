@@ -22,6 +22,10 @@ export const categoryBlogSchema = mongoose.Schema(
         ref: 'NewsBlog',
       },
     ],
+    id_user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
   },
   {
     timestamps: true,

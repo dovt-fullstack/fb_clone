@@ -25,6 +25,9 @@ import {
 } from './routes';
 import ChangePassword from '../components/pages/ChangePassword';
 import ForgotPassword from '../components/pages/ForgotPassword';
+import NewDetails from '../components/pages/watch/NewDetails';
+import MyData from '../components/pages/watch/MyData';
+import MaketDetails from '../components/pages/marketplace/MaketDetails';
 
 const Routers: React.FC = () => {
   return (
@@ -43,7 +46,7 @@ const Routers: React.FC = () => {
         path={WATCH}
         element={
           <PrivateRoute layout={WatchPageLayout}>
-            <WatchPage />
+            <WatchPage></WatchPage>
           </PrivateRoute>
         }
       />
@@ -56,7 +59,14 @@ const Routers: React.FC = () => {
           </PrivateRoute>
         }
       />
-
+      <Route
+        path={'/marketplace/:id'}
+        element={
+          <PrivateRoute layout={MarketplacePageLayout}>
+            <MaketDetails />
+          </PrivateRoute>
+        }
+      />
       <Route
         path={GAMING}
         element={
@@ -65,18 +75,12 @@ const Routers: React.FC = () => {
           </PrivateRoute>
         }
       />
-      <Route
-        path={'/change-pass'}
-        element={
-          <ChangePassword/>
-        }
-      />
-      <Route
-        path={'/forgot-password'}
-        element={
-          <ForgotPassword/>
-        }
-      />
+      <Route path={'/change-pass'} element={<ChangePassword />} />
+      <Route path={'/forgot-password'} element={<ForgotPassword />} />
+      {/* my-category my-blogs */}
+      <Route path={'/my-category/:id'} element={<MyData />} />
+      <Route path={'/my-blogs/:id'} element={<NewDetails />} />
+      <Route path={'/blogs/:id'} element={<NewDetails />} />
 
       <Route
         path={PROFILE}
@@ -86,7 +90,7 @@ const Routers: React.FC = () => {
           </PrivateRoute>
         }
       />
-       <Route
+      <Route
         path={'/profile/:id'}
         element={
           <PrivateRoute layout={ProfilePageLayout}>

@@ -72,79 +72,22 @@ export const ProductController = {
 
   createProductV2: async (req, res, next) => {
     try {
-      const sizeIdArray = [];
       const body = req.body;
-      const sizeArray = body.size;
-      let dataSizeArray = [];
-      /* kiểm tra xem size thêm vào có trùng với size mặc định hay không */
-      const sizeDefault = body.sizeDefault;
-      if (sizeArray) {
-        for (let index = 0; index < sizeDefault.length; index++) {
-          const element = await Size.findById(sizeDefault[index]);
-          /*
-          so sánh xem tên element size default đó trùng với tên size người dùng đẩy lên thì lấy size mới người dùng thêm
-          chứ không lấy size mặc định nữa, loại bỏ id size default đó ra khỏi mảng sizeDefault
-        */
-          for (let i = 0; i < sizeArray.length; i++) {
-            if (element.name === sizeArray[i].name) {
-              sizeDefault.splice(index, 1);
-            }
-          }
-        }
-        /* tạo ra size này */
-        for (const sizeItem of sizeArray) {
-          const sizeCreate = await Size.create(sizeItem);
-          if (!sizeCreate) {
-            return res.status(400).json({ message: 'fail', err: 'Create Size failed' });
-          }
-          sizeIdArray.push(sizeCreate._id);
-        }
-        /* tạo ra product này */
-        dataSizeArray = [...sizeIdArray, ...body.sizeDefault];
-      } else {
-        dataSizeArray = [...body.sizeDefault];
-      }
       const productData = {
         name: body.name,
         description: body.description,
-        category: body.category,
-        sizes: dataSizeArray,
-        toppings: body.toppings,
         images: body.images,
         sale: body.sale,
         is_active: body.is_active,
-        kindOfRoom: body.kindOfRoom,
-        timBooking: body.timBooking,
+        idUser: body.idUser,
       };
       const product = await Product.create(productData);
       if (!product) {
         return res.status(400).json({ message: 'fail', err: 'Create Product failed' });
       }
-      /* update category */
-      await Category.findByIdAndUpdate(body.category, {
-        $addToSet: { products: product._id },
-      });
-      /* update topping */
-      const { toppings } = body;
-      if (toppings.length > 0) {
-        for (let i = 0; i < toppings.length; i++) {
-          await Topping.findByIdAndUpdate(toppings[i], {
-            $addToSet: { products: product._id },
-          });
-        }
-      }
-      /* update size */
-      const { sizes } = productData;
-      if (sizes.length > 0) {
-        for (let i = 0; i < sizes.length; i++) {
-          await Size.findByIdAndUpdate(sizes[i], {
-            $addToSet: { productId: product._id },
-          });
-        }
-      }
       return res.status(200).json({ message: 'success', data: product });
     } catch (error) {
-      return res.status(500).json({ message: 'fail', err: error });
+      return res.status(500).json({ message: 'fail', err: error.message });
     }
   },
 
@@ -396,31 +339,31 @@ export const ProductController = {
     try {
       const product = await Product.findByIdAndDelete(req.params.id);
       /* delete product */
-      const updateCategory = await Category.findByIdAndUpdate(product.category, {
-        $pull: { products: product._id },
-      });
-      if (!updateCategory) {
-        return res.status(404).json({ message: 'fail', err: 'Delete Product failed' });
-      }
+      // const updateCategory = await Category.findByIdAndUpdate(product.category, {
+      //   $pull: { products: product._id },
+      // });
+      // if (!updateCategory) {
+      //   return res.status(404).json({ message: 'fail', err: 'Delete Product failed' });
+      // }
       /* delete topping */
-      const toppings = product.toppings;
-      if (toppings.length > 0) {
-        for (let i = 0; i < toppings.length, i++; ) {
-          await Topping.findByIdAndUpdate(toppings[i], {
-            $pull: { products: product._id },
-          });
-        }
-      }
-      /* xóa size */
-      const sizes = product.sizes;
-      if (sizes.length > 0) {
-        for (let size of sizes) {
-          await Size.findByIdAndDelete(size._id);
-        }
-      }
-      if (!product) {
-        return res.status(404).json({ message: 'fail', err: 'Delete Product failed' });
-      }
+      // const toppings = product.toppings;
+      // if (toppings.length > 0) {
+      //   for (let i = 0; i < toppings.length, i++; ) {
+      //     await Topping.findByIdAndUpdate(toppings[i], {
+      //       $pull: { products: product._id },
+      //     });
+      //   }
+      // }
+      // /* xóa size */
+      // const sizes = product.sizes;
+      // if (sizes.length > 0) {
+      //   for (let size of sizes) {
+      //     await Size.findByIdAndDelete(size._id);
+      //   }
+      // }
+      // if (!product) {
+      //   return res.status(404).json({ message: 'fail', err: 'Delete Product failed' });
+      // }
       return res.status(200).json({ message: 'success', data: product });
     } catch (error) {
       next(error);

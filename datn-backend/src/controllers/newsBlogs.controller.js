@@ -14,6 +14,7 @@ const newsBlogSchema = joi.object({
     .unknown(true),
   description: joi.string().required(),
   category: joi.string().required(),
+  id_user: joi.string().required(),
   is_active: joi.boolean().default(true),
   is_deleted: joi.boolean().default(false),
 });
@@ -96,8 +97,6 @@ const newBlogsController = {
         $pull: { blogs: blog._id },
       });
 
-    
-
       const data = await newBlogModel.findOneAndUpdate({ _id: req.params.id }, req.body, {
         new: true,
       });
@@ -148,8 +147,7 @@ const newBlogsController = {
   /* lấy chi tiết 1 bài blog */
   getDetailNewBlog: async (req, res) => {
     try {
-      const data = await newBlogModel.findOne({ _id: req.params.id });
-
+      const data = await newBlogModel.findOne({ _id: req.params.id }).populate('id_user');
       if (!data) {
         // Kiểm tra xem có tin tức nào được xóa không
         return res.status(404).json({
@@ -270,6 +268,81 @@ const newBlogsController = {
     } catch (error) {
       return res.status(500).json({
         // Sử dụng mã lỗi 500 cho lỗi server
+        message: error.message,
+      });
+    }
+  },
+  commentNewBlogs: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const dataReq = req.body;
+      const data = await newBlogModel.findById(id);
+      if (!data) {
+        return res.status(500).json({
+          message: 'not found',
+        });
+      }
+      var dataComment = {
+        userId: dataReq.userId,
+        nameUser: dataReq.nameUser,
+        avatar: dataReq.avatar,
+        image: dataReq.image,
+        content: dataReq.content,
+      };
+      data.comments.push(dataComment);
+      await data.save();
+      return res.status(200).json(data);
+    } catch (error) {
+      return res.status(500).json({
+        message: error.message,
+      });
+    }
+  },
+
+  removeCommentNewBlog: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { index } = req.body;
+      const data = await newBlogModel.findById(id);
+      if (!data) {
+        return res.status(500).json({
+          message: 'not found',
+        });
+      }
+      data.comments.splice(index, 1);
+      await data.save();
+      return res.status(200).json({
+        message: 'success',
+        data,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: error.message,
+      });
+    }
+  },
+
+  editCommentNewblogs: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { index, content } = req.body;
+      const data = await newBlogModel.findById(id);
+      if (!data) {
+        return res.status(500).json({
+          message: 'not found',
+        });
+      }
+      data.comments[index] = {
+        ...data.comments[index],
+        content: content,
+      };
+      await data.save();
+      return res.status(200).json({
+        message: 'success',
+        data,
+      });
+    } catch (error) {
+      return res.status(500).json({
         message: error.message,
       });
     }

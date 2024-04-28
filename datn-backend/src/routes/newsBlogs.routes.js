@@ -8,7 +8,13 @@ routerNewBlogs.get('/newsBlog', newBlogsController.getAllNewBlogs);
 // router.get('/order/:id', orderController.getById);
 routerNewBlogs.put('/newsBlog/:id', newBlogsController.updateNewBlogs);
 routerNewBlogs.delete('/newsBlog-remove/:id', newBlogsController.removeNewBlogs);
+routerNewBlogs.post('/comment-post/:id', newBlogsController.commentNewBlogs);
+routerNewBlogs.post('/remove-comment-post/:id', newBlogsController.removeCommentNewBlog);
+routerNewBlogs.post('/edit-comment-post/:id', newBlogsController.editCommentNewblogs);
 
+// commentNewBlogs
+// removeCommentNewBlog
+// editCommentNewblogs
 routerNewBlogs.get('/newBlog/:id', newBlogsController.getDetailNewBlog);
 routerNewBlogs.put('/newsBlog-update/deleted/:id', newBlogsController.updateIsDeletedNewBlog);
 routerNewBlogs.put('/newsBlog-update/active/:id', newBlogsController.updateIsActiveNewBlog);

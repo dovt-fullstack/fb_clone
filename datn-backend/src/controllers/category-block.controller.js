@@ -32,7 +32,7 @@ export const categoryBlogController = {
         limit: _limit,
         page: _page,
         sort: { createdAt: -1 },
-        populate: { path: 'blogs', },
+        populate: { path: 'blogs' },
       };
 
       if (query) {
@@ -54,7 +54,7 @@ export const categoryBlogController = {
   getOne: async (req, res) => {
     try {
       const { id } = req.params;
-      const category = await CategoryBlog.findById(id);
+      const category = await CategoryBlog.findById(id).populate('blogs');
       if (category) {
         return res.status(200).json(category);
       }

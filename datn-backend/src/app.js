@@ -491,8 +491,125 @@ app.post('/update/description-user/:id', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+app.get('/api/get-category-user/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const myCategory = await CategoryBlog.find({ id_user: id });
+    if (!myCategory) {
+      return res.status(404).json({
+        message: 'No category',
+      });
+    }
+    return res.status(200).json(myCategory);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
-app.use(notFound);
+app.get('/api/get-blogs-user/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = await newBlogModel.find({ id_user: id });
+    if (!data) {
+      return res.status(404).json({
+        message: 'No category',
+      });
+    }
+    return res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+//
+app.post('/api/update-product-v5/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const values = req.body;
+    const data = await Product.findById(id);
+    if (!data) {
+      return res.status(404).json({
+        message: 'Product not found',
+      });
+    }
+    data.name = values.name;
+    data.description = values.description;
+    data.images = values.images;
+    data.sale = values.sale;
+    data.is_active = values.is_active;
+    await data.save();
+    return res.status(200).json({
+      message: 'ok',
+      data: data,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+app.get('/api/get-product-user-create/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = await Product.find({ idUser: id });
+    return res.status(200).json(data);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+app.get('/api/add-sp-yt/:id', async (req, res) => {
+  try {
+    const { idPro } = req.query;
+    const data = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        $addToSet: {
+          ytProduct: idPro,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    return res.status(201).json(data);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+app.get('/api/remove-sp-yt/:id', async (req, res) => {
+  try {
+    const { idPro } = req.query;
+    const data = await User.findById(req.params.id);
+    data.ytProduct = data.ytProduct.filter((x) => x != idPro);
+    await data.save();
+    return res.status(200).json(data);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+app.get('/api/get-product-farvourite/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const dataUser = await User.findById(id).select('ytProduct').populate('ytProduct');
+    return res.status(200).json(dataUser);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+app.get('/api/check-product-farvourite/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { idPro } = req.query;
+    const dataUser = await User.findById(id);
+    const indexPro = dataUser.ytProduct.findIndex((item) => item == idPro);
+    return res.status(200).json({
+      data: indexPro == -1 ? false : true,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
 app.use(errHandler);
 
 /* connectDb */
@@ -534,6 +651,9 @@ server.listen(port, async () => {
   }
 });
 import mongoose from 'mongoose';
+import { CategoryBlog } from './models/category-blog.model.js';
+import newBlogModel from './models/newsBlogs.model.js';
+import Product from './models/product.model.js';
 const { Schema } = mongoose;
 // Định nghĩa schema cho các collection
 const conversationSchema = new Schema({

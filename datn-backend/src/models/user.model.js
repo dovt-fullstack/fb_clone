@@ -76,6 +76,12 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    ytProduct: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
+      },
+    ],
     description: { type: String, default: '' },
   },
   { timestamps: true, versionKey: false }
