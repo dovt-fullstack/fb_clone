@@ -1,8 +1,7 @@
 import React, { PropsWithChildren } from 'react';
 import Navbar from '../atoms/navbar';
 import MainContentContainer from '../common';
-import LeftSidebar from '../organisms/newsfeed/LeftSidebar';
-import RightSidebar from '../organisms/newsfeed/RightSidebar';
+
 
 const NewsFeedLayout: React.FC<PropsWithChildren> = (props) => {
   const { children } = props;
@@ -11,9 +10,9 @@ const NewsFeedLayout: React.FC<PropsWithChildren> = (props) => {
       <Navbar />
       <MainContentContainer>
         <div className="flex">
-          <LeftSidebar />
+          {/* <LeftSidebar /> */}
           <div className="flex-1 ">{children}</div>
-          <RightSidebar />
+          {/* <RightSidebar /> */}
         </div>
       </MainContentContainer>
     </div>

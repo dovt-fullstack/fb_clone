@@ -123,73 +123,81 @@ const CreatePostBox: React.FC = () => {
     <div className="rounded-lg bg-white flex flex-col p-3 px-4 shadow">
       {open && (
         <>
-          <Drawer
-            title="Create a new post"
-            width={720}
-            onClose={onClose}
-            open={open}
-            styles={{
-              body: {
-                paddingBottom: 80,
-              },
-            }}
-            extra={
-              <Space>
-                <Button onClick={onClose}>Cancel</Button>
-              </Space>
-            }
-          >
-            <Form
-              name="basic"
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
-              form={form}
-              style={{ maxWidth: 600 }}
-              initialValues={{ remember: true }}
-              onFinish={onFinish}
-              autoComplete="off"
-              layout="vertical"
-              hideRequiredMark
-            >
-              <Row gutter={16}>
-                <Col span={24}>
-                  <Form.Item
-                    name="description"
-                    label="bạn đang nghĩ gì "
-                    rules={[
-                      {
-                        required: true,
-                        message: 'please enter url description',
-                      },
-                    ]}
-                  >
-                    <Input.TextArea
-                      rows={4}
-                      placeholder="please enter url description"
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <input
-                onChange={(event: any) => {
-                  handleFileChange(event);
-                }}
-                type="file"
-                name=""
-                id="updateAvatars"
-                className="hidden"
-              />
-              {dataPageQuery == 1 && dataPost && (
-                <img className="w-[100px] mt-5" src={imageDetails} />
-              )}
-              <Button
-                htmlType="submit"
-                className="mt-5 bg-green-500 text-white"
+
+          <div style={{
+            padding:"20px 80px 120px 100px",
+            margin:"70px 0px 0px -31px",
+            background:"#FFF5EE",
+            position:"absolute",
+            boxShadow:"0px -1px 7px 27px rgba(60,64,67,.102), 0 2px 6px 2px rgba(60,64,67,.149)",
+            borderRadius:"20px"
+          }}>
+            <div style={{ display: "flex", justifyContent: "space-between",paddingBottom:"50px" }}>
+              <div style={{ display: "flex", gap: "13px", alignItems: "center" }}>
+                <img onClick={onClose} style={{ width: "10px", height: "10px" }} src="https://cdn-icons-png.flaticon.com/128/1828/1828778.png" alt="" />
+                <span style={{}}>Create a new post</span>
+              </div>
+              <Button onClick={onClose}>Cancel</Button>
+            </div>
+
+            <div style={{ width: "533px", margin: "auto" }}>
+              <Form
+                name="basic"
+                style={{ margin: "auto" }}
+                labelCol={{ span: 8 }}
+                wrapperCol={{ span: 16 }}
+                form={form}
+
+                initialValues={{ remember: true }}
+                onFinish={onFinish}
+                autoComplete="off"
+                layout="vertical"
+                hideRequiredMark
               >
-                Submit
-              </Button>
-            </Form>
-          </Drawer>
+                <Row gutter={16}>
+                  <Col span={24}>
+
+                    <Form.Item
+                      style={{ width: "800px" }}
+                      name="description"
+                      label="Bạn đang nghĩ gì "
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Please enter url description',
+                        },
+                      ]}
+                    >
+                      <Input.TextArea
+                        rows={4}
+                        placeholder="Please enter url description"
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <input
+                  onChange={(event: any) => {
+                    handleFileChange(event);
+                  }}
+                  type="file"
+                  name=""
+                  id="updateAvatars"
+                  className="hidden"
+                />
+                {dataPageQuery == 1 && dataPost && (
+                  <img className=" mt-5" src={imageDetails} />
+                )}
+                <Button
+                  htmlType="submit"
+                  className="mt-5 bg-green-500 text-white"
+                >
+                  Submit
+                </Button>
+              </Form>
+            </div>
+          </div>
+
+
         </>
       )}
       <>

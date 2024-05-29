@@ -655,7 +655,7 @@ const Post: React.FC<IProps> = (props) => {
           <div className="flex items-center space-x-2">
             <span className="pl-3"> {post.cmt.length}</span>
             <button>{post.comments} Comments</button>
-            <button>{post.shares} Shares</button>
+            
           </div>
         </div>
         <div className="flex space-x-3 text-gray-500 text-sm font-thin">
@@ -704,14 +704,7 @@ const Post: React.FC<IProps> = (props) => {
               <p className="font-semibold">Comment</p>
             </div>
           </button>
-          <button className="flex-1 flex items-center h-8 focus:outline-none focus:bg-gray-200 justify-center space-x-2 hover:bg-gray-100 rounded-md">
-            <div>
-              <i className="fas fa-share"></i>
-            </div>
-            <div>
-              <p className="font-semibold">Share</p>
-            </div>
-          </button>
+          
         </div>
       </div>
     </div>

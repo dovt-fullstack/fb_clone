@@ -89,6 +89,7 @@ export const userController = {
           account: req.body.account,
           password: hashedPassword,
           // role: 'customer',
+          
           avatar: `https://ui-avatars.com/api/?name=${req.body.username}`,
           gender: 'male',
           birthday: new Date('1999-01-01'),
@@ -472,7 +473,9 @@ export const userController = {
       const user = await User.create({
         ...req.body,
         password: hashedPassword,
+        
         avatar: body.avatar ? body.avatar : `https://ui-avatars.com/api/?name=${req.body.username}`,
+        
         gender: body.gender,
       });
       return res.status(200).json({

@@ -24,6 +24,9 @@ const ProfilePage: React.FC = () => {
   const showDrawer = () => {
     setOpen(!open);
   };
+  const checkAddbane = () => {
+    setCheckAddBanner(!checkAddBanner);
+  }
   const [valueDescription, setValueDescription] = useState('');
   const navigate = useNavigate();
   const { id } = useParams();
@@ -44,9 +47,13 @@ const ProfilePage: React.FC = () => {
         'http://localhost:8000/api/users/' + id
       );
       setData(dataIdUser.data.user);
+      console.log("ở đây", dataIdUser.data.user)
     };
     getDataUser();
+
   }, [id]);
+  // ở đây
+
   useEffect(() => {
     const handelGetStatusFriend = async () => {
       const status = await axios.get(
@@ -268,7 +275,7 @@ const ProfilePage: React.FC = () => {
               <div className="absolute" style={{ bottom: 30, right: 30 }}>
                 {id == user._id && (
                   <button
-                    onClick={() => setCheckAddBanner(true)}
+                    onClick={() => checkAddbane()}
                     className="focus:outline-none px-3 py-2 hover:bg-gray-50 font-semibold bg-white rounded-md"
                   >
                     <i className="fas fa-camera mr-2"></i>Edit Cover Photo
@@ -276,23 +283,23 @@ const ProfilePage: React.FC = () => {
                 )}
                 {checkAddBanner && (
                   <div>
-                    <div className="w-[400px] absolute -right-7 top-14 h-[100px] bg-[#8b939f] rounded-md z-50">
+                    <div style={{margin:"auto"}} className="w-[400px] h-[170px] absolute -right-7 top-14  bg-[#8b939f] rounded-md z-50">
                       <form
+                      style={{justifyContent:"space-between",margin:"14px 0px 0px 48px"}}
                         onSubmit={handelUpdateBanner}
-                        className="flex cursor-pointer mt-3 border-b border-[#ccc] gap-5 items-center ml-5 mb-3"
+                        className=""
                       >
-                        <label
-                          htmlFor="updateBanner"
-                          className="text-white font-bold text-xl cursor-pointer"
-                        >
-                          Tải ảnh lên
-                        </label>
+                        <span style={{}} className="text-white font-bold text-xl c">Upload photos</span>
+                        <div style={{width:"50px"}}>
+                          
                         <input
+                          style={{padding:"20px 0px"}}
                           onChange={(event: any) => handleFileChange(event)}
-                          className="hidden"
                           type="file"
                           name=""
                           id="updateBanner"
+                          
+
                         />
                         <button
                           type="submit"
@@ -300,7 +307,10 @@ const ProfilePage: React.FC = () => {
                         >
                           submit
                         </button>
+                        </div>
+                        
                       </form>
+                      
                     </div>
                   </div>
                 )}
@@ -359,12 +369,7 @@ const ProfilePage: React.FC = () => {
                   >
                     <i className="fas fa-plus-circle  mr-2"></i>Thêm tiểu sử
                   </button>
-                  <button className="px-3 py-1.5 rounded-md bg-primary hover:bg-blue-600 text-white font-semibold focus:outline-none">
-                    <i className="fas fa-plus-circle  mr-2"></i>Add to Story
-                  </button>
-                  <button className="px-3 py-1.5 bg-gray-200 hover:bg-gray-300 rounded-md font-semibold focus:outline-none">
-                    <i className="fas fa-pen mr-2"></i>Edit Profile
-                  </button>
+                  
                   <button className="px-3 py-1.5 rounded-md bg-gray-100 hover:bg-gray-200 font-semibold focus:outline-none">
                     <i className="fas fa-ellipsis-h"></i>
                   </button>

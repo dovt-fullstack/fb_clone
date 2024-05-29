@@ -49,7 +49,7 @@ const LoginPage: React.FC = () => {
                 type="password"
                 placeholder="Password"
               />
-              <Button
+              <Button style={{background:"#006400"}}
                 type="submit"
                 size="large"
                 block
@@ -69,7 +69,7 @@ const LoginPage: React.FC = () => {
 
         <div className="mt-5 text-center">
           <Link to="/register">
-            <Button size="large" bg="bg-greenLight" fontSize="text-xl">
+            <Button style={{width:"352px",height:"44px", background:"#3CB371"}} size="large" bg="bg-greenLight" fontSize="text-xl">
               Create New Account
             </Button>
           </Link>
