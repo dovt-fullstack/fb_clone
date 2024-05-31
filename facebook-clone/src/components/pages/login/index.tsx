@@ -6,6 +6,7 @@ import Button from '../../atoms/button/Button';
 import { TextInput } from '../../atoms/input/TextInput';
 import { useLoginMutation } from '../../../api/Auth';
 import { toast } from 'react-toastify';
+import Navbar from '../../atoms/navbar';
 
 const LoginPage: React.FC = () => {
   const [loginUser] = useLoginMutation();
@@ -15,7 +16,10 @@ const LoginPage: React.FC = () => {
     password: yup.string().required('Password required'),
   });
   return (
+    <>
+    <Navbar/>
     <div className="w-full h-full flex items-center justify-center">
+       
       <div className="w-96 h-auto bg-white rounded-md shadow-md p-4">
         <Formik
           initialValues={{
@@ -59,9 +63,11 @@ const LoginPage: React.FC = () => {
                 Login
               </Button>
               <div className="mt-2 text-center pb-3 border-b border-gray-300">
+                <Link to={'/forgot-password'}>
                 <p className="text-primary cursor-pointer underline">
                   Forgot password?
                 </p>
+                </Link>
               </div>
             </form>
           )}
@@ -76,6 +82,7 @@ const LoginPage: React.FC = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

@@ -6,6 +6,7 @@ import { TextInput } from '../../atoms/input/TextInput';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useRegisterMutation } from '../../../api/Auth';
+import Navbar from '../../atoms/navbar';
 
 const RegisterPage: React.FC = () => {
   const [resgter] = useRegisterMutation();
@@ -17,6 +18,8 @@ const RegisterPage: React.FC = () => {
   });
   const navigate = useNavigate();
   return (
+    <>
+    <Navbar/>
     <div style={{width:""}} className="w-full h-full flex items-center justify-center">
       <div style={{width:"700px",height:"700px",padding:"30px 130px 0px 130px"}} className="w-96 h-auto bg-white rounded-md shadow-md ">
         <Formik
@@ -93,6 +96,7 @@ const RegisterPage: React.FC = () => {
         </Formik>
       </div>
     </div>
+    </>
   );
 };
 

@@ -126,9 +126,9 @@ const CreatePostBox: React.FC = () => {
 
           <div style={{
             padding:"20px 80px 120px 100px",
-            margin:"70px 0px 0px -31px",
+            margin:"-13px -22px 12px -31px",
             background:"#FFF5EE",
-            position:"absolute",
+            position:"relative",
             boxShadow:"0px -1px 7px 27px rgba(60,64,67,.102), 0 2px 6px 2px rgba(60,64,67,.149)",
             borderRadius:"20px"
           }}>

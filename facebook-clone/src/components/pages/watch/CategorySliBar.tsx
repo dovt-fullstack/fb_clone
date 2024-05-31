@@ -16,9 +16,10 @@ const CategorySliBar = () => {
   }, []);
   return (
     <div>
-      <div className="sm:w-full lg:w-full max-w-[300px]">
+      <div className="sm:w-full lg:w-full max-w-[300px] ">
         <div
-          className={`category_menu_title sm:text-[25px] text-center lg:text-[28px]`}
+        style={{color:'rgb(0, 128, 0)'}}
+          className={`category_menu_title sm:text-[25px] text-center lg:text-[28px] `}
         >
           Danh mục tin tức
         </div>

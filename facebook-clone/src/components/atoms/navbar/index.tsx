@@ -5,12 +5,16 @@ import {
   useLocation,
   useNavigate,
 } from 'react-router-dom';
+import userheader from "../../../assets/userheader.jpg"
+
+
 import { useAppSelector } from '../../../store';
 import { RootState } from '@reduxjs/toolkit/query';
 import axios from 'axios';
 import { useLogoutMutation } from '../../../api/Auth';
 import { Button, Drawer, Space } from 'antd';
 import { SupportBot } from '../../../features';
+import logo from "../../../assets/logoweb.png"
 
 const Navbar: React.FC = () => {
   const location = useLocation();
@@ -126,6 +130,7 @@ const Navbar: React.FC = () => {
             >
               <img className="w-[60px] rounded-full" src={data.avatar} alt="" />
               <p className="text-lg text-white font-bold">{user?.username}</p>
+              {/* đây này */}
             </div>
        
               <div className='flex cursor-pointer mt-5 border-b border-[#ccc] gap-5 items-center ml-5 mb-3'>
@@ -161,12 +166,12 @@ const Navbar: React.FC = () => {
           </div>
         </div>
       )}
-      <div className="w-full h-14 bg-white grid grid-cols-7 gap-4 fixed z-50">
+      <div style={{background:"#15894c"}} className="w-full h-14 bg-white grid grid-cols-7 gap-4 fixed z-50">
         <div className="col-span-2 flex items-center">
           <div className="flex items-center ml-2">
             <div className="h-10 text-primary">
               <Link to="/">
-                <i className="fab fa-facebook" style={{ fontSize: 40 }}></i>
+             <img style={{width:"40px", height:"40px"}} src={logo} alt="" />
               </Link>
             </div>
             <div className="h-10">
@@ -180,7 +185,7 @@ const Navbar: React.FC = () => {
         <div className="col-span-3 flex items-center justify-center space-x-2">
           <Link to="/">
             <div className="w-24 h-12 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-100">
-              <div className="w-14 h-auto relative flex items-center justify-center">
+              <div className="">
                 <div
                   className={`${
                     pathName === '' || undefined
@@ -188,30 +193,31 @@ const Navbar: React.FC = () => {
                       : 'text-gray-400'
                   }`}
                 >
-                  <i className="text-2xl fas fa-home"></i>
+                 <span style={{color:"black",fontWeight:"800",width:'50px'}}>Trang Chủ</span>
                 </div>
               </div>
             </div>
           </Link>
           <Link to="/watch">
             <div className="w-24 h-12 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-100">
-              <div className="w-14 h-auto relative flex items-center justify-center">
-                <div className="absolute bg-red-500 text-white text-xs font-bold px-1 rounded-lg top-0 right-0">
+              <div className=" h-auto relative flex items-center justify-center">
+                <div style={{margin:"20px -14px 0px 4px"}} className="absolute bg-red-500 text-white text-xs font-bold px-1 rounded-lg top-0 right-0">
                   9+
                 </div>
                 <div
+
                   className={`${
                     pathName === 'watch' ? 'text-primary' : 'text-gray-400'
                   }`}
                 >
-                  <i className="text-2xl fas fa-tv"></i>
+                  <span style={{color:"black",fontWeight:"800",width:'50px'}}> Bảng tin</span>
                 </div>
               </div>
             </div>
           </Link>
           <Link to="/marketplace">
             <div className="w-24 h-12 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-100">
-              <div className="w-14 h-auto relative flex items-center justify-center">
+              <div className=" h-auto relative flex items-center justify-center">
                 <div className="hidden absolute bg-red-500 text-white text-xs font-bold px-1 rounded-lg top-0 right-0">
                   9+
                 </div>
@@ -222,15 +228,15 @@ const Navbar: React.FC = () => {
                       : 'text-gray-400'
                   }`}
                 >
-                  <i className="text-2xl fas fa-store"></i>
+                  <span style={{color:"black",fontWeight:"800",width:'50px'}}>Trao đổi</span>
                 </div>
               </div>
             </div>
           </Link>
           <Link to="/groups">
             <div className="w-24 h-12 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-100">
-              <div className="w-14 h-auto relative flex items-center justify-center">
-                <div className="absolute bg-red-500 text-white text-xs font-bold px-1 rounded-lg top-0 right-0">
+              <div className=" h-auto relative flex items-center justify-center">
+                <div style={{margin:"20px -14px 0px 4px"}} className="absolute bg-red-500 text-white text-xs font-bold px-1 rounded-lg top-0 right-0">
                   2
                 </div>
                 <div
@@ -238,47 +244,27 @@ const Navbar: React.FC = () => {
                     pathName === 'groups' ? 'text-primary' : 'text-gray-400'
                   }`}
                 >
-                  <i className="text-2xl fas fa-users"></i>
+                  <span style={{color:"black",fontWeight:"800",width:'50px'}}>Diễn đàn</span>
                 </div>
               </div>
             </div>
           </Link>
-          <Link to="/gaming">
-            <div className="w-24 h-12 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-100">
-              <div className="w-14 h-auto relative flex items-center justify-center">
-                <div className="absolute bg-red-500 text-white text-xs font-bold px-1 rounded-lg top-0 right-0">
-                  9+
-                </div>
-                <div
-                  className={`${
-                    pathName === 'gaming' ? 'text-primary' : 'text-gray-400'
-                  }`}
-                >
-                  <i className="text-2xl fas fa-gamepad"></i>
-                </div>
-              </div>
-            </div>
-          </Link>
-        </div>
-        <div className="col-span-2 flex items-center justify-end">
-          <div className="h-10 w-auto flex items-center space-x-2 pr-2">
-            <Link to={`/profile/${user._id}`}>
+          <Link to={`/profile/${user._id}`}>
               <button className="h-10 px-2 flex space-x-1 items-center justify-center focus:outline-none hover:bg-gray-300 rounded-full">
                 <div className="h-8">
-                  <img
-                    src={user?.avatar}
-                    className="w-8 h-8 rounded-full"
-                    alt="dp"
-                  />
+                  
                 </div>
                 <div className="h-8 flex items-center justify-content">
-                  <p className="font-semibold text-sm">{user?.username}</p>
+                <span style={{color:"black",fontWeight:"800"}}>Trang cá nhân</span>
+
                 </div>
               </button>
             </Link>
-            <button className="w-10 h-10 bg-gray-200 focus:outline-none hover:bg-gray-300 rounded-full">
-              <i className="fas fa-plus"></i>
-            </button>
+        </div>
+        <div className="col-span-2 flex items-center justify-end">
+          <div className="h-10 w-auto flex items-center space-x-2 pr-2">
+            
+
             <button
               onClick={showDrawer}
               className="w-10 h-10 bg-gray-200 focus:outline-none hover:bg-gray-300 rounded-full"
@@ -292,7 +278,7 @@ const Navbar: React.FC = () => {
               onClick={() => setIsClick(!isClick)}
               className="w-10 h-10 bg-gray-200 focus:outline-none hover:bg-gray-300 rounded-full"
             >
-              <i className="fas fa-sort-down"></i>
+              <img style={{borderRadius:"30px"}} src={userheader} alt="" />
             </button>
           </div>
         </div>

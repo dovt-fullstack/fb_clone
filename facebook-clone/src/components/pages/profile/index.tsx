@@ -216,7 +216,7 @@ const ProfilePage: React.FC = () => {
     },
   ];
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full" style={{position:"relative"}}>
       {open && <SupportBot showDrawer={showDrawer} />}
       <div className="w-full h-auto shadow bg-white rounded-md">
         <div className="max-w-6xl h-full mx-auto bg-white p-2">

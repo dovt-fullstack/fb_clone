@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React, { useState } from 'react';
-import { IPost } from '../../../types/post';
+import { I } from '../../../types/post';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import {
@@ -26,6 +26,9 @@ interface IProps {
 import likeIcons from '../../../assets/like.png';
 import tymIcons from '../../../assets/thumbs-up.png';
 const Post: React.FC<IProps> = (props) => {
+
+  
+
   const [queryParameters] = useSearchParams();
   const [open, setOpen] = useState(false);
   const [countLike, setCountLike] = useState(0);
@@ -56,6 +59,7 @@ const Post: React.FC<IProps> = (props) => {
       reader.readAsDataURL(file);
     }
   };
+
   const { users } = post;
   const handelCheckActionPost = (id: string) => {
     setShowPopUp(!showPopUp);
@@ -108,13 +112,17 @@ const Post: React.FC<IProps> = (props) => {
       axios
         .get('http://localhost:8000/api/post/react-post/' + id + '?status=0')
         .then((res) => {
-          console.log(res.data.data.like);
+          console.log("đw",res.data.data.like);
+         
           setDataLike(res.data.data.like);
           setDataTym(res.data.data.tym);
         })
         .catch((error) => console.log(error));
     }
   };
+
+
+
   const onClose = () => {
     setOpen(false);
     navigate({
@@ -248,6 +256,7 @@ const Post: React.FC<IProps> = (props) => {
           className="w-[30px] cursor-pointer hover:scale-110 "
           alt="2"
         />
+
       </div>
       <div>
         <img
@@ -313,8 +322,9 @@ const Post: React.FC<IProps> = (props) => {
     {
       key: '2',
       label: (
-        <div>
+        <div style={{display:"flex"}}>
           <img src={likeIcons} className="w-[30px]" alt="" />
+          <span className="pt-2">{post.like.length + post.tym.length}</span>
         </div>
       ),
       children: (
@@ -341,8 +351,11 @@ const Post: React.FC<IProps> = (props) => {
     {
       key: '3',
       label: (
-        <div>
+        <div style={{display:"flex"}}>
           <img src={tymIcons} className="w-[30px]" alt="" />
+          <span className="pt-2">{post.tym.length}</span>
+          {/* tym đây */}
+          
         </div>
       ),
       children: (
@@ -371,7 +384,7 @@ const Post: React.FC<IProps> = (props) => {
     console.log(key);
   };
   return (
-    <div className="w-full relative shadow h-auto bg-white rounded-md">
+    <div style={{position:"relative"}} className="w-full relative shadow h-auto bg-white rounded-md">
       <Drawer
         title="Chi tiết bình luận"
         placement={'right'}
@@ -660,7 +673,9 @@ const Post: React.FC<IProps> = (props) => {
         </div>
         <div className="flex space-x-3 text-gray-500 text-sm font-thin">
           <Popover content={content}>
-            <button
+            <button 
+            
+            // đây nè 
               onMouseEnter={() =>
                 navigate({
                   search: createSearchParams({

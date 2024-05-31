@@ -322,9 +322,9 @@ const MarketplacePage: React.FC = () => {
                   axios
                     .get(
                       'http://localhost:8000/api/remove-sp-yt/' +
-                        userInfo._id +
-                        '?idPro=' +
-                        key
+                      userInfo._id +
+                      '?idPro=' +
+                      key
                     )
                     .then(() => {
                       fetchDataProductUser();
@@ -420,7 +420,29 @@ const MarketplacePage: React.FC = () => {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item name="sale" label=" giá sản phẩm">
-                <InputNumber placeholder=" giá sản phẩm" className="w-full" />
+                <InputNumber
+                  placeholder="Giá sản phẩm"
+                  className="w-full"
+                  formatter={(value: any) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value: string | undefined) => {
+                    if (!value) return 0; // trả về 0 nếu giá trị không hợp lệ
+                    return parseInt(value.replace(/\$\s?|(,*)/g, ''), 10); // chuyển đổi giá trị thành số nguyên
+                  }}
+                  onChange={(value: number | string | undefined) => {
+                    if (isNaN(Number(value))) {
+                      return;
+                    }
+                    // Xử lý giá trị nếu cần
+                  }}
+                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                    const key = e.key;
+                    // Chỉ cho phép nhập số
+                    if (!/[0-9]/.test(key)) {
+                      e.preventDefault();
+                    }
+                  }}
+                />
+
               </Form.Item>
             </Col>
           </Row>
@@ -516,11 +538,11 @@ const MarketplacePage: React.FC = () => {
             <Col span={24}>
               <Form.Item
                 name="description"
-                label="Mô tả Phòng"
+                label="Mô tả sản phẩm"
                 rules={[
                   {
                     required: true,
-                    message: 'Mô tả Phòng là bắt buộc',
+                    message: 'Mô tả sản phẩm là bắt buộc',
                   },
                 ]}
               >
@@ -567,7 +589,7 @@ const MarketplacePage: React.FC = () => {
             href="/chuyen-muc/san-pham-ban-chay.html"
             title="Sản phẩm bán chạy"
           >
-            Sản phẩm<span> hôm nay</span>
+            Trao đổi<span> mua bán</span>
           </a>
         </div>
         <div className="product-block">

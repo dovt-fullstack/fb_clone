@@ -63,7 +63,7 @@ const MaketDetails = () => {
                     className="text-center"
                     style={{ textShadow: '2px 2px #000', color: '#fff' }}
                   >
-                    CÂY XANH VÀ PHỤ KIỆN{' '}
+                    CÂY XANH VÀ PHỤ KIỆN {' '}
                   </h1>
                 </div>
                 <div className="breadcrumb-menu float-left"></div>

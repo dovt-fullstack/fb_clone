@@ -56,22 +56,40 @@ export const ChatInputBox = ({ sendANewMessage }: ChatInputBoxProps) => {
   };
   return (
     <>
-      <div className="relative -bottom-10 ">
-        <label htmlFor="fileMessage">
-          {!dataFile && (
-            <img src={fileIcons} className="w-4 h-4 cursor-pointer" alt="" />
-          )}
-        </label>
-        <input
-          onChange={(event: any) => {
-            handleFileChange(event);
-          }}
-          type="file"
-          name=""
-          className="hidden"
-          id="fileMessage"
-        />
-      </div>
+      <div style={{ position: 'relative', display: 'inline-block' }} className="">
+  <input
+    style={{
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      opacity: 0,
+      cursor: 'pointer',
+      zIndex: 1,
+      paddingLeft:"10px"
+    }}
+    onChange={(event: any) => {
+      handleFileChange(event);
+    }}
+    type="file"
+    name=""
+    id="fileMessage"
+  />
+  {!dataFile && (
+    <img 
+      src={fileIcons} 
+      className="w-4 h-4 cursor-pointer" 
+      alt="" 
+      style={{ 
+        position: 'absolute', 
+        right:"118px",
+        transform: "translate(95%, 139%)",
+        zIndex: 2
+      }} 
+    />
+  )}
+</div>
       <div className="w-100 rounded-bl-xl rounded-br-xl py-3 overflow-hidden bg-white px-5">
         {dataFile && <Image className="!w-[100px] !h-[100px] mt-5" src={dataFile} />}
         <div className="flex flex-row items-center space-x-5">

@@ -344,7 +344,7 @@ const NewsFeed: React.FC = () => {
           onClick={() => handelActionThisPost('1')}
           src={likeIcons}
           className="w-[30px] cursor-pointer hover:scale-110 "
-          alt="2"
+          alt=""
         />
       </div>
       <div>

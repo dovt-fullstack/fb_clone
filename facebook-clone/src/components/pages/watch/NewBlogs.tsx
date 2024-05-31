@@ -83,7 +83,7 @@ console.log(paginatedData && paginatedData.length,'paginatedData && paginatedDat
                     }
                   />
                   <Link to={'#'} className="text-left ">
-                    <Button className="mt-[25px] hover:!text-[#d3b673] hover:bg-transparent hover:!border-[#d3b673]  text-[#fff] bg-[#d3b673]">
+                    <Button style={{background:"rgb(0, 128, 0)"}} className="mt-[25px] hover:!text-[#d3b673] hover:bg-transparent hover:!border-[#d3b673]  text-[#fff] bg-[#d3b673]">
                       Xem thêm
                     </Button>
                   </Link>
