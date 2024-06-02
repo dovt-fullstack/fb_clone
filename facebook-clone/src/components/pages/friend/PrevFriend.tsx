@@ -8,6 +8,8 @@ const PrevFriend = () => {
   const {id} = useParams()
   const { user } = useAppSelector((state: any) => state.persistedReducer.auth);
   const navigate = useNavigate()
+
+
   useEffect(() => {
     const fetchDataFriend = async () => {
       const allFriend = await axios.get(
@@ -17,6 +19,8 @@ const PrevFriend = () => {
     };
     fetchDataFriend();
   }, [id]);
+  console.log("data",data)
+
   return (
     <div>
       <div className="col-span-2">
