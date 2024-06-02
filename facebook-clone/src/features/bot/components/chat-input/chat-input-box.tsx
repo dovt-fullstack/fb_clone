@@ -58,17 +58,7 @@ export const ChatInputBox = ({ sendANewMessage }: ChatInputBoxProps) => {
     <>
       <div style={{ position: 'relative', display: 'inline-block' }} className="">
   <input
-    style={{
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      opacity: 0,
-      cursor: 'pointer',
-      zIndex: 1,
-      paddingLeft:"10px"
-    }}
+    style={{ display: 'none' }}
     onChange={(event: any) => {
       handleFileChange(event);
     }}
@@ -77,17 +67,19 @@ export const ChatInputBox = ({ sendANewMessage }: ChatInputBoxProps) => {
     id="fileMessage"
   />
   {!dataFile && (
+    <label htmlFor="fileMessage" style={{ cursor: 'pointer' }}>
     <img 
       src={fileIcons} 
       className="w-4 h-4 cursor-pointer" 
-      alt="" 
+      alt="Attach file"
       style={{ 
         position: 'absolute', 
-        right:"118px",
+        right: "118px",
         transform: "translate(95%, 139%)",
         zIndex: 2
       }} 
     />
+  </label>
   )}
 </div>
       <div className="w-100 rounded-bl-xl rounded-br-xl py-3 overflow-hidden bg-white px-5">

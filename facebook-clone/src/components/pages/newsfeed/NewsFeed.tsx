@@ -47,6 +47,7 @@ const NewsFeed: React.FC = () => {
     image: '',
   });
 
+ 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -105,6 +106,7 @@ const NewsFeed: React.FC = () => {
         console.log(error);
       });
   };
+  console.log("countLike",countLike)
   const onFinish = (values: any) => {
     if (!isEdit) {
       console.log('Success:', values, dataFile);
@@ -367,6 +369,7 @@ const NewsFeed: React.FC = () => {
         open={open}
         extra={
           <Space>
+            
             <Button onClick={onClose}>Cancel</Button>
           </Space>
         }
@@ -625,7 +628,7 @@ const NewsFeed: React.FC = () => {
                   <div className="flex items-center space-x-2">
                     <span className="pl-3"> {countComment}</span>
                     <button>{post.comments} Comments</button>
-                    <button>{post.shares} Shares</button>
+                   
                   </div>
                 </div>
                 <div className="flex space-x-3 text-gray-500 text-sm font-thin">
@@ -656,6 +659,7 @@ const NewsFeed: React.FC = () => {
                         ></i>
                       </div>
                       <div>
+                        {/* đây này */}
                         <p className="font-semibold">Like</p>
                       </div>
                     </button>
@@ -677,17 +681,10 @@ const NewsFeed: React.FC = () => {
                       <i className="fas fa-comment"></i>
                     </div>
                     <div>
-                      <p className="font-semibold">Comment</p>
+                      <p className="font-semibold">Comment đư</p>
                     </div>
                   </button>
-                  <button className="flex-1 flex items-center h-8 focus:outline-none focus:bg-gray-200 justify-center space-x-2 hover:bg-gray-100 rounded-md">
-                    <div>
-                      <i className="fas fa-share"></i>
-                    </div>
-                    <div>
-                      <p className="font-semibold">Share</p>
-                    </div>
-                  </button>
+
                 </div>
               </div>
             </div>
@@ -699,3 +696,7 @@ const NewsFeed: React.FC = () => {
 };
 
 export default NewsFeed;
+
+
+
+

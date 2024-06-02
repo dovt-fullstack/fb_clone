@@ -20,16 +20,33 @@ const Navbar: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [openChat, setOpenChat] = useState(false);
-
+const [notificatio, setNotification] = useState(false)
   const [data, setData] = useState<any>({});
   const [logout] = useLogoutMutation();
   const [open, setOpen] = useState(false);
   const [dataChat, setDataChat] = useState([]);
+  // const [statusFriend,setStatusFriend] = useState([])
   // conversations
+
+  // useEffect(() => {
+  //   const handelGetStatusFriend = async () => {
+  //     const status = await axios.get(
+  //       'http://localhost:8000/get-status-friend/' + user._id + '?idUser=' + id
+  //     );
+  //     console.log(status.data.status, 'status');
+  //     setStatusFriend(status.data.status);
+  //   };
+  //   handelGetStatusFriend();
+  // }, [id, user._id]);
+  // console.log("fwfwf",statusFriend)
+
   const showDrawer = () => {
     setOpen(!open);
 
   };
+  const notification = () => {
+  setNotification(!notificatio)
+  }
   const showDrawerChat = () => {
     setOpenChat(!openChat);
   };
@@ -271,19 +288,33 @@ const Navbar: React.FC = () => {
             >
               <i className="fab fa-facebook-messenger"></i>
             </button>
-            <button className="w-10 h-10 bg-gray-200 focus:outline-none hover:bg-gray-300 rounded-full">
+            <button onClick={notification}  className="w-10 h-10 bg-gray-200 focus:outline-none hover:bg-gray-300 rounded-full">
               <i className="fas fa-bell"></i>
+              {/* đây này  */}
             </button>
+            
             <button
               onClick={() => setIsClick(!isClick)}
               className="w-10 h-10 bg-gray-200 focus:outline-none hover:bg-gray-300 rounded-full"
             >
               <img style={{borderRadius:"30px"}} src={userheader} alt="" />
             </button>
+            
           </div>
+          
+          
+
+
         </div>
+        {notificatio ? 
+         <div  style={{width:"300px",height:"300px",borderRadius:"10px",background:"#FFFFFF",position:"absolute",margin:"56px -1px 0px 0px",right:"0",boxShadow:'0 1px 2px 0 rgba(60, 64, 67, .102), 0 2px 6px 2px rgba(60, 64, 67, .149)'}}>
+         <span  style={{fontWeight:"600",padding:"10px"}}>Thông báo</span>
+          </div> : ""  
+           }
       </div>
+      
     </div>
+    
   );
 };
 

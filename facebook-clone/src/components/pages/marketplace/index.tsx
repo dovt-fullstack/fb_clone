@@ -104,8 +104,6 @@ const MarketplacePage: React.FC = () => {
     fetchAllProduct();
   }, []);
   const handleSubmitForm = (values: any) => {
-    //
-    console.log(images, 'images', dataIdProduct.images, 'dataIdProduct.images');
     const dataPost = {
       name: values.name,
       description: values.description,
@@ -114,14 +112,16 @@ const MarketplacePage: React.FC = () => {
       is_active: values.is_active,
       idUser: userInfo._id,
     };
+
     const dataEdit = {
       name: values.name,
       description: values.description,
-      images: images.length > 0 ? images : dataIdProduct.images,
+      images: images.length > 0 ? images : dataIdProduct?.images, // Kiểm tra xem dataIdProduct có tồn tại không trước khi truy cập vào thuộc tính images
       sale: values.sale,
       is_active: values.is_active,
       idUser: userInfo._id,
     };
+
     if (!isEditMyPro) {
       axios
         .post('http://localhost:8000/api/create/product', dataPost)
@@ -156,6 +156,7 @@ const MarketplacePage: React.FC = () => {
         });
     }
   };
+
   const uploadImage = async (formData: FormData) => {
     return await axios.post(
       'http://localhost:8000/api/uploadImages',
@@ -409,8 +410,7 @@ const MarketplacePage: React.FC = () => {
                   { required: true, message: 'Trạng thái sản phẩm là bắt buộc' },
                 ]}
               >
-                <Select placeholder="Chọn trạng thái sản phẩm" size="large">
-                  <Option value={false}>Riêng tư</Option>
+                <Select value={true} placeholder="Công Khai" size="large">
                   <Option value={true}>Công khai</Option>
                 </Select>
               </Form.Item>

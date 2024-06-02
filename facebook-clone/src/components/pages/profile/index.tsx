@@ -27,6 +27,7 @@ const ProfilePage: React.FC = () => {
   const checkAddbane = () => {
     setCheckAddBanner(!checkAddBanner);
   }
+  console.log("statusFriend",statusFriend)
   const [valueDescription, setValueDescription] = useState('');
   const navigate = useNavigate();
   const { id } = useParams();
@@ -57,7 +58,7 @@ const ProfilePage: React.FC = () => {
   useEffect(() => {
     const handelGetStatusFriend = async () => {
       const status = await axios.get(
-        'http://localhost:8000/get-status-friend/' + user._id + '?idUser=' + id
+        'http://localhost:8000/get-status-friend/' + user._id + '?idUser=' + id 
       );
       console.log(status.data.status, 'status');
       setStatusFriend(status.data.status);
@@ -120,6 +121,7 @@ const ProfilePage: React.FC = () => {
           )
           .then((response) => {
             toast.success('Đã gửi yêu cầu kết bạn');
+            // đây này 
             setTimeout(() => {
               window.location.reload();
             }, 400);
