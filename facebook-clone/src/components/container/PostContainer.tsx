@@ -17,19 +17,24 @@ const PostContainer: React.FC<IProps> = (props) => {
   const [queryParameters] = useSearchParams();
   const dataPageQuery: any = queryParameters.get('isDelete');
   const {id} = useParams()
+  const fetchPostByUser = async () => {
+    const { data } = await axios.get(
+      'http://localhost:8000/api/get-all-post/by-user/' + id
+    );
+    const newData =
+     dataPageQuery == 1
+        ? data.filter((it: any) => it.status == 1)
+        : data.filter((it: any) => it.status == 0);
+    setDataPost(newData);
+  };
   useEffect(() => {
-    const fetchPostByUser = async () => {
-      const { data } = await axios.get(
-        'http://localhost:8000/api/get-all-post/by-user/' + id
-      );
-      const newData =
-       dataPageQuery == 1
-          ? data.filter((it: any) => it.status == 1)
-          : data.filter((it: any) => it.status == 0);
-      setDataPost(newData);
-    };
+   
     fetchPostByUser();
   }, [id, dataPageQuery]);
+  const handelok = () => {
+    
+  }
+  
   const { postsView } = props;
   return (
     <div className="mt-4 w-full h-full">

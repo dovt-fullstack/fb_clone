@@ -60,6 +60,7 @@ const Post: React.FC<IProps> = (props) => {
     }
   };
 
+
   const { users } = post;
   const handelCheckActionPost = (id: string) => {
     setShowPopUp(!showPopUp);
@@ -94,7 +95,7 @@ const Post: React.FC<IProps> = (props) => {
     // remove-post
   };
   const showDrawer = () => {
-    setOpen(true);
+    setOpen(!open);
   };
   const handelGetCommentThisPost = (idPost: string) => {
     axios
@@ -385,175 +386,7 @@ const Post: React.FC<IProps> = (props) => {
   };
   return (
     <div style={{position:"relative"}} className="w-full relative shadow h-auto bg-white rounded-md">
-      <Drawer
-        title="Chi tiết bình luận"
-        placement={'right'}
-        width={500}
-        onClose={onClose}
-        open={open}
-        extra={
-          <Space>
-            <Button onClick={onClose}>Cancel</Button>
-          </Space>
-        }
-      >
-        <>
-          {!isCheckLike ? (
-            <>
-              <div className="min-h-[2000px]">
-                {dataCommentPost?.map((itm: any) => {
-                  console.log(dataCommentPost, 'dataCommentPost');
-                  return (
-                    <div
-                      className="overflow-y-auto border-b border-[#ccc] pb-5"
-                      key={itm._id}
-                    >
-                      <div className="flex mt-4  items-center gap-5">
-                        <div className="w-10 h-10">
-                          <img
-                            onClick={() =>
-                              navigate('/profile/' + itm.idUser._id)
-                            }
-                            src={itm.idUser.avatar}
-                            className="w-full cursor-pointer h-full rounded-full"
-                            alt="dp"
-                          />
-                        </div>
-                        <p className="font-bold text-md">
-                          {itm.idUser.username}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-5">
-                        <div>
-                          <p>{itm.comment} </p>
-                          <img
-                            className="w-[80px] pt-3 rounded-md"
-                            src={itm.image}
-                            alt=""
-                          />
-                        </div>
-                        <div className="">
-                          {itm.idUser._id == user._id && (
-                            <div className=" space-x-5">
-                              <Button
-                                onClick={() =>
-                                  removeCommentThisPost(itm._id, itm.idPost)
-                                }
-                                className="bg-red-400 text-white"
-                              >
-                                Xoá
-                              </Button>
-                              <Button
-                                onClick={() => {
-                                  navigate({
-                                    search: createSearchParams({
-                                      postId: itm.idPost,
-                                      isEdit: itm._id,
-                                    }).toString(),
-                                  });
-                                  editCommentThisPost(itm._id, itm.idPost);
-                                }}
-                                className="bg-blue-400 text-white"
-                              >
-                                Chỉnh sửa
-                              </Button>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="absolute z-50 bg-white w-[90%] shadow-2xl bottom-0">
-                <Form
-                  name="basic"
-                  form={form}
-                  initialValues={{ remember: true }}
-                  onFinish={onFinish}
-                  onFinishFailed={onFinishFailed}
-                  autoComplete="off"
-                >
-                  <div className="">
-                    <div className="">
-                      <Form.Item
-                        name="username"
-                        rules={[
-                          {
-                            required: true,
-                            message: 'Please input your comment!',
-                          },
-                        ]}
-                      >
-                        <Input.TextArea
-                          className="w-full font-bold text-black"
-                          placeholder={
-                            isEdit
-                              ? dataIdComment.comment
-                              : 'Nhập bình luận của bạn !'
-                          }
-                        />
-                      </Form.Item>
-                    </div>
-                    <div className="">
-                      <label
-                        htmlFor="enterFile"
-                        className="font-bold text-lg underline cursor-pointer"
-                      >
-                        Chọn ảnh
-                      </label>
-                      <input
-                        onChange={(event) => handleFileChange(event)}
-                        type="file"
-                        className="hidden opacity-0"
-                        id="enterFile"
-                        name=""
-                      />
-                      {dataFile && (
-                        <img className="w-[80px] mb-5" src={dataFile} alt="" />
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex justify-between">
-                    <Button
-                      type="primary"
-                      htmlType="submit"
-                      className="mb-2 mx-5"
-                    >
-                      {isEdit ? 'Edit' : 'Submit'}
-                    </Button>
-                    {isEdit && (
-                      <Button
-                        onClick={() => {
-                          navigate({
-                            search: createSearchParams({
-                              postId: dataPageQuery,
-                              isEdit: '',
-                            }).toString(),
-                          });
-                          setDataFile(null);
-                          setDataIdComment({
-                            comment: '',
-                            image: '',
-                          });
-                        }}
-                        htmlType="button"
-                        className="mb-2 mr-5 bg-red-500 text-white font-bold "
-                      >
-                        {isEdit ? 'X' : ''}
-                      </Button>
-                    )}
-                  </div>
-                </Form>
-              </div>
-            </>
-          ) : (
-            <>
-              <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
-            </>
-          )}
-        </>
-      </Drawer>
+
       {showPopUp && (
         <div
           className={
@@ -584,6 +417,7 @@ const Post: React.FC<IProps> = (props) => {
             {post.status == 1 && (
               <p
                 onClick={() => handelRemovePost(post._id, 2)}
+                
                 className="border-b border-[#ccc] pb-4 text-white font-semibold text-md pl-5 pt-3 cursor-pointer hover:bg-gray-600"
               >
                 Khôi phục bài post
@@ -667,38 +501,42 @@ const Post: React.FC<IProps> = (props) => {
           </div>
           <div className="flex items-center space-x-2">
             <span className="pl-3"> {post.cmt.length}</span>
-            <button>{post.comments} Comments</button>
+            <button>{post.comments} Comments </button>
             
           </div>
         </div>
         <div className="flex space-x-3 text-gray-500 text-sm font-thin">
-          <Popover content={content}>
-            <button 
-            
-            // đây nè 
-              onMouseEnter={() =>
-                navigate({
-                  search: createSearchParams({
-                    postId: post._id,
-                  }).toString(),
-                })
-              }
-              className="flex-1 flex items-center h-8 focus:outline-none focus:bg-gray-200 justify-center space-x-2 hover:bg-gray-100 rounded-md"
-            >
-              <div>
-                <i
-                  className={`fas fa-thumbs-up ${
-                    post.like.includes(user._id) || post.tym.includes(user._id)
-                      ? 'text-blue-500'
-                      : ''
-                  }`}
-                ></i>
-              </div>
-              <div>
-                <p className="font-semibold">Like</p>
-              </div>
-            </button>
-          </Popover>
+        <Popover content={content}>
+                    <button
+                      onMouseEnter={() =>
+                        navigate({
+                          search: createSearchParams({
+                            postId: post._id,
+                          }).toString(),
+                        })
+                      }
+                      // onMouseLeave={ ()=> navigate({
+                      //     search: createSearchParams({
+                      //       postId: "",
+                      //     }).toString(),
+                      //   })}
+                      className="flex-1 flex items-center h-8 focus:outline-none focus:bg-gray-200 justify-center space-x-2 hover:bg-gray-100 rounded-md"
+                    >
+                      <div>
+                        <i
+                          className={`fas fa-thumbs-up ${post.like.includes(user._id) ||
+                            post.tym.includes(user._id)
+                            ? 'text-blue-500'
+                            : ''
+                            }`}
+                        ></i>
+                      </div>
+                      <div>
+                        {/* đây này */}
+                        <p className="font-semibold">Like</p>
+                      </div>
+                    </button>
+                  </Popover>
 
           <button
             onClick={() => {
@@ -721,7 +559,161 @@ const Post: React.FC<IProps> = (props) => {
           </button>
           
         </div>
+        {open ? <>
+                    <div className="">
+                      {dataCommentPost?.map((itm: any) => {
+                        console.log(dataCommentPost, 'dataCommentPost');
+                        return (
+                          <div
+                            className="overflow-y-auto border-b border-[#ccc] pb-5"
+                            key={itm._id}
+                          >
+                            <div style={{justifyContent:"space-between"}} className="flex items-center">
+                              <div>
+                            <div className="flex mt-4  items-center gap-5">
+                              <div className="w-10 h-10">
+                                <img
+                                  onClick={() =>
+                                    navigate('/profile/' + itm.idUser._id)
+                                  }
+                                  src={itm.idUser.avatar}
+                                  className="w-full cursor-pointer h-full rounded-full"
+                                  alt="dp"
+                                />
+                              </div>
+                              <p className="font-bold text-md">
+                                {itm.idUser.username}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-5">
+                              <div>
+                                <p>{itm.comment}đá </p>
+                                <img
+                                  className="w-[80px] pt-3 rounded-md"
+                                  src={itm.image} 
+                                  alt=""
+                                />
+                              </div>
+                              </div>
+                              </div>
+                              <div style={{right:'0'}} className="">
+                                {itm.idUser._id == user._id && (
+                                  <div className=" space-x-5">
+                                    <Button
+                                      onClick={() =>
+                                        removeCommentThisPost(itm._id, itm.idPost)
+                                      }
+                                      className="bg-red-400 text-white"
+                                    >
+                                      Xoá
+                                    </Button>
+                                    <Button
+                                      onClick={() => {
+                                        navigate({
+                                          search: createSearchParams({
+                                            postId: itm.idPost,
+                                            isEdit: itm._id,
+                                          }).toString(),
+                                        });
+                                        editCommentThisPost(itm._id, itm.idPost);
+                                      }}
+                                      className="bg-blue-400 text-white"
+                                    >
+                                      Chỉnh sửa
+                                    </Button>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div className=" z-50 bg-white w-[100%] shadow-2xl bottom-0">
+                      <Form
+                        name="basic"
+                        form={form}
+                        initialValues={{ remember: true }}
+                        onFinish={onFinish}
+                        onFinishFailed={onFinishFailed}
+                        autoComplete="off"
+                      >
+                        <div className="">
+                          <div className="">
+                            <Form.Item
+                              name="username"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: 'Please input your comment!',
+                                },
+                              ]}
+                            >
+                              <Input.TextArea
+                                className="w-full font-bold text-black"
+                                placeholder={
+                                  isEdit
+                                    ? dataIdComment.comment
+                                    : 'Nhập bình luận của bạn !'
+                                }
+                              />
+                            </Form.Item>
+                          </div>
+                          <div className="">
+                            <label
+                              htmlFor="enterFile"
+                              className="font-bold text-lg underline cursor-pointer"
+                            >
+                              Chọn ảnh
+                            </label>
+                            <input
+                              onChange={(event) => handleFileChange(event)}
+                              type="file"
+                              className="hidden opacity-0"
+                              id="enterFile"
+                              name=""
+                            />
+                            {dataFile && (
+                              <img className="w-[80px] mb-5" src={dataFile} alt="" />
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex justify-between">
+                          <Button
+                            type="primary"
+                            htmlType="submit"
+                            className="mb-2 mx-5"
+                          >
+                            {isEdit ? 'Edit' : 'Submit'}
+                          </Button>
+                          {isEdit && (
+                            <Button
+                              onClick={() => {
+                                navigate({
+                                  search: createSearchParams({
+                                    postId: dataPageQuery,
+                                    isEdit: '',
+                                  }).toString(),
+                                });
+                                setDataFile(null);
+                                setDataIdComment({
+                                  comment: '',
+                                  image: '',
+                                });
+                              }}
+                              htmlType="button"
+                              className="mb-2 mr-5 bg-red-500 text-white font-bold "
+                            >
+                              {isEdit ? 'X' : ''}
+                            </Button>
+                          )}
+                        </div>
+                      </Form>
+                    </div>
+                  </>
+                  : ""}
       </div>
+      
     </div>
   );
 };

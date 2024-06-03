@@ -225,6 +225,7 @@ const CreatePostBox: React.FC = () => {
               <p className="font-semibold">Create Video</p>
             </div>
           </button>
+          
           <button className="flex-1 flex items-center h-8 focus:outline-none focus:bg-gray-200 justify-center space-x-2 hover:bg-gray-100 rounded-md">
             <div>
               <i className="fas fa-images text-green-500"></i>

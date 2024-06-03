@@ -21,6 +21,8 @@ const ProfilePage: React.FC = () => {
   const [checkOnChangle, setCheckOnChangle] = useState(false);
   const [checkEditDescription, setCheckEditDescription] = useState(false);
   const [open, setOpen] = useState(false);
+
+  
   const showDrawer = () => {
     setOpen(!open);
   };
@@ -585,13 +587,17 @@ const ProfilePage: React.FC = () => {
                   }`}
                   onClick={() => setPostsView('gridView')}
                 >
+
                   <i className="fas fa-th-large mr-2"></i>Grid View
                 </button>
               </div>
             </div>
 
             {/* user posts */}
-            <PostContainer postsView={postsView} />
+            <PostContainer postsView={postsView}
+           
+            />
+            
           </div>
         </div>
       </div>
