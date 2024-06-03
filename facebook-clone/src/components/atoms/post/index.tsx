@@ -47,6 +47,9 @@ const Post: React.FC<IProps> = (props) => {
     image: '',
   });
   const [dataFile, setDataFile] = useState<any>(null);
+const [demo,setDemo] = useState(false);
+
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -97,6 +100,7 @@ const Post: React.FC<IProps> = (props) => {
   const showDrawer = () => {
     setOpen(!open);
   };
+
   const handelGetCommentThisPost = (idPost: string) => {
     axios
       .get('http://localhost:8000/api/post/get-comment/' + idPost)
@@ -108,6 +112,9 @@ const Post: React.FC<IProps> = (props) => {
         console.log(error);
       });
   };
+
+
+ 
   const getDataLikeTymThisPost = (id: any, action: any) => {
     if (action == '0') {
       axios
@@ -501,7 +508,7 @@ const Post: React.FC<IProps> = (props) => {
           </div>
           <div className="flex items-center space-x-2">
             <span className="pl-3"> {post.cmt.length}</span>
-            <button>{post.comments} Comments </button>
+            <button>{post.comments} Comments  </button>
             
           </div>
         </div>
@@ -554,7 +561,8 @@ const Post: React.FC<IProps> = (props) => {
               <i className="fas fa-comment"></i>
             </div>
             <div>
-              <p className="font-semibold">Comment</p>
+
+              <p className="font-semibold">Comment </p>
             </div>
           </button>
           

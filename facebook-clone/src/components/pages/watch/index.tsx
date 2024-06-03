@@ -538,7 +538,7 @@ const WatchPage: React.FC = () => {
         <CategorySliBar />
         <div>
           <div className="flex justify-end space-x-5 mt-5">
-            <Button onClick={onOpen}>Tạo chuyên mục</Button>
+            {/* <Button onClick={onOpen}>Tạo chuyên mục</Button> */}
             <Button onClick={() => setOpenBlog(true)}>Tạo tin tức</Button>
             <Button onClick={() => openMyCate()}>Danh mục của bạn</Button>
             <Button className="" onClick={openNewBlog}>

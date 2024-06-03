@@ -23,13 +23,14 @@ const ProfilePage: React.FC = () => {
   const [open, setOpen] = useState(false);
 
   
+  
   const showDrawer = () => {
     setOpen(!open);
   };
   const checkAddbane = () => {
     setCheckAddBanner(!checkAddBanner);
   }
-  console.log("statusFriend",statusFriend)
+
   const [valueDescription, setValueDescription] = useState('');
   const navigate = useNavigate();
   const { id } = useParams();
@@ -54,8 +55,10 @@ const ProfilePage: React.FC = () => {
     };
     getDataUser();
 
+
   }, [id]);
   // ở đây
+  console.log("ko ổn",dataFile)
 
   useEffect(() => {
     const handelGetStatusFriend = async () => {
@@ -67,6 +70,7 @@ const ProfilePage: React.FC = () => {
     };
     handelGetStatusFriend();
   }, [id, user._id]);
+
 
   const handelUpdateBanner = (event: any) => {
     event.preventDefault();
@@ -345,23 +349,15 @@ const ProfilePage: React.FC = () => {
             <div className="mt-1 flex items-center justify-between">
               <div className="flex mb-2 items-center space-x-2">
                 <button className="py-3 px-2 hover:bg-gray-100 rounded-md font-semibold focus:outline-none">
-                  Posts
+                  Bài viết
                 </button>
                 <button className="py-3 px-2 hover:bg-gray-100 rounded-md font-semibold focus:outline-none">
-                  About
+                  Bạn bè
                 </button>
                 <button className="py-3 px-2 hover:bg-gray-100 rounded-md font-semibold focus:outline-none">
-                  Friends
+                  Bộ sưu tập
                 </button>
-                <button className="py-3 px-2 hover:bg-gray-100 rounded-md font-semibold focus:outline-none">
-                  Photos
-                </button>
-                <button className="py-3 px-2 hover:bg-gray-100 rounded-md font-semibold focus:outline-none">
-                  Story Archrive
-                </button>
-                <button className="py-3 px-2 hover:bg-gray-100 rounded-md font-semibold focus:outline-none">
-                  Videos
-                </button>
+
               </div>
               {id == user._id ? (
                 <div className="flex items-center space-x-2">
@@ -424,7 +420,12 @@ const ProfilePage: React.FC = () => {
           </div>
         </div>
       </div>
-      {/* After bio content */}
+
+
+
+
+
+      {/* phần dưới */}
       <div className="max-w-6xl h-full mx-auto my-3">
         <div className="grid grid-cols-5 gap-4">
           <div className="col-span-2">
@@ -601,6 +602,7 @@ const ProfilePage: React.FC = () => {
           </div>
         </div>
       </div>
+      {/* After bio content */}
     </div>
   );
 };
