@@ -47,7 +47,6 @@ const Post: React.FC<IProps> = (props) => {
     image: '',
   });
   const [dataFile, setDataFile] = useState<any>(null);
-const [demo,setDemo] = useState(false);
 
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {

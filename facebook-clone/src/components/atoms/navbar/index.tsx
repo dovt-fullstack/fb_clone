@@ -28,7 +28,23 @@ const Navbar: React.FC = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
   const [inputValue, setInputValue] = useState('');
+  const [isClick, setIsClick] = useState(false);
 
+  const handleisClick = () => {
+    if (location.pathname !== '/login' && location.pathname !== '/register') {
+      setNotification(false)
+    setIsClick(!isClick)
+    }
+
+    
+  }
+  const notification = () => {
+    if (location.pathname !== '/login' && location.pathname !== '/register') {
+      
+    setIsClick(false)
+    setNotification(!notificatio)
+  }
+  }
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -64,28 +80,31 @@ const Navbar: React.FC = () => {
 
 
   const showDrawer = () => {
-    setOpen(!open);
+    if (location.pathname !== '/login' && location.pathname !== '/register') {
 
-  };
-  const notification = () => {
-    setNotification(!notificatio)
+    setOpen(!open);
   }
+  };
+
   const showDrawerChat = () => {
     setOpenChat(!openChat);
+  
   };
   const onClose = () => {
-    setOpen(false);
-    setOpenChat(false)
-    navigate({
-      search: createSearchParams({
-        chat: "",
-      }).toString(),
-    });
+    
+    
+      setOpen(false);
+      setOpenChat(false)
+      navigate({
+        search: createSearchParams({
+          chat: "",
+        }).toString(),
+      });
+   
   };
   const { user } = useAppSelector((state: any) => state.persistedReducer.auth);
 
   const pathName = location?.pathname.split('/')[1];
-  const [isClick, setIsClick] = useState(false);
   const logOut = () => {
     localStorage.clear();
     logout()
@@ -229,7 +248,7 @@ const Navbar: React.FC = () => {
 
         </div>
         <div className="col-span-3 flex items-center justify-center space-x-2">
-          <Link to="/">
+          <Link to="/groups">
             <div className="w-24 h-12 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-100">
               <div className="">
                 <div
@@ -238,13 +257,14 @@ const Navbar: React.FC = () => {
                     : 'text-gray-400'
                     }`}
                 >
-                  <span style={{ color: "black", fontWeight: "800", width: '50px' }}>Trang Chủ</span>
+                  <span style={{ color: "black", fontWeight: "800", width: '50px' }}>Home page</span>
                 </div>
               </div>
             </div>
           </Link>
-          <Link to="/watch">
-            <div className="w-24 h-12 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-100">
+          <Link to="/">
+          <div className={`w-24 h-12 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-100 ${pathName === '/' ? 'bg-white' : ''}`}>
+
               <div className=" h-auto relative flex items-center justify-center">
                 <div style={{ margin: "20px -14px 0px 4px" }} className="absolute bg-red-500 text-white text-xs font-bold px-1 rounded-lg top-0 right-0">
                   9+
@@ -254,50 +274,47 @@ const Navbar: React.FC = () => {
                   className={`${pathName === 'watch' ? 'text-primary' : 'text-gray-400'
                     }`}
                 >
-                  <span style={{ color: "black", fontWeight: "800", width: '50px' }}> Bảng tin</span>
+                  <span style={{ color: "black", fontWeight: "800", width: '50px' }}>News</span>
                 </div>
               </div>
             </div>
           </Link>
           <Link to="/marketplace">
-            <div className="w-24 h-12 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-100">
+          <div className={`w-24 h-12 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-100 ${pathName === 'marketplace' ? 'bg-white' : ''}`}>
               <div className=" h-auto relative flex items-center justify-center">
                 <div className="hidden absolute bg-red-500 text-white text-xs font-bold px-1 rounded-lg top-0 right-0">
                   9+
                 </div>
-                <div
-                  className={`${pathName === 'marketplace'
-                    ? 'text-primary'
-                    : 'text-gray-400'
-                    }`}
-                >
-                  <span style={{ color: "black", fontWeight: "800", width: '50px' }}>Trao đổi</span>
+                <div className={`${pathName === 'marketplace' ? 'text-primary' : 'text-gray-400'}`}>
+
+                  <span style={{ color: "black", fontWeight: "800", width: '50px' }}>Exchange</span>
                 </div>
               </div>
             </div>
           </Link>
-          <Link to="/groups">
-            <div className="w-24 h-12 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-100">
+          <Link to="/watch">
+            {/* <Link to="/groups"> */}
+            <div className={`w-24 h-12 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-100 ${pathName === 'watch' ? 'bg-white' : ''}`}>
               <div className=" h-auto relative flex items-center justify-center">
                 <div style={{ margin: "20px -14px 0px 4px" }} className="absolute bg-red-500 text-white text-xs font-bold px-1 rounded-lg top-0 right-0">
                   2
                 </div>
                 <div
-                  className={`${pathName === 'groups' ? 'text-primary' : 'text-gray-400'
+                  className={`${pathName === 'watch' ? 'text-primary' : 'text-gray-400'
                     }`}
                 >
-                  <span style={{ color: "black", fontWeight: "800", width: '50px' }}>Diễn đàn</span>
+                  <span style={{ color: "black", fontWeight: "800", width: '50px' }}>Forum</span>
                 </div>
               </div>
             </div>
           </Link>
           <Link to={`/profile/${user._id}`}>
-            <button className="h-10 px-2 flex space-x-1 items-center justify-center focus:outline-none hover:bg-gray-300 rounded-full">
+          <button className={`h-10 px-2 flex space-x-1 items-center justify-center focus:outline-none hover:bg-gray-300 rounded-full ${location.pathname === `/profile/${user._id}` ? 'bg-white' : ''}`}>
               <div className="h-8">
 
               </div>
               <div className="h-8 flex items-center justify-content">
-                <span style={{ color: "black", fontWeight: "800" }}>Trang cá nhân</span>
+                <span style={{ color: "black", fontWeight: "800" }}>Personal page</span>
 
               </div>
             </button>
@@ -312,6 +329,7 @@ const Navbar: React.FC = () => {
               className="w-10 h-10 bg-gray-200 focus:outline-none hover:bg-gray-300 rounded-full"
             >
               <i className="fab fa-facebook-messenger"></i>
+            
             </button>
             <button onClick={notification} className="w-10 h-10 bg-gray-200 focus:outline-none hover:bg-gray-300 rounded-full">
               <i className="fas fa-bell"></i>
@@ -319,7 +337,7 @@ const Navbar: React.FC = () => {
             </button>
 
             <button
-              onClick={() => setIsClick(!isClick)}
+              onClick={() => handleisClick()}
               className="w-10 h-10 bg-gray-200 focus:outline-none hover:bg-gray-300 rounded-full"
             >
               <img style={{ borderRadius: "30px" }} src={userheader} alt="" />

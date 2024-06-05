@@ -125,9 +125,9 @@ const CreatePostBox: React.FC = () => {
         <>
 
           <div style={{
-            padding:"20px 80px 120px 100px",
+            padding:"20px 80px 120px 68px",
             margin:"-13px -22px 12px -31px",
-            background:"#FFF5EE",
+            background:"#3CB371",
             position:"relative",
             boxShadow:"0px -1px 7px 27px rgba(60,64,67,.102), 0 2px 6px 2px rgba(60,64,67,.149)",
             borderRadius:"20px"
@@ -175,7 +175,8 @@ const CreatePostBox: React.FC = () => {
                     </Form.Item>
                   </Col>
                 </Row>
-                <input
+                <div style={{textAlign:"center"}}>
+                <input style={{margin:'auto'}}
                   onChange={(event: any) => {
                     handleFileChange(event);
                   }}
@@ -193,6 +194,7 @@ const CreatePostBox: React.FC = () => {
                 >
                   Submit
                 </Button>
+                </div>
               </Form>
             </div>
           </div>

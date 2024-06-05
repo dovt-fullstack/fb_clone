@@ -47,6 +47,29 @@ const NewsFeed: React.FC = () => {
     image: '',
   });
 
+  const [userPosts, setUserPosts] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchUserPosts = async () => {
+      try {
+        const response = await axios.get<any[]>(`http://localhost:8000/api/get-all-post/by-user/${user._id}`);
+        setUserPosts(response.data); // Lưu các bài đăng của người dùng vào state
+      } catch (error) {
+        console.error('Error fetching user posts:', error);
+      }
+    };
+
+    if (user) {
+      fetchUserPosts();
+    }
+  }, [user]); // Sử dụng user._id làm phần tử phụ thuộc để gọi API mỗi khi user thay đổi
+  const fillter = userPosts.filter(items => items.status === "0")
+
+  console.log("Demo",fillter)
+
+  const concatOk = fillter.concat(getPostFriend)
+console.log("contac",concatOk)
+
   const handeopen = () => {
     setOpen(!open)
   }
@@ -63,12 +86,13 @@ const NewsFeed: React.FC = () => {
       reader.readAsDataURL(file);
     }
   };
+
   useEffect(() => {
     const fetchDataFirend = async () => {
       const { data } = await axios.get(
         'http://localhost:8000/api/post/get-post-friend/' + user._id
       );
-      console.log(data);
+      console.log("huytnhes ",data);
       setGetPostFriend(data);
     };
     fetchDataFirend();
@@ -370,7 +394,7 @@ const NewsFeed: React.FC = () => {
       <CreatePostBox />
       {/* All posts */}
       <div className="mt-10">
-        {getPostFriend?.map((post: any, idx) => {
+        {concatOk?.map((post: any, idx) => {
           console.log('edt', post);
           const count: any = post.like.length + post.tym.length;
           const countComment: any = post.cmt.length;
@@ -689,6 +713,8 @@ const NewsFeed: React.FC = () => {
           );
         })}
       </div>
+      <h1>huy</h1>
+      {/* <Demo/> */}
     </div>
   );
 };

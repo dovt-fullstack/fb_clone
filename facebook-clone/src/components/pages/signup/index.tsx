@@ -20,8 +20,8 @@ const RegisterPage: React.FC = () => {
   return (
     <>
     <Navbar/>
-    <div style={{width:""}} className="w-full h-full flex items-center justify-center">
-      <div style={{width:"700px",height:"700px",padding:"30px 130px 0px 130px"}} className="w-96 h-auto bg-white rounded-md shadow-md ">
+    <div style={{}} className="w-full h-full flex items-center justify-center mt-[-30px]">
+      <div style={{width:"550px",height:"550px",padding:"10px 80px 0px 80px"}} className="w-96 h-auto bg-white rounded-md shadow-md ">
         <Formik
           initialValues={{
             email: '',
@@ -76,9 +76,9 @@ const RegisterPage: React.FC = () => {
                 type="password"
                 placeholder="Confirm Password"
               />
-              <div style={{display:"flex",gap:"10px",marginTop:"-15px"}}>
+              <div style={{display:"flex",gap:"10px",marginTop:"-15px",alignItems:"center", margin:"10px 0px"}}>
               <input style={{}} type="checkbox" name="" id="" />
-              <p style={{fontSize:"13px",marginTop:"15px"}}>Khi đăng ký, bạn phải đồng ý với <a style={{color:"#1E90FF"}} href="">điều khoản sử dụng</a> và <a style={{color:"#1E90FF"}} href="">chính sách bảo mật</a> của chúng tôi.</p>
+              <p style={{fontSize:"13px"}}>When registering, you must agree to <a style={{color:"#1E90FF"}} href="">terms of use</a> và <a style={{color:"#1E90FF"}} href=""> Privacy Policy</a> ours.</p>
               </div>
               <Button
               style={{marginTop:"10px"}}
