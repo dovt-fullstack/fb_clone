@@ -49,6 +49,8 @@ const Post: React.FC<IProps> = (props) => {
   const [dataFile, setDataFile] = useState<any>(null);
 
 
+
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -251,6 +253,8 @@ const Post: React.FC<IProps> = (props) => {
     }
     // post/like-post
   };
+
+
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
   };
@@ -460,11 +464,13 @@ const Post: React.FC<IProps> = (props) => {
       {post.name ? (
         <div className="mb-1">
           <p className="text-gray-700 max-h-10 truncate px-3 text-sm">
-            {post.name}
+            {post.name} 
           </p>
         </div>
       ) : null}
-      {post.image ? (
+
+      { post.image ? (
+        // đây là img 
         <div className="w-full h-76 max-h-100">
           <img
             src={post.image}
@@ -472,7 +478,9 @@ const Post: React.FC<IProps> = (props) => {
             className="w-full h-76 max-h-100 object-cover"
           />
         </div>
-      ) : null}
+      ) : null
+      }
+
 
       <div className="w-full flex flex-col space-y-2 p-2 px-4">
         <div className="flex items-center justify-between pb-2 border-b border-gray-300 text-gray-500 text-sm">
@@ -496,9 +504,7 @@ const Post: React.FC<IProps> = (props) => {
               <button className="focus:outline-none flex items-center justify-center w-4 h-4 rounded-full bg-primary text-white">
                 <i style={{ fontSize: 10 }} className="fas fa-thumbs-up"></i>
               </button>
-              <button className="focus:outline-none flex items-center justify-center w-4 h-4 rounded-full bg-yellow-500 text-white">
-                <i style={{ fontSize: 10 }} className="fas fa-surprise"></i>
-              </button>
+
               <span className="pl-3">{post.like.length + post.tym.length}</span>
               <div className="ml-1">
                 <p>{post.likes}</p>
@@ -507,7 +513,7 @@ const Post: React.FC<IProps> = (props) => {
           </div>
           <div className="flex items-center space-x-2">
             <span className="pl-3"> {post.cmt.length}</span>
-            <button>{post.comments} Comments  </button>
+            <button>{post.comments} Comments </button>
             
           </div>
         </div>
@@ -719,6 +725,7 @@ const Post: React.FC<IProps> = (props) => {
                     </div>
                   </>
                   : ""}
+                  
       </div>
       
     </div>

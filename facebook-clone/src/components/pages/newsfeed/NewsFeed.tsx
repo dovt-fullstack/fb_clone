@@ -49,23 +49,42 @@ const NewsFeed: React.FC = () => {
 
   const [userPosts, setUserPosts] = useState<any[]>([]);
 
-  useEffect(() => {
-    const fetchUserPosts = async () => {
-      try {
-        const response = await axios.get<any[]>(`http://localhost:8000/api/get-all-post/by-user/${user._id}`);
-        setUserPosts(response.data); // Lưu các bài đăng của người dùng vào state
-      } catch (error) {
-        console.error('Error fetching user posts:', error);
-      }
-    };
 
-    if (user) {
-      fetchUserPosts();
-    }
-  }, [user]); // Sử dụng user._id làm phần tử phụ thuộc để gọi API mỗi khi user thay đổi
+  const [openPostId, setOpenPostId] = useState(null);
+
+  const toggleCommentBox = (postId:any) => {
+    setOpenPostId(prevPostId => (prevPostId === postId ? null : postId));
+  };
+
+
+  // useEffect(() => {
+  //   const fetchUserPosts = async () => {
+  //     try {
+  //       const response = await axios.get<any[]>(`http://localhost:8000/api/get-all-post/by-user/${user._id}`);
+  //       setUserPosts(response.data); // Lưu các bài đăng của người dùng vào state
+  //     } catch (error) {
+  //       console.error('Error fetching user posts:', error);
+  //     }
+  //   };
+
+  //   if (user) {
+  //     fetchUserPosts();
+  //   }
+  // }, [user]); // Sử dụng user._id làm phần tử phụ thuộc để gọi API mỗi khi user thay đổi
+
+  useEffect(() => {
+    const fetchDataFirend = async () => {
+      const { data } = await axios.get(
+        'http://localhost:8000/api/get-all-post/by-user/' + user._id
+      );
+      console.log("huytnhes ",data);
+      setUserPosts(data);
+    };
+    fetchDataFirend();
+  }, [user._id, countLike]);
   const fillter = userPosts.filter(items => items.status === "0")
 
-  console.log("Demo",fillter)
+
 
   const concatOk = fillter.concat(getPostFriend)
 console.log("contac",concatOk)
@@ -228,6 +247,7 @@ console.log("contac",concatOk)
     }
   };
   const editCommentThisPost = (id: any, idPost: any) => {
+    
     axios
       .get('http://localhost:8000/api/post/get-id-comments/' + id)
       .then((ok: any) => {
@@ -242,7 +262,9 @@ console.log("contac",concatOk)
         console.log(error);
       });
     // axios.get('');
+    
   };
+
   const getDataLikeTymThisPost = (id: any, action: any) => {
     if (action == '0') {
       axios
@@ -471,12 +493,7 @@ console.log("contac",concatOk)
                           className="fas fa-thumbs-up"
                         ></i>
                       </button>
-                      <button className="focus:outline-none flex items-center justify-center w-4 h-4 rounded-full bg-yellow-500 text-white">
-                        <i
-                          style={{ fontSize: 10 }}
-                          className="fas fa-surprise"
-                        ></i>
-                      </button>
+
                       <span className="pl-3"> {count}</span>
                       <div className="ml-1">
                         <p>{post.likes}</p>
@@ -485,7 +502,7 @@ console.log("contac",concatOk)
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="pl-3"> {countComment}</span>
-                    <button>{post.comments} Comments</button>
+                    <button>{post.comments} Comments </button>
 
                   </div>
                 </div>
@@ -532,6 +549,7 @@ console.log("contac",concatOk)
                         }).toString(),
                       });
                       handelGetCommentThisPost(post._id);
+                      toggleCommentBox(post._id);
                     }}
                     className="flex-1 flex items-center h-8 focus:outline-none focus:bg-gray-200 justify-center space-x-2 hover:bg-gray-100 rounded-md"
                   >
@@ -547,159 +565,104 @@ console.log("contac",concatOk)
                 </div>
 
 
-                {open ? <>
-                    <div className="">
-                      {dataCommentPost?.map((itm: any) => {
-                        console.log(dataCommentPost, 'dataCommentPost');
-                        return (
-                          <div
-                            className="overflow-y-auto border-b border-[#ccc] pb-5"
-                            key={itm._id}
-                          >
-                            <div style={{justifyContent:"space-between"}} className="flex items-center">
-                              <div>
-                            <div className="flex mt-4  items-center gap-5">
-                              <div className="w-10 h-10">
-                                <img
-                                  onClick={() =>
-                                    navigate('/profile/' + itm.idUser._id)
-                                  }
-                                  src={itm.idUser.avatar}
-                                  className="w-full cursor-pointer h-full rounded-full"
-                                  alt="dp"
-                                />
-                              </div>
-                              <p className="font-bold text-md">
-                                {itm.idUser.username}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-5">
-                              <div>
-                                <p>{itm.comment}đá </p>
-                                <img
-                                  className="w-[80px] pt-3 rounded-md"
-                                  src={itm.image} 
-                                  alt=""
-                                />
-                              </div>
-                              </div>
-                              </div>
-                              <div style={{right:'0'}} className="">
-                                {itm.idUser._id == user._id && (
-                                  <div className=" space-x-5">
-                                    <Button
-                                      onClick={() =>
-                                        removeCommentThisPost(itm._id, itm.idPost)
-                                      }
-                                      className="bg-red-400 text-white"
-                                    >
-                                      Xoá
-                                    </Button>
-                                    <Button
-                                      onClick={() => {
-                                        navigate({
-                                          search: createSearchParams({
-                                            postId: itm.idPost,
-                                            isEdit: itm._id,
-                                          }).toString(),
-                                        });
-                                        editCommentThisPost(itm._id, itm.idPost);
-                                      }}
-                                      className="bg-blue-400 text-white"
-                                    >
-                                      Chỉnh sửa
-                                    </Button>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                    <div className=" z-50 bg-white w-[100%] shadow-2xl bottom-0">
-                      <Form
-                        name="basic"
-                        form={form}
-                        initialValues={{ remember: true }}
-                        onFinish={onFinish}
-                        onFinishFailed={onFinishFailed}
-                        autoComplete="off"
-                      >
-                        <div className="">
-                          <div className="">
-                            <Form.Item
-                              name="username"
-                              rules={[
-                                {
-                                  required: true,
-                                  message: 'Please input your comment!',
-                                },
-                              ]}
-                            >
-                              <Input.TextArea
-                                className="w-full font-bold text-black"
-                                placeholder={
-                                  isEdit
-                                    ? dataIdComment.comment
-                                    : 'Nhập bình luận của bạn !'
-                                }
-                              />
-                            </Form.Item>
-                          </div>
-                          <div className="">
-                            <label
-                              htmlFor="enterFile"
-                              className="font-bold text-lg underline cursor-pointer"
-                            >
-                              Chọn ảnh
-                            </label>
-                            <input
-                              onChange={(event) => handleFileChange(event)}
-                              type="file"
-                              className="hidden opacity-0"
-                              id="enterFile"
-                              name=""
-                            />
-                            {dataFile && (
-                              <img className="w-[80px] mb-5" src={dataFile} alt="" />
-                            )}
-                          </div>
-                        </div>
-                        <div className="flex justify-between">
-                          <Button
-                            type="primary"
-                            htmlType="submit"
-                            className="mb-2 mx-5"
-                          >
-                            {isEdit ? 'Edit' : 'Submit'}
-                          </Button>
-                          {isEdit && (
-                            <Button
-                              onClick={() => {
-                                navigate({
-                                  search: createSearchParams({
-                                    postId: dataPageQuery,
-                                    isEdit: '',
-                                  }).toString(),
-                                });
-                                setDataFile(null);
-                                setDataIdComment({
-                                  comment: '',
-                                  image: '',
-                                });
-                              }}
-                              htmlType="button"
-                              className="mb-2 mr-5 bg-red-500 text-white font-bold "
-                            >
-                              {isEdit ? 'X' : ''}
-                            </Button>
-                          )}
-                        </div>
-                      </Form>
-                    </div>
-                  </>
-                  : ""}
+                {openPostId === post._id && (
+  <div>
+    {dataCommentPost?.map((itm) => (
+      <div key={itm._id} className="overflow-y-auto border-b border-[#ccc] pb-5">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex mt-4 items-center gap-5">
+              <div className="w-10 h-10">
+                <img
+                  onClick={() => navigate('/profile/' + itm.idUser._id)}
+                  src={itm.idUser.avatar}
+                  className="w-full cursor-pointer h-full rounded-full"
+                  alt="dp"
+                />
+              </div>
+              <p className="font-bold text-md">{itm.idUser.username}</p>
+            </div>
+            <div className="flex items-center gap-5">
+              <div>
+                <p>{itm.comment}</p>
+                {itm.image && <img className="w-[80px] pt-3 rounded-md" src={itm.image} alt="" />}
+              </div>
+            </div>
+          </div>
+          <div>
+            {itm.idUser._id === user._id && (
+              <div className="space-x-5">
+                <Button onClick={() => removeCommentThisPost(itm._id, itm.idPost)} className="bg-red-400 text-white">Xoá</Button>
+                <Button
+                  onClick={() => {
+                    navigate({
+                      search: createSearchParams({
+                        postId: itm.idPost,
+                        isEdit: itm._id,
+                      }).toString(),
+                    });
+                    editCommentThisPost(itm._id, itm.idPost);
+                  }}
+                  className="bg-blue-400 text-white"
+                >
+                  Chỉnh sửa
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    ))}
+    <div className="z-50 bg-white w-[100%] shadow-2xl bottom-0">
+      <Form
+        name="basic"
+        form={form}
+        initialValues={{ remember: true }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off"
+      >
+        <div>
+          <Form.Item
+            name="username"
+            rules={[{ required: true, message: 'Please input your comment!' }]}
+          >
+            <Input.TextArea className="w-full font-bold text-black" placeholder={isEdit ? dataIdComment.comment : 'Nhập bình luận của bạn !'} />
+          </Form.Item>
+          <div>
+            <label htmlFor="enterFile" className="font-bold text-lg underline cursor-pointer">Chọn ảnh</label>
+            <input
+              onChange={(event) => handleFileChange(event)}
+              type="file"
+              className="hidden opacity-0"
+              id="enterFile"
+              name=""
+            />
+            {dataFile && <img className="w-[80px] mb-5" src={dataFile} alt="" />}
+          </div>
+          <div className="flex justify-between">
+            <Button type="primary" htmlType="submit" className="mb-2 mx-5">{isEdit ? 'Edit' : 'Submit'}</Button>
+            {isEdit && (
+              <Button
+                onClick={() => {
+                  navigate({
+                    search: createSearchParams({ postId: dataPageQuery, isEdit: '' }).toString(),
+                  });
+                  setDataFile(null);
+                  setDataIdComment({ comment: '', image: '' });
+                }}
+                htmlType="button"
+                className="mb-2 mr-5 bg-red-500 text-white font-bold"
+              >
+                {isEdit ? 'X' : ''}
+              </Button>
+            )}
+          </div>
+        </div>
+      </Form>
+    </div>
+  </div>
+)}
 
 
 
@@ -713,14 +676,12 @@ console.log("contac",concatOk)
           );
         })}
       </div>
-      <h1>huy</h1>
-      {/* <Demo/> */}
+
     </div>
   );
 };
 
 export default NewsFeed;
-
 
 
 

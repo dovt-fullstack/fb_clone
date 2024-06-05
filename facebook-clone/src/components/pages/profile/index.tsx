@@ -21,9 +21,12 @@ const ProfilePage: React.FC = () => {
   const [checkOnChangle, setCheckOnChangle] = useState(false);
   const [checkEditDescription, setCheckEditDescription] = useState(false);
   const [open, setOpen] = useState(false);
+  const [selectedTab, setSelectedTab] = useState('posts');
 
-  
-  
+
+
+
+
   const showDrawer = () => {
     setOpen(!open);
   };
@@ -31,10 +34,30 @@ const ProfilePage: React.FC = () => {
     setCheckAddBanner(!checkAddBanner);
   }
 
+  const [userPosts, setUserPosts] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchUserPosts = async () => {
+      try {
+        const response = await axios.get<any[]>(`http://localhost:8000/api/get-all-post/by-user/${user._id}`);
+        setUserPosts(response.data); // Lưu các bài đăng của người dùng vào state
+      } catch (error) {
+        console.error('Error fetching user posts:', error);
+      }
+    };
+
+    if (user) {
+      fetchUserPosts();
+    }
+  }, [user]);
+  const filllterrr = userPosts.filter(items => items.image != null)
+  console.log("ok mà ", filllterrr) // Sử dụng user._id làm phần tử phụ thuộc để gọi API mỗi khi user thay đổi
+
   const [valueDescription, setValueDescription] = useState('');
   const navigate = useNavigate();
   const { id } = useParams();
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
@@ -58,12 +81,12 @@ const ProfilePage: React.FC = () => {
 
   }, [id]);
   // ở đây
-  console.log("ko ổn",dataFile)
+  console.log("ko ổn", dataFile)
 
   useEffect(() => {
     const handelGetStatusFriend = async () => {
       const status = await axios.get(
-        'http://localhost:8000/get-status-friend/' + user._id + '?idUser=' + id 
+        'http://localhost:8000/get-status-friend/' + user._id + '?idUser=' + id
       );
       console.log(status.data.status, 'status');
       setStatusFriend(status.data.status);
@@ -121,9 +144,9 @@ const ProfilePage: React.FC = () => {
         axios
           .post(
             'http://localhost:8000/send-request-makefriend/' +
-              id +
-              '?idUser=' +
-              user._id
+            id +
+            '?idUser=' +
+            user._id
           )
           .then((response) => {
             toast.success('Đã gửi yêu cầu kết bạn');
@@ -141,10 +164,10 @@ const ProfilePage: React.FC = () => {
         axios
           .post(
             'http://localhost:8000/approve-makefriend/' +
-              user._id +
-              '?idUser=' +
-              id +
-              '&accept=1'
+            user._id +
+            '?idUser=' +
+            id +
+            '&accept=1'
           )
           .then((response) => {
             toast.success('Đã chấp nhận yêu cầu kết bạn');
@@ -160,10 +183,10 @@ const ProfilePage: React.FC = () => {
         axios
           .post(
             'http://localhost:8000/approve-makefriend/' +
-              user._id +
-              '?idUser=' +
-              id +
-              '&remove=1'
+            user._id +
+            '?idUser=' +
+            id +
+            '&remove=1'
           )
           .then((response) => {
             toast.success('Đã xoá bạn bè');
@@ -182,7 +205,7 @@ const ProfilePage: React.FC = () => {
   const showMessageFriend = () => {
     navigate({
       search: createSearchParams({
-        chat : id as string
+        chat: id as string
       }).toString()
     })
     setOpen(!open);
@@ -223,8 +246,9 @@ const ProfilePage: React.FC = () => {
       ),
     },
   ];
+
   return (
-    <div className="w-full h-full" style={{position:"relative"}}>
+    <div className="w-full h-full" style={{ position: "relative" }}>
       {open && <SupportBot showDrawer={showDrawer} />}
       <div className="w-full h-auto shadow bg-white rounded-md">
         <div className="max-w-6xl h-full mx-auto bg-white p-2">
@@ -291,34 +315,34 @@ const ProfilePage: React.FC = () => {
                 )}
                 {checkAddBanner && (
                   <div>
-                    <div style={{margin:"auto"}} className="w-[400px] h-[170px] absolute -right-7 top-14  bg-[#8b939f] rounded-md z-50">
+                    <div style={{ margin: "auto" }} className="w-[400px] h-[170px] absolute -right-7 top-14  bg-[#8b939f] rounded-md z-50">
                       <form
-                      style={{justifyContent:"space-between",margin:"14px 0px 0px 48px"}}
+                        style={{ justifyContent: "space-between", margin: "14px 0px 0px 48px" }}
                         onSubmit={handelUpdateBanner}
                         className=""
                       >
                         <span style={{}} className="text-white font-bold text-xl c">Upload photos</span>
-                        <div style={{width:"50px"}}>
-                          
-                        <input
-                          style={{padding:"20px 0px"}}
-                          onChange={(event: any) => handleFileChange(event)}
-                          type="file"
-                          name=""
-                          id="updateBanner"
-                          
+                        <div style={{ width: "50px" }}>
 
-                        />
-                        <button
-                          type="submit"
-                          className="w-[80px] h-[35px] bg-green-500"
-                        >
-                          submit
-                        </button>
+                          <input
+                            style={{ padding: "20px 0px" }}
+                            onChange={(event: any) => handleFileChange(event)}
+                            type="file"
+                            name=""
+                            id="updateBanner"
+
+
+                          />
+                          <button
+                            type="submit"
+                            className="w-[80px] h-[35px] bg-green-500"
+                          >
+                            submit
+                          </button>
                         </div>
-                        
+
                       </form>
-                      
+
                     </div>
                   </div>
                 )}
@@ -347,17 +371,25 @@ const ProfilePage: React.FC = () => {
               )}
             </div>
             <div className="mt-1 flex items-center justify-between">
-              <div className="flex mb-2 items-center space-x-2">
-                <button className="py-3 px-2 hover:bg-gray-100 rounded-md font-semibold focus:outline-none">
-                  Bài viết
+              <div className="flex space-x-8">
+                <button
+                  onClick={() => setSelectedTab('posts')}
+                  className={`text-lg font-semibold ${selectedTab === 'posts' ? 'text-blue-600' : 'text-gray-600'}`}
+                >
+                  Posts 
                 </button>
-                <button className="py-3 px-2 hover:bg-gray-100 rounded-md font-semibold focus:outline-none">
-                  Bạn bè
+                <button
+                  onClick={() => setSelectedTab('friends')}
+                  className={`text-lg font-semibold ${selectedTab === 'friends' ? 'text-blue-600' : 'text-gray-600'}`}
+                >
+                  Friends 
                 </button>
-                <button className="py-3 px-2 hover:bg-gray-100 rounded-md font-semibold focus:outline-none">
-                  Bộ sưu tập
+                <button
+                  onClick={() => setSelectedTab('gallery')}
+                  className={`text-lg font-semibold ${selectedTab === 'gallery' ? 'text-blue-600' : 'text-gray-600'}`}
+                >
+                  Albums 
                 </button>
-
               </div>
               {id == user._id ? (
                 <div className="flex items-center space-x-2">
@@ -369,7 +401,7 @@ const ProfilePage: React.FC = () => {
                   >
                     <i className="fas fa-plus-circle  mr-2"></i>Thêm tiểu sử
                   </button>
-                  
+
                   <button className="px-3 py-1.5 rounded-md bg-gray-100 hover:bg-gray-200 font-semibold focus:outline-none">
                     <i className="fas fa-ellipsis-h"></i>
                   </button>
@@ -426,6 +458,7 @@ const ProfilePage: React.FC = () => {
 
 
       {/* phần dưới */}
+      {selectedTab === 'posts' &&
       <div className="max-w-6xl h-full mx-auto my-3">
         <div className="grid grid-cols-5 gap-4">
           <div className="col-span-2">
@@ -575,17 +608,15 @@ const ProfilePage: React.FC = () => {
               </div>
               <div className="flex space-x-3 text-gray-500 mt-1 -mb-1">
                 <button
-                  className={`font-semibold flex-1 h-8 focus:outline-none justify-center space-x-2 hover:bg-gray-100 rounded-md ${
-                    postsView === 'listView' ? 'bg-gray-200' : undefined
-                  }`}
+                  className={`font-semibold flex-1 h-8 focus:outline-none justify-center space-x-2 hover:bg-gray-100 rounded-md ${postsView === 'listView' ? 'bg-gray-200' : undefined
+                    }`}
                   onClick={() => setPostsView('listView')}
                 >
                   <i className="fas fa-bars mr-2"></i>List View
                 </button>
                 <button
-                  className={`font-semibold flex-1 h-8 focus:outline-none justify-center space-x-2 hover:bg-gray-100 rounded-md  ${
-                    postsView === 'gridView' ? 'bg-gray-200' : undefined
-                  }`}
+                  className={`font-semibold flex-1 h-8 focus:outline-none justify-center space-x-2 hover:bg-gray-100 rounded-md  ${postsView === 'gridView' ? 'bg-gray-200' : undefined
+                    }`}
                   onClick={() => setPostsView('gridView')}
                 >
 
@@ -596,14 +627,49 @@ const ProfilePage: React.FC = () => {
 
             {/* user posts */}
             <PostContainer postsView={postsView}
-           
+
             />
-            
+
           </div>
         </div>
       </div>
+      }
       {/* After bio content */}
+      {selectedTab === 'friends' &&
+        <div className="max-w-6xl h-full mx-auto my-3">
+          <PrevFriend />
+        </div>
+      }
+
+      {/* Bộ sưu tập */}
+      {selectedTab === 'gallery' && (
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr",
+          width: "70%",
+          margin: "auto",
+          marginTop: "40px",
+          background: "#FFFFFF",
+          boxShadow: "0 1px 2px 0 rgba(60, 64, 67, .102), 0 2px 6px 2px rgba(60, 64, 67, .149)",
+          borderRadius: "20px"
+
+        }}
+          className="">
+
+          {filllterrr.map((itemss) => {
+            return (
+              <div style={{ marginLeft: "30px" }}>
+                <img style={{ borderRadius: "10px", marginTop: "30px" }} src={itemss.image} alt="" />
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+
     </div>
+
+
   );
 };
 
