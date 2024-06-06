@@ -11,11 +11,24 @@ const addressSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
-  phone: {
+  where: {
     type: String,
     required: true,
   },
   address: {
+    type: String,
+    required: true,
+  },
+  yearold: {
+    type: Number,
+    required: true,
+  },
+  sex: {
+    type: String,
+    enum: ['male', 'female', 'other'],
+    required: true,
+  },
+  workplace: {
     type: String,
     required: true,
   },
