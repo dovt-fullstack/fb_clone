@@ -534,23 +534,23 @@ return (
     </div>
 
     {openIntro && (
-        <div style={{ width: "40%", margin: 'auto', background: 'rgb(21, 137, 76)', padding: "30px 0px" }}>
+        <div style={{ width: "40%", margin: 'auto', background: 'rgb(21, 137, 76)', padding: "30px 0px",borderRadius:"10px"}}>
           <h1 style={{ textAlign: 'center', background: "#778899", fontWeight: '700', fontSize: "20px" }}>Update Intro User</h1>
           <form onSubmit={handleSubmit} style={{ textAlign: 'center' }}>
             <div style={{ margin: "15px 0px", display: 'flex', gap: '15px', justifyContent: "center", alignItems: "center" }}>
-              <label style={{ color: "#FFFFFF", fontWeight: '600', fontSize: "18px" }} htmlFor="">Work at</label>
+              <label style={{ color: "#FFFFFF", fontWeight: '600', fontSize: "18px" }} htmlFor="">Work at :</label>
               <input style={{ borderRadius: "8px", padding: "10px 80px" }} type="text" name="workplace" value={updateIntro.workplace} onChange={handleInputChange} />
             </div>
             <div style={{ margin: "15px 0px", display: 'flex', gap: '15px', justifyContent: "center", alignItems: "center" }}>
-              <label style={{ color: "#FFFFFF", fontWeight: '600', fontSize: "18px" }} htmlFor="">Year old</label>
+              <label style={{ color: "#FFFFFF", fontWeight: '600', fontSize: "18px" }} htmlFor="">Year old :</label>
               <input style={{ borderRadius: "8px", padding: "10px 80px" }} type="number" name="yearold" value={updateIntro.yearold} onChange={handleInputChange} />
             </div>
             <div style={{ margin: "15px 0px", display: 'flex', gap: '15px', justifyContent: "center", alignItems: "center" }}>
-              <label style={{ color: "#FFFFFF", fontWeight: '600', fontSize: "18px" }} htmlFor="">Where</label>
+              <label style={{ color: "#FFFFFF", fontWeight: '600', fontSize: "18px" }} htmlFor="">Where :</label>
               <input style={{ borderRadius: "8px", padding: "10px 80px" }} type="text" name="where" value={updateIntro.where} onChange={handleInputChange} />
             </div>
             <div style={{ margin: "15px 0px", display: 'flex', gap: '15px', justifyContent: "center", alignItems: "center" }}>
-              <label style={{ color: "#FFFFFF", fontWeight: '600', fontSize: "18px" }} htmlFor="">From</label>
+              <label style={{ color: "#FFFFFF", fontWeight: '600', fontSize: "18px" }} htmlFor="">From :</label>
               <input style={{ borderRadius: "8px", padding: "10px 80px" }} type="text" name="address" value={updateIntro.address} onChange={handleInputChange} />
             </div>
             <div style={{ margin: "15px 0px", display: 'flex', gap: '15px', justifyContent: "center", alignItems: "center" }}>
