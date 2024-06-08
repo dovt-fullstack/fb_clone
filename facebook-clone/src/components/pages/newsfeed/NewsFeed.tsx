@@ -71,15 +71,15 @@ const NewsFeed: React.FC = () => {
   //     fetchUserPosts();
   //   }
   // }, [user]); // Sử dụng user._id làm phần tử phụ thuộc để gọi API mỗi khi user thay đổi
-
-  useEffect(() => {
-    const fetchDataFirend = async () => {
+  const fetchDataFirend = async () => {
       const { data } = await axios.get(
         'http://localhost:8000/api/get-all-post/by-user/' + user._id
       );
       console.log("huytnhes ",data);
       setUserPosts(data);
     };
+  useEffect(() => {
+
     fetchDataFirend();
   }, [user._id, countLike]);
   const fillter = userPosts.filter(items => items.status === "0")
@@ -167,6 +167,7 @@ console.log("contac",concatOk)
           form.resetFields();
           setDataFile(null);
           handelGetCommentThisPost(dataPageQuery);
+          fetchDataFirend();
         })
         .catch((error: any) => {
           console.log('Error:', error);
@@ -247,7 +248,7 @@ console.log("contac",concatOk)
     }
   };
   const editCommentThisPost = (id: any, idPost: any) => {
-    
+
     axios
       .get('http://localhost:8000/api/post/get-id-comments/' + id)
       .then((ok: any) => {
@@ -262,7 +263,7 @@ console.log("contac",concatOk)
         console.log(error);
       });
     // axios.get('');
-    
+
   };
 
   const getDataLikeTymThisPost = (id: any, action: any) => {

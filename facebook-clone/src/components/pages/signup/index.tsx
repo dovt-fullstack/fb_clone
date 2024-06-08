@@ -28,7 +28,11 @@ const RegisterPage: React.FC = () => {
             password: '',
             name: '',
           }}
-          onSubmit={async (values) => {
+            onSubmit={async (values) => {
+              if (values.cf_password !== values.password) {
+                toast.error("Invalid password")
+                return;
+            }
             const data = {
               password: values.password,
               username: values.name,
@@ -90,7 +94,7 @@ const RegisterPage: React.FC = () => {
               >
                 Register
               </Button>
-              
+
             </form>
           )}
         </Formik>
