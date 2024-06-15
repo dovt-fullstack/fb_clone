@@ -207,7 +207,7 @@ const Post: React.FC<IProps> = (props) => {
           image: dataFile || '',
         })
         .then((ok: any) => {
-          toast.success(' đã sửa bình luận');
+          toast.success('Edited comment');
           form.resetFields();
           setDataFile(null);
           handelGetCommentThisPost(dataPageQuery);
@@ -667,7 +667,7 @@ const Post: React.FC<IProps> = (props) => {
                                 placeholder={
                                   isEdit
                                     ? dataIdComment.comment
-                                    : 'Nhập bình luận của bạn !'
+                                    : 'Enter your comment !'
                                 }
                               />
                             </Form.Item>
@@ -677,7 +677,7 @@ const Post: React.FC<IProps> = (props) => {
                               htmlFor="enterFile"
                               className="font-bold text-lg underline cursor-pointer"
                             >
-                              Chọn ảnh
+                              Select photo
                             </label>
                             <input
                               onChange={(event) => handleFileChange(event)}

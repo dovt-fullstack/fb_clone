@@ -194,7 +194,7 @@ const Navbar: React.FC = () => {
 
             <div className='flex cursor-pointer mt-5 border-b border-[#ccc] gap-5 items-center ml-5 mb-3'>
               <Link to={'/change-pass'} className="text-lg text-white font-bold">
-                Đổi mật khẩu
+              Change Password
               </Link>
             </div>
             <div className="flex cursor-pointer mt-5 border-b border-[#ccc] gap-5 items-center ml-5 mb-3">
@@ -217,7 +217,7 @@ const Navbar: React.FC = () => {
               </div>
 
               <p onClick={logOut} className="text-lg text-white font-bold">
-                Đăng xuất
+              Log out
               </p>
 
             </div>
@@ -351,7 +351,7 @@ const Navbar: React.FC = () => {
         </div>
         {notificatio ?
           <div style={{ width: "300px", height: "300px", borderRadius: "10px", background: "#FFFFFF", position: "absolute", margin: "56px -1px 0px 0px", right: "0", boxShadow: '0 1px 2px 0 rgba(60, 64, 67, .102), 0 2px 6px 2px rgba(60, 64, 67, .149)' }}>
-            <span style={{ fontWeight: "600", padding: "10px" }}>Thông báo</span>
+            <span style={{ fontWeight: "600", padding: "10px" }}>Notification</span>
           </div> : ""
         }
       </div>

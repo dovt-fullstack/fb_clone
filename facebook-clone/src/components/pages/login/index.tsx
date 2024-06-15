@@ -32,7 +32,7 @@ const LoginPage: React.FC = () => {
               if (data.error) {
                 return toast.error(data.error.data.message, {});
               } else {
-                toast.success('Đăng nhập thành công');
+                toast.success('Logged in successfully');
                 navigate('/');
               }
             });

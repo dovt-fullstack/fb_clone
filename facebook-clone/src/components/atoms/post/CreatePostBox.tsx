@@ -160,7 +160,7 @@ const CreatePostBox: React.FC = () => {
                     <Form.Item
                       style={{ width: "800px" }}
                       name="description"
-                      label="Bạn đang nghĩ gì "
+                      label="What are you thinking "
                       rules={[
                         {
                           required: true,

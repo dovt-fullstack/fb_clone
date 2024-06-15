@@ -138,7 +138,7 @@ export const userController = {
       }
       const isMatch = await bcrypt.compare(password, findUser.password);
       if (!isMatch) {
-        return res.status(400).json({ message: 'Tài khoản hoặc Mật khẩu không khớp' });
+        return res.status(400).json({ message: 'Account or Password do not match' });
       }
 
       const token = generateToken({

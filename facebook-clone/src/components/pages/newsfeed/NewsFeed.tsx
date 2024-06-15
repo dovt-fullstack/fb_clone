@@ -46,13 +46,17 @@ const NewsFeed: React.FC = () => {
     comment: '',
     image: '',
   });
+  const [iconsPost, setIconsPost] = useState(false)
+  const handelCheckActionPost = (id: string) => {
+    setIconsPost(!iconsPost);
+  };
 
   const [userPosts, setUserPosts] = useState<any[]>([]);
 
 
   const [openPostId, setOpenPostId] = useState(null);
 
-  const toggleCommentBox = (postId:any) => {
+  const toggleCommentBox = (postId: any) => {
     setOpenPostId(prevPostId => (prevPostId === postId ? null : postId));
   };
 
@@ -72,12 +76,12 @@ const NewsFeed: React.FC = () => {
   //   }
   // }, [user]); // Sử dụng user._id làm phần tử phụ thuộc để gọi API mỗi khi user thay đổi
   const fetchDataFirend = async () => {
-      const { data } = await axios.get(
-        'http://localhost:8000/api/get-all-post/by-user/' + user._id
-      );
-      console.log("huytnhes ",data);
-      setUserPosts(data);
-    };
+    const { data } = await axios.get(
+      'http://localhost:8000/api/get-all-post/by-user/' + user._id
+    );
+    console.log("huytnhes ", data);
+    setUserPosts(data);
+  };
   useEffect(() => {
 
     fetchDataFirend();
@@ -87,7 +91,7 @@ const NewsFeed: React.FC = () => {
 
 
   const concatOk = fillter.concat(getPostFriend)
-console.log("contac",concatOk)
+  console.log("contac", concatOk)
 
   const handeopen = () => {
     setOpen(!open)
@@ -111,7 +115,7 @@ console.log("contac",concatOk)
       const { data } = await axios.get(
         'http://localhost:8000/api/post/get-post-friend/' + user._id
       );
-      console.log("huytnhes ",data);
+      console.log("huytnhes ", data);
       setGetPostFriend(data);
     };
     fetchDataFirend();
@@ -180,7 +184,7 @@ console.log("contac",concatOk)
           image: dataFile || '',
         })
         .then((ok: any) => {
-          toast.success(' đã sửa bình luận');
+          toast.success('Edited comment');
           form.resetFields();
           setDataFile(null);
           handelGetCommentThisPost(dataPageQuery);
@@ -426,6 +430,7 @@ console.log("contac",concatOk)
               key={post._id}
               className="w-full mt-10 relative shadow h-auto bg-white rounded-md"
             >
+
               <div className="flex items-center space-x-2 p-2.5 px-4">
                 <div className="w-10 h-10">
                   <img
@@ -443,12 +448,23 @@ console.log("contac",concatOk)
                     {post.status == 1 && 'deleted'}
                   </span>
                 </div>
-                <div className="w-8 h-8">
-                  <button className="w-full h-full hover:bg-gray-100 rounded-full text-gray-400 focus:outline-none">
+                <div
+                  className="w-8 h-8">
+                  <button
+                    onClick={() => handelCheckActionPost(post._id)}
+
+                    className="w-full h-full hover:bg-gray-100 rounded-full text-gray-400 focus:outline-none">
                     <i className="fas fa-ellipsis-h"></i>
                   </button>
                 </div>
               </div>
+              {iconsPost ? <div className="absolute right-5 w-[200px]  bg-gray-400 top-12 rounded-md shadow-mdh-[120px]"><div>
+                <p className="border-b border-[#ccc] pb-4 text-white font-semibold text-md pl-5 pt-3 cursor-pointer hover:bg-gray-600">Sửa bài post</p>
+                <p className="border-b border-[#ccc] pb-4 text-white font-semibold text-md pl-5 pt-3 cursor-pointer hover:bg-gray-600">Xoá bài post</p>
+              </div>
+              </div> : ""}
+
+
               {post.name ? (
                 <div className="mb-1">
                   <p className="text-gray-700 max-h-10 truncate px-3 text-sm">
@@ -525,18 +541,27 @@ console.log("contac",concatOk)
                       className="flex-1 flex items-center h-8 focus:outline-none focus:bg-gray-200 justify-center space-x-2 hover:bg-gray-100 rounded-md"
                     >
                       <div>
-                        <i
-                          className={`fas fa-thumbs-up ${post.like.includes(user._id) ||
-                            post.tym.includes(user._id)
-                            ? 'text-blue-500'
-                            : ''
-                            }`}
-                        ></i>
+
+                        {post.tym.includes(user._id) ?
+                          <div className='flex-1 flex items-center h-8 focus:outline-none focus:bg-gray-200 justify-center space-x-2 hover:bg-gray-100 rounded-md'>
+
+                            <img style={{ width: "22px" }} src={tymIcons} alt="" />
+                            <p className="font-semibold">Tym</p>
+                          </div> :
+
+                          <div className='flex-1 flex items-center h-8 focus:outline-none focus:bg-gray-200 justify-center space-x-2 hover:bg-gray-100 rounded-md'>
+                            <i className={`fas fa-thumbs-up ${post.like.includes(user._id)
+                              ? 'text-blue-500'
+                              : ''
+                              }`}></i>
+                            <div>
+
+                              <p className="font-semibold">Like</p>
+                            </div>
+                          </div>}
+
                       </div>
-                      <div>
-                        {/* đây này */}
-                        <p className="font-semibold">Like</p>
-                      </div>
+
                     </button>
                   </Popover>
 
@@ -567,103 +592,113 @@ console.log("contac",concatOk)
 
 
                 {openPostId === post._id && (
-  <div>
-    {dataCommentPost?.map((itm) => (
-      <div key={itm._id} className="overflow-y-auto border-b border-[#ccc] pb-5">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex mt-4 items-center gap-5">
-              <div className="w-10 h-10">
-                <img
-                  onClick={() => navigate('/profile/' + itm.idUser._id)}
-                  src={itm.idUser.avatar}
-                  className="w-full cursor-pointer h-full rounded-full"
-                  alt="dp"
-                />
-              </div>
-              <p className="font-bold text-md">{itm.idUser.username}</p>
-            </div>
-            <div className="flex items-center gap-5">
-              <div>
-                <p>{itm.comment}</p>
-                {itm.image && <img className="w-[80px] pt-3 rounded-md" src={itm.image} alt="" />}
-              </div>
-            </div>
-          </div>
-          <div>
-            {itm.idUser._id === user._id && (
-              <div className="space-x-5">
-                <Button onClick={() => removeCommentThisPost(itm._id, itm.idPost)} className="bg-red-400 text-white">Xoá</Button>
-                <Button
-                  onClick={() => {
-                    navigate({
-                      search: createSearchParams({
-                        postId: itm.idPost,
-                        isEdit: itm._id,
-                      }).toString(),
-                    });
-                    editCommentThisPost(itm._id, itm.idPost);
-                  }}
-                  className="bg-blue-400 text-white"
-                >
-                  Chỉnh sửa
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    ))}
-    <div className="z-50 bg-white w-[100%] shadow-2xl bottom-0">
-      <Form
-        name="basic"
-        form={form}
-        initialValues={{ remember: true }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
-      >
-        <div>
-          <Form.Item
-            name="username"
-            rules={[{ required: true, message: 'Please input your comment!' }]}
-          >
-            <Input.TextArea className="w-full font-bold text-black" placeholder={isEdit ? dataIdComment.comment : 'Nhập bình luận của bạn !'} />
-          </Form.Item>
-          <div>
-            <label htmlFor="enterFile" className="font-bold text-lg underline cursor-pointer">Chọn ảnh</label>
-            <input
-              onChange={(event) => handleFileChange(event)}
-              type="file"
-              className="hidden opacity-0"
-              id="enterFile"
-              name=""
-            />
-            {dataFile && <img className="w-[80px] mb-5" src={dataFile} alt="" />}
-          </div>
-          <div className="flex justify-between">
-            <Button type="primary" htmlType="submit" className="mb-2 mx-5">{isEdit ? 'Edit' : 'Submit'}</Button>
-            {isEdit && (
-              <Button
-                onClick={() => {
-                  navigate({
-                    search: createSearchParams({ postId: dataPageQuery, isEdit: '' }).toString(),
-                  });
-                  setDataFile(null);
-                  setDataIdComment({ comment: '', image: '' });
-                }}
-                htmlType="button"
-                className="mb-2 mr-5 bg-red-500 text-white font-bold"
-              >
-                {isEdit ? 'X' : ''}
-              </Button>
-            )}
-          </div>
-        </div>
-      </Form>
-    </div>
-  </div>
-)}
+                  <div>
+                    {dataCommentPost?.map((itm) => (
+                      <div key={itm._id} className="overflow-y-auto border-b border-[#ccc] pb-1">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="flex mt-4 items-center gap-5">
+                              <div className="w-10 h-10">
+                                <img
+                                  onClick={() => navigate('/profile/' + itm.idUser._id)}
+                                  src={itm.idUser.avatar}
+                                  className="w-full cursor-pointer h-full rounded-full"
+                                  alt="dp"
+                                />
+                              </div>
+                              <p className={"font-bold text-md "}>{itm.idUser.username}</p>
+                            </div>
+
+                            <div className="flex items-center gap-5">
+                              <div>
+                                <p>{itm.comment}</p>
+                                {itm.image && <img className="w-[80px] pt-3 rounded-md" src={itm.image} alt="" />}
+                              </div>
+
+                            </div>
+                          </div>
+
+                          <div>
+                            {itm.idUser._id === user._id && (
+                              <div className="space-x-5">
+                                <Button onClick={() => removeCommentThisPost(itm._id, itm.idPost)} className="bg-red-400 text-white">Xoá</Button>
+                                <Button
+                                  onClick={() => {
+                                    navigate({
+                                      search: createSearchParams({
+                                        postId: itm.idPost,
+                                        isEdit: itm._id,
+                                      }).toString(),
+                                    });
+                                    editCommentThisPost(itm._id, itm.idPost);
+                                  }}
+                                  className="bg-blue-400 text-white"
+                                >
+                                  Chỉnh sửa
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+
+                        </div>
+                        {isEdit === itm._id ? <div style={{ background: "#b8b8b8", width: "100%", height: "10px", borderRadius: "10px", marginTop: "10px" }}></div> : ""}
+
+                      </div>
+
+                    ))}
+
+
+
+                    <div className="z-50 bg-white w-[100%] shadow-2xl bottom-0">
+                      <Form
+                        name="basic"
+                        form={form}
+                        initialValues={{ remember: true }}
+                        onFinish={onFinish}
+                        onFinishFailed={onFinishFailed}
+                        autoComplete="off"
+                      >
+                        <div>
+                          <Form.Item
+                            name="username"
+                            rules={[{ required: true, message: 'Please input your comment!' }]}
+                          >
+                            <Input.TextArea className="w-full font-bold text-black" placeholder={isEdit ? dataIdComment.comment : 'Nhập bình luận của bạn !'} />
+                          </Form.Item>
+                          <div>
+                            <label htmlFor="enterFile" className="font-bold text-lg underline cursor-pointer">Select photo</label>
+                            <input
+                              onChange={(event) => handleFileChange(event)}
+                              type="file"
+                              className="hidden opacity-0"
+                              id="enterFile"
+                              name=""
+                            />
+                            {dataFile && <img className="w-[80px] mb-5" src={dataFile} alt="" />}
+                          </div>
+                          <div className="flex justify-between">
+                            <Button type="primary" htmlType="submit" className="mb-2 mx-5">{isEdit ? 'Edit' : 'Submit'}</Button>
+                            {isEdit && (
+                              <Button
+                                onClick={() => {
+                                  navigate({
+                                    search: createSearchParams({ postId: dataPageQuery, isEdit: '' }).toString(),
+                                  });
+                                  setDataFile(null);
+                                  setDataIdComment({ comment: '', image: '' });
+                                }}
+                                htmlType="button"
+                                className="mb-2 mr-5 bg-red-500 text-white font-bold"
+                              >
+                                {isEdit ? 'X' : ''}
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </Form>
+                    </div>
+                  </div>
+                )}
 
 
 

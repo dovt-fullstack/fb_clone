@@ -43,7 +43,7 @@ const RegisterPage: React.FC = () => {
               if (data.error) {
                 return toast.error(data.error.data.message, {});
               } else {
-                toast.success('Đăng kí thành công');
+                toast.success('Sign Up Success');
                 navigate('/login');
               }
             });
