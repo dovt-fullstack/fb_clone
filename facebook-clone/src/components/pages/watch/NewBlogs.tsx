@@ -73,6 +73,7 @@ console.log(paginatedData && paginatedData.length,'paginatedData && paginatedDat
                   }
                 >
                   <Meta
+                  style={{padding:"0px 0px 20px 0px"}}
                     className="custom-title  mb-5"
                     avatar={<Avatar src="/logo_icon.png" />}
                     title={item.name}
@@ -83,7 +84,7 @@ console.log(paginatedData && paginatedData.length,'paginatedData && paginatedDat
                     }
                   />
                   <Link to={'#'} className="text-left ">
-                    <Button style={{background:"rgb(0, 128, 0)"}} className="mt-[25px] hover:!text-[#d3b673] hover:bg-transparent hover:!border-[#d3b673]  text-[#fff] bg-[#d3b673]">
+                    <Button style={{background:"rgb(0, 128, 0)",bottom:"0",position:'absolute'}} className="mt-[25px] hover:!text-[#d3b673] hover:bg-transparent hover:!border-[#d3b673]  text-[#fff] bg-[#d3b673]">
                       Xem thêm 
                     </Button>
                   </Link>

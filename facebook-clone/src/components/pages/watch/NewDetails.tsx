@@ -172,7 +172,7 @@ const NewDetails = () => {
                       onClick={() => setCheckIndexEdit(index)}
                       className="bg-blue-500 text-white font-medium"
                     >
-                      Sửa
+                      Update
                     </Button>
                     <Button
                       onClick={() => {
@@ -196,7 +196,7 @@ const NewDetails = () => {
                       }}
                       className="bg-red-500 text-white font-medium"
                     >
-                      xoá
+                      Delete
                     </Button>
                   </>
                 ) : (

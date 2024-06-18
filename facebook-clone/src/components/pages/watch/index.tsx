@@ -404,8 +404,9 @@ const WatchPage: React.FC = () => {
       </Drawer>
       {/* blogs */}
       <Drawer
-        title={'Thêm bài viết mới'}
+        title={'Article name'}
         width={776}
+       
         destroyOnClose
         onClose={onCloseBlogs}
         getContainer={false}
@@ -420,15 +421,14 @@ const WatchPage: React.FC = () => {
         >
           <Form.Item
             className="dark:text-white"
-            label="Ảnh bài viết"
+            label="Article photo"
             name="images"
-            // rules={[{ required: true, message: 'Không được bỏ trống!' }]}
           >
             <UploadFiles fileList={fileList} setFileList={setFileList} />
           </Form.Item>
           <Form.Item
             className="dark:text-white"
-            label="Tên bài viết"
+            label="Article name"
             name="name"
             rules={[
               { required: true, message: 'Tên bài viết không được bỏ trống!' },
@@ -444,17 +444,17 @@ const WatchPage: React.FC = () => {
               },
             ]}
           >
-            <Input size="large" placeholder="Tên bài viết" />
+            <Input maxLength={40} size="large" placeholder="Tên bài viết" />
           </Form.Item>
           <div className="grid grid-cols-[1fr,1fr] gap-5">
             <Form.Item
               name="category"
-              label="Tên danh mục bài viểt"
+              label="Article category name"
               rules={[
                 { required: true, message: 'Danh mục bài viết là bắt buộc' },
               ]}
             >
-              <Select placeholder="Danh mục bài viết" size="large">
+              <Select placeholder="NEWS CATEGORY" size="large">
                 {dataCategory?.docs?.map((category: any) => (
                   <Option value={category._id} key={category._id}>
                     <span className="text-sm capitalize">{category.name}</span>
@@ -464,12 +464,12 @@ const WatchPage: React.FC = () => {
             </Form.Item>
             <Form.Item
               name="is_active"
-              label="Trạng thái bài viết"
+              label="Post status"
               rules={[
                 { required: true, message: 'Trạng thái bài viết là bắt buộc' },
               ]}
             >
-              <Select placeholder="Trạng thái bài viết" size="large">
+              <Select placeholder="Post status" size="large">
                 <Option value={true}>Công khai</Option>
                 <Option value={false}>Riêng tư</Option>
               </Select>
@@ -477,7 +477,7 @@ const WatchPage: React.FC = () => {
           </div>
           <Form.Item
             className="dark:text-white mb-17"
-            label="Mô tả bài viết"
+            label="Article description"
             name="description"
             rules={[{ required: true, message: 'Không được bỏ trống!' }]}
           >
@@ -498,12 +498,15 @@ const WatchPage: React.FC = () => {
             />
           </Form.Item>
           <Form.Item>
-            <Button className="!w-full mt-5 py-2" htmlType="submit">
-              Thêm bài viết mới
+            <Button
+              style={{ width: '30%', display: 'flex', margin: "auto", justifyContent: "center", background: 'rgb(21, 137, 76)', alignItems: "center" }}
+              className="mt-5 py-2" htmlType="submit">
+              Add new article
             </Button>
           </Form.Item>
         </Form>
       </Drawer>
+
       {/* my-category */}
       <Drawer
         title={'danh mục bạn đã chia sẻ'}
@@ -539,10 +542,10 @@ const WatchPage: React.FC = () => {
         <div>
           <div className="flex justify-end space-x-5 mt-5">
             {/* <Button onClick={onOpen}>Tạo chuyên mục</Button> */}
-            <Button onClick={() => setOpenBlog(true)}>Tạo tin tức</Button>
-            <Button onClick={() => openMyCate()}>Danh mục của bạn</Button>
+            <Button onClick={() => setOpenBlog(true)}>Create news</Button>
+            {/* <Button onClick={() => openMyCate()}>Your directory</Button> */}
             <Button className="" onClick={openNewBlog}>
-              Tin tức của bạn
+              Your news
             </Button>
           </div>
           <p

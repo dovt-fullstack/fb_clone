@@ -618,7 +618,7 @@ const Post: React.FC<IProps> = (props) => {
                                       }
                                       className="bg-red-400 text-white"
                                     >
-                                      Xoá
+                                      Delete
                                     </Button>
                                     <Button
                                       onClick={() => {
@@ -632,7 +632,7 @@ const Post: React.FC<IProps> = (props) => {
                                       }}
                                       className="bg-blue-400 text-white"
                                     >
-                                      Chỉnh sửa
+                                      Update
                                     </Button>
                                   </div>
                                 )}

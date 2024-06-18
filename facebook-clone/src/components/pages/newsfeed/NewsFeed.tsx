@@ -621,7 +621,7 @@ const NewsFeed: React.FC = () => {
                           <div>
                             {itm.idUser._id === user._id && (
                               <div className="space-x-5">
-                                <Button onClick={() => removeCommentThisPost(itm._id, itm.idPost)} className="bg-red-400 text-white">Xoá</Button>
+                                <Button onClick={() => removeCommentThisPost(itm._id, itm.idPost)} className="bg-red-400 text-white">Delete</Button>
                                 <Button
                                   onClick={() => {
                                     navigate({

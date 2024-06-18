@@ -137,7 +137,7 @@ const MyData = () => {
       <Navbar />
       <Drawer
         title={'sửa bài viết mới'}
-        width={'100%'}
+        width={'50%'}
         destroyOnClose
         getContainer={false}
         onClose={onClose}
@@ -162,7 +162,7 @@ const MyData = () => {
           )}
           <Form.Item
             className="dark:text-white"
-            label="Ảnh bài viết"
+            label="Article photo"
             name="images"
             // rules={[{ required: true, message: 'Không được bỏ trống!' }]}
           >
@@ -191,7 +191,7 @@ const MyData = () => {
           <div className="grid grid-cols-[1fr,1fr] gap-5">
             <Form.Item
               name="category"
-              label="Tên danh mục bài viểt"
+              label="Article category name"
               rules={[
                 { required: true, message: 'Danh mục bài viết là bắt buộc' },
               ]}
@@ -206,12 +206,12 @@ const MyData = () => {
             </Form.Item>
             <Form.Item
               name="is_active"
-              label="Trạng thái bài viết"
+              label="Post status"
               rules={[
                 { required: true, message: 'Trạng thái bài viết là bắt buộc' },
               ]}
             >
-              <Select placeholder="Trạng thái bài viết" size="large">
+              <Select placeholder="Post status" size="large">
                 <Option value={true}>Công khai</Option>
                 <Option value={false}>Riêng tư</Option>
               </Select>
@@ -219,7 +219,7 @@ const MyData = () => {
           </div>
           <Form.Item
             className="dark:text-white mb-17"
-            label="Mô tả bài viết"
+            label="Article description"
             name="description"
             rules={[{ required: true, message: 'Không được bỏ trống!' }]}
           >

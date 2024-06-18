@@ -146,7 +146,7 @@ const Navbar: React.FC = () => {
     <div className="relative">
       {openChat && <SupportBot showDrawer={showDrawerChat} showDrawerChat={showDrawerChat} />}
       <Drawer
-        title="Danh sách tin nhăn"
+        title="Message list"
         placement={'right'}
         width={500}
         onClose={onClose}

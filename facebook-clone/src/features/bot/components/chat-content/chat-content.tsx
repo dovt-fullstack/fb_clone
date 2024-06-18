@@ -112,7 +112,9 @@ export const ChatContent = ({ messages }: ChatContentProps) => {
               }`}
             >
               <span className="text-xs text-gray-200">
-                {new Date(message.createdAt).toLocaleTimeString('en-US', {
+                {new Date(message.createdAt).toLocaleString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
                   hour: '2-digit',
                   minute: '2-digit',
                 })}

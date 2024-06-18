@@ -21,7 +21,7 @@ const CategorySliBar = () => {
         style={{color:'rgb(0, 128, 0)'}}
           className={`category_menu_title sm:text-[25px] text-center lg:text-[28px] `}
         >
-          Danh mục tin tức
+          NEWS CATEGORY
         </div>
         <div className="w-full max-w-[260px] mx-auto mb-[70px]">
           <ul>
@@ -38,7 +38,7 @@ const CategorySliBar = () => {
                       });
                     }}
                   >
-                    {item?.name}
+                    {item?.name} 
                   </p>
                 </li>
               ))}
