@@ -39,7 +39,7 @@ router.delete(
 );
 
 /* thêm người dùng */
-router.post('/users', userController.createUser);
+router.post('/q', userController.createUser);
 //lấy role admin và staff
 router.get('/user-admin-staff-role', userController.getAllAdminAndStaff);
 

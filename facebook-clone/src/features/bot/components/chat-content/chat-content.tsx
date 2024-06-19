@@ -37,9 +37,9 @@ export const ChatContent = ({ messages }: ChatContentProps) => {
       };
       const { data } = await axios.get(
         'http://localhost:8000/get-user-chat-message?senderId=' +
-          userData._id +
-          '&receiverId=' +
-          dataPageQuery,
+        userData._id +
+        '&receiverId=' +
+        dataPageQuery,
         config
       );
       console.log(data);
@@ -63,16 +63,15 @@ export const ChatContent = ({ messages }: ChatContentProps) => {
         return (
           <div
             key={index}
-            className={`py-2 flex flex-row w-full ${
-              message.senderId._id == userData._id
+            className={`py-2 flex flex-row w-full ${message.senderId._id == userData._id
                 ? 'justify-end'
                 : 'justify-start'
-            }`}
-          >
-            <div
-              className={`${
-                message.senderId._id == userData._id ? 'order-2' : 'order-1'
               }`}
+          >
+
+            <div
+              className={`${message.senderId._id == userData._id ? 'order-2' : 'order-1'
+                }`}
             >
               {/* avata */}
               <div className="relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full">
@@ -105,11 +104,10 @@ export const ChatContent = ({ messages }: ChatContentProps) => {
               </div>
             </div>
             <div
-              className={`px-2 w-fit py-3 flex flex-col bg-[#D3B673] items-start rounded-lg text-white ${
-                message.senderId._id == userData._id
+              className={`px-2 w-fit py-3 flex flex-col bg-[#D3B673] items-start rounded-lg text-white ${message.senderId._id == userData._id
                   ? 'order-1 mr-2'
                   : 'order-2 ml-2'
-              }`}
+                }`}
             >
               <span className="text-xs text-gray-200">
                 {new Date(message.createdAt).toLocaleString('en-US', {

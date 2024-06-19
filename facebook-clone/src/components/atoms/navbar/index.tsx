@@ -280,14 +280,14 @@ const Navbar: React.FC = () => {
             </div>
           </Link>
           <Link to="/marketplace">
-          <div className={`w-24 h-12 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-100 ${pathName === 'marketplace' ? 'bg-white' : ''}`}>
+          <div className={`w-32 h-12 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-100 ${pathName === 'marketplace' ? 'bg-white' : ''}`}>
               <div className=" h-auto relative flex items-center justify-center">
                 <div className="hidden absolute bg-red-500 text-white text-xs font-bold px-1 rounded-lg top-0 right-0">
                   9+
                 </div>
                 <div className={`${pathName === 'marketplace' ? 'text-primary' : 'text-gray-400'}`}>
 
-                  <span style={{ color: "black", fontWeight: "800", width: '50px' }}>Exchange</span>
+                  <span style={{ color: "black", fontWeight: "800", width: '50px'}}>Marketplace</span>
                 </div>
               </div>
             </div>
@@ -303,7 +303,7 @@ const Navbar: React.FC = () => {
                   className={`${pathName === 'watch' ? 'text-primary' : 'text-gray-400'
                     }`}
                 >
-                  <span style={{ color: "black", fontWeight: "800", width: '50px' }}>Forum</span>
+                  <span style={{ color: "black", fontWeight: "800", width: '50px' }}>Watch</span>
                 </div>
               </div>
             </div>
@@ -314,7 +314,7 @@ const Navbar: React.FC = () => {
 
               </div>
               <div className="h-8 flex items-center justify-content">
-                <span style={{ color: "black", fontWeight: "800" }}>Personal page</span>
+                <span style={{ color: "black", fontWeight: "800" }}>Profile</span>
 
               </div>
             </button>

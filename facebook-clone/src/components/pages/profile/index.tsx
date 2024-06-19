@@ -9,10 +9,34 @@ import { Button, Dropdown, MenuProps, message } from 'antd';
 import { toast } from 'react-toastify';
 import { createSearchParams, useNavigate, useParams } from 'react-router-dom';
 import { SupportBot } from '../../../features';
+import { useHoook } from './useHoook';
 const ProfilePage: React.FC = () => {
+  const [dataPrevFriend, setDataPrevFriend] = useState([]);
+const { id } = useParams();
+
+  useEffect(() => {
+    const fetchDataFriend = async () => {
+      const allFriend = await axios.get(
+        'http://localhost:8000/get-all/friendUser/' + id + '?friend=0'
+      );
+      setDataPrevFriend(allFriend.data.data);
+    };
+    fetchDataFriend();
+  }, [id]);
+  console.log("data",dataPrevFriend)
+
+
+
+
+
+
+
+
+
   const [postsView, setPostsView] = useState<TPostView>('listView');
   const { user } = useAppSelector((state: any) => state.persistedReducer.auth);
   const [data, setData] = useState<any>({});
+  console.log("dataaaa",data)
 
   const [dataFile, setDataFile] = useState<any>(null);
   const [checkHover, setCheckHover] = useState(false);
@@ -21,7 +45,8 @@ const ProfilePage: React.FC = () => {
   const [checkOnChangle, setCheckOnChangle] = useState(false);
   const [checkEditDescription, setCheckEditDescription] = useState(false);
   const [open, setOpen] = useState(false);
-  const [selectedTab, setSelectedTab] = useState('posts');
+  const {selectedTab, setSelectedTab} = useHoook()
+  // const [selectedTab, setSelectedTab] = useState('posts');
   const [intro, setIntro] = useState<any[]>([])
   const [openIntro, setOpenIntro] = useState(false)
   const [updateIntro, setUpdateIntro] = useState<{
@@ -41,6 +66,7 @@ const ProfilePage: React.FC = () => {
     workplace: '',
     yearold: 0,
   });
+  
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -62,6 +88,7 @@ const ProfilePage: React.FC = () => {
   };
 
 
+  console.log("9999999",selectedTab)
 
 
 const showDrawer = () => {
@@ -86,6 +113,7 @@ useEffect(() => {
   if (user) {
     fetchUserPosts();
   }
+  
 }, [user]);
 
 useEffect(() => {
@@ -110,7 +138,6 @@ console.log("ok mà ", filllterrr) // Sử dụng user._id làm phần tử ph�
 
 const [valueDescription, setValueDescription] = useState('');
 const navigate = useNavigate();
-const { id } = useParams();
 const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
   const file = event.target.files?.[0];
@@ -123,14 +150,16 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     reader.readAsDataURL(file);
   }
 };
+
+
+const getDataUser = async () => {
+  const dataIdUser = await axios.get(
+    'http://localhost:8000/api/users/' + id
+  );
+  setData(dataIdUser.data.user);
+  console.log("ở đây", dataIdUser.data.user)
+};
 useEffect(() => {
-  const getDataUser = async () => {
-    const dataIdUser = await axios.get(
-      'http://localhost:8000/api/users/' + id
-    );
-    setData(dataIdUser.data.user);
-    console.log("ở đây", dataIdUser.data.user)
-  };
   getDataUser();
 }, [id]);
 
@@ -147,6 +176,8 @@ useEffect(() => {
     setStatusFriend(status.data.status);
   };
   handelGetStatusFriend();
+
+  
 }, [id, user._id]);
 
 
@@ -162,6 +193,7 @@ const handelUpdateBanner = (event: any) => {
     .catch((error) => {
       console.log(error);
     });
+    
 };
 const handelUpdateAvatar = (event: any) => {
   event.preventDefault();
@@ -175,6 +207,7 @@ const handelUpdateAvatar = (event: any) => {
     .catch((error) => {
       console.log(error);
     });
+    
 };
 const handelEditDescription = (event: any) => {
   event.preventDefault();
@@ -190,6 +223,9 @@ const handelEditDescription = (event: any) => {
     .catch((error) => {
       console.log(error);
     });
+
+    getDataUser()
+    
 };
 const actionFriend = (action: any) => {
   console.log(action);
@@ -414,13 +450,13 @@ return (
                   onChange={(e: any) => setValueDescription(e.target.value)}
                   className="border border-[#ccc] h-[32px]  rounded-md pl-3"
                   type="text"
-                  placeholder="enter your description"
+                  placeholder="Enter your description"
                 />
                 <Button
                   className="ml-3 bg-green-500 text-white"
                   htmlType="submit"
                 >
-                  submit
+                  Submit
                 </Button>
               </form>
             )}
@@ -488,7 +524,7 @@ return (
                         Huỷ kết bạn
                       </button>
                       <button className="px-3 py-1.5 rounded-md bg-gray-500 hover:bg-gray-600 text-white font-semibold focus:outline-none">
-                        Bạn bè
+                        Bạn bè 
                       </button>
                     </>
                   )}
@@ -639,7 +675,7 @@ return (
             })}
 
             <div className="mt-10">
-              <PrevFriend />
+              <PrevFriend/>
             </div>
           </div>
           <div className="col-span-3">
@@ -699,12 +735,55 @@ return (
     {/* After bio content */}
     {selectedTab === 'friends' &&
       <div className="max-w-6xl h-full mx-auto my-3">
-        <PrevFriend />
+        <div>
+      <div className="col-span-2">
+        <div className="bg-white rounded-lg p-3 text-sm text-gray-600 shadow">
+          <div className="mb-2 flex justify-between items-center">
+            <div>
+              <p className="font-bold text-xl text-gray-800">Friend</p>
+              <p>{dataPrevFriend?.length} Friend</p>
+            </div>
+            <div>
+              <p onClick={()=>navigate('')} className="text-blue-500 text-lg font-medium">
+              See all friends
+              </p>
+            </div>
+          </div>
+          <div className='grid grid-cols-6 gap-6'>
+            {dataPrevFriend &&
+              dataPrevFriend.slice(0,9).map((items: any, index) => {
+                console.log(items, 'o');
+                return (
+                  <div key={items._id}>
+                    <div onClick={()=>navigate('/profile/' + items._id)} className="mt-3 cursor-pointer">
+                      <img
+                        className="w-[130px] rounded-md h-[130px]"
+                        src={
+                          items.avatar != null && items.avatar != ''
+                            ? items.avatar
+                            : 'https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI='
+                        }
+                        alt=""
+                      />
+                      <p className="pt-2 pl-2 font-medium text-lg">
+                        {items.username}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+              
+          </div>
+        </div>
+      </div>
+    </div>
       </div>
     }
 
     {/* Bộ sưu tập */}
     {selectedTab === 'gallery' && (
+            <div className="h-full mx-auto my-3">
+
       <div style={{
         display: 'grid',
         gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr",
@@ -713,19 +792,23 @@ return (
         marginTop: "40px",
         background: "#FFFFFF",
         boxShadow: "0 1px 2px 0 rgba(60, 64, 67, .102), 0 2px 6px 2px rgba(60, 64, 67, .149)",
-        borderRadius: "20px"
-
+        borderRadius: "20px",
       }}
         className="">
 
         {filllterrr.map((itemss) => {
           return (
-            <div style={{ marginLeft: "30px" }}>
+            <div style={{ margin: "20px" }}>
               <img style={{ borderRadius: "10px", marginTop: "30px" }} src={itemss.image} alt="" />
             </div>
           )
         })}
       </div>
+            </div>
+
+
+
+
     )}
 
 

@@ -406,7 +406,7 @@ const WatchPage: React.FC = () => {
       <Drawer
         title={'Article name'}
         width={776}
-       
+
         destroyOnClose
         onClose={onCloseBlogs}
         getContainer={false}

@@ -4,6 +4,7 @@ import { createSearchParams, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useAppSelector } from '../../../store';
 import { SupportBot } from '../../../features';
+import anhbia from './../../../../public//imgg/anhbia.jpg'
 
 const MaketDetails = () => {
   const { id } = useParams();
@@ -30,9 +31,9 @@ const MaketDetails = () => {
   const getIdProductoFouve = async () => {
     const { data } = await axios.get(
       'http://localhost:8000/api/check-product-farvourite/' +
-        userInfo._id +
-        '?idPro=' +
-        id
+      userInfo._id +
+      '?idPro=' +
+      id
     );
     setDataFouve(data.data);
   };
@@ -51,7 +52,8 @@ const MaketDetails = () => {
       <section
         className="breadcrumb-area style2"
         style={{
-          backgroundImage: 'url(https://caycanhnoithat.vn/2021/bn-sp.jpg)',
+          backgroundImage: `url(${anhbia})`,
+
         }}
       >
         <div className="container">
@@ -73,22 +75,24 @@ const MaketDetails = () => {
         </div>
       </section>
 
-      <div className="bg-gray-100">
+      <div className="bg-gray-100 ">
         <div className="container mx-auto p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2">
-              <div className="grid grid-cols-2 gap-4">
-                <img
-                  src={dataIdProduct?.images[0]?.url}
-                  alt="Product Image"
-                  className="rounded-lg w-[396px] h-[396px]"
-                />
-              </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-[150px]">
+
+
+            <div className="ml-[auto] gap-4">
+              <img
+                src={dataIdProduct?.images[0]?.url}
+                alt="Product Image"
+                className="rounded-lg w-[396px] h-[396px]"
+              />
             </div>
+
+
             <div>
               <h2 className="text-xl font-semibold">{dataIdProduct?.name}</h2>
               <p className="text-2xl font-semibold mb-4">
-                {dataIdProduct?.sale?.toLocaleString()} VND
+                {dataIdProduct?.sale === 0 ? "Thỏa Thuận" : ` ${dataIdProduct?.sale?.toLocaleString()} VND `} 
               </p>
               <div className="space-x-5">
                 {dataFouve ? (
@@ -98,18 +102,18 @@ const MaketDetails = () => {
                     }}
                     className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
                   >
-                    Đã thích
+                    Liked 
                   </button>
                 ) : (
                   <button
                     onClick={() => {
-                      if (window.confirm('thêm yêu thích')) {
+                      if (window.confirm('Add favorites')) {
                         axios
                           .get(
                             'http://localhost:8000/api/add-sp-yt/' +
-                              userInfo._id +
-                              '?idPro=' +
-                              id
+                            userInfo._id +
+                            '?idPro=' +
+                            id
                           )
                           .then((response) => {
                             //
@@ -121,7 +125,7 @@ const MaketDetails = () => {
                     }}
                     className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
                   >
-                    Yêu thích
+                    Liked  
                   </button>
                 )}
                 <button
@@ -139,8 +143,9 @@ const MaketDetails = () => {
                   }}
                   className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
                 >
-                  Liên hệ người bán
+                  Contact seller
                 </button>
+
               </div>
               <p className="text-gray-600 mb-4 mt-10">
                 {dataIdProduct?.description}

@@ -27,8 +27,9 @@ import likeIcons from '../../../assets/like.png';
 import tymIcons from '../../../assets/thumbs-up.png';
 const Post: React.FC<IProps> = (props) => {
 
-  
 
+  const [tymlike, setTimlike] = useState(true)
+  console.log("tymlike", tymlike)
   const [queryParameters] = useSearchParams();
   const [open, setOpen] = useState(false);
   const [countLike, setCountLike] = useState(0);
@@ -48,7 +49,11 @@ const Post: React.FC<IProps> = (props) => {
   });
   const [dataFile, setDataFile] = useState<any>(null);
 
+  const [liketym, setLiketym] = useState<any>([])
 
+  const handleTymLike = (id: any) => {
+    setTimlike(!tymlike)
+  }
 
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,14 +120,13 @@ const Post: React.FC<IProps> = (props) => {
   };
 
 
- 
   const getDataLikeTymThisPost = (id: any, action: any) => {
     if (action == '0') {
       axios
         .get('http://localhost:8000/api/post/react-post/' + id + '?status=0')
         .then((res) => {
-          console.log("đw",res.data.data.like);
-         
+
+          setLiketym(res.data.data)
           setDataLike(res.data.data.like);
           setDataTym(res.data.data.tym);
         })
@@ -152,9 +156,9 @@ const Post: React.FC<IProps> = (props) => {
       axios
         .get(
           'http://localhost:8000/api/post/comment-remove/' +
-            id +
-            '?idPost=' +
-            dataPageQuery
+          id +
+          '?idPost=' +
+          dataPageQuery
         )
         .then((ok: any) => {
           console.log('oji post');
@@ -224,9 +228,9 @@ const Post: React.FC<IProps> = (props) => {
       axios
         .get(
           'http://localhost:8000/api/post/like-post/' +
-            dataPageQuery +
-            '?like=1&idUser=' +
-            user._id
+          dataPageQuery +
+          '?like=1&idUser=' +
+          user._id
         )
         .then((ok: any) => {
           console.log('oji post');
@@ -239,9 +243,9 @@ const Post: React.FC<IProps> = (props) => {
       axios
         .get(
           'http://localhost:8000/api/post/like-post/' +
-            dataPageQuery +
-            '?tym=1&idUser=' +
-            user._id
+          dataPageQuery +
+          '?tym=1&idUser=' +
+          user._id
         )
         .then((ok: any) => {
           console.log('oji post');
@@ -301,6 +305,7 @@ const Post: React.FC<IProps> = (props) => {
                     className="w-[80px] rounded-full"
                     alt=""
                   />
+
                   <p className="font-bold text-md">{items.username}</p>
                 </div>
               );
@@ -333,7 +338,7 @@ const Post: React.FC<IProps> = (props) => {
     {
       key: '2',
       label: (
-        <div style={{display:"flex"}}>
+        <div style={{ display: "flex" }}>
           <img src={likeIcons} className="w-[30px]" alt="" />
           <span className="pt-2">{post.like.length + post.tym.length}</span>
         </div>
@@ -362,11 +367,11 @@ const Post: React.FC<IProps> = (props) => {
     {
       key: '3',
       label: (
-        <div style={{display:"flex"}}>
+        <div style={{ display: "flex" }}>
           <img src={tymIcons} className="w-[30px]" alt="" />
           <span className="pt-2">{post.tym.length}</span>
           {/* tym đây */}
-          
+
         </div>
       ),
       children: (
@@ -395,7 +400,7 @@ const Post: React.FC<IProps> = (props) => {
     console.log(key);
   };
   return (
-    <div style={{position:"relative"}} className="w-full relative shadow h-auto bg-white rounded-md">
+    <div style={{ position: "relative" }} className="w-full relative shadow h-auto bg-white rounded-md">
 
       {showPopUp && (
         <div
@@ -416,21 +421,21 @@ const Post: React.FC<IProps> = (props) => {
               }}
               className="border-b border-[#ccc] pb-4 text-white font-semibold text-md pl-5 pt-3 cursor-pointer hover:bg-gray-600"
             >
-              Sửa bài post
+              Edit post
             </p>
             <p
               onClick={() => handelRemovePost(post._id, 1)}
               className="border-b border-[#ccc] pb-4 text-white font-semibold text-md pl-5 pt-3 cursor-pointer hover:bg-gray-600"
             >
-              Xoá bài post
+              Delete the post
             </p>
             {post.status == 1 && (
               <p
                 onClick={() => handelRemovePost(post._id, 2)}
-                
+
                 className="border-b border-[#ccc] pb-4 text-white font-semibold text-md pl-5 pt-3 cursor-pointer hover:bg-gray-600"
               >
-                Khôi phục bài post
+                Restore posts
               </p>
             )}
           </div>
@@ -464,12 +469,12 @@ const Post: React.FC<IProps> = (props) => {
       {post.name ? (
         <div className="mb-1">
           <p className="text-gray-700 max-h-10 truncate px-3 text-sm">
-            {post.name} 
+            {post.name}
           </p>
         </div>
       ) : null}
 
-      { post.image ? (
+      {post.image ? (
         // đây là img 
         <div className="w-full h-76 max-h-100">
           <img
@@ -491,8 +496,10 @@ const Post: React.FC<IProps> = (props) => {
                   postId: post._id,
                   isCheckLike: 'ok',
                 }).toString(),
+
               }),
-                showDrawer();
+
+                handleTymLike(post._id)
               getDataLikeTymThisPost(post._id, '0');
             }}
             className="flex items-center"
@@ -501,54 +508,119 @@ const Post: React.FC<IProps> = (props) => {
               <button className="focus:outline-none flex items-center justify-center w-4 h-4 rounded-full bg-red-500 text-white">
                 <i style={{ fontSize: 10 }} className="fas fa-heart"></i>
               </button>
-              <button className="focus:outline-none flex items-center justify-center w-4 h-4 rounded-full bg-primary text-white">
+              <button
+
+                className="focus:outline-none flex items-center justify-center w-4 h-4 rounded-full bg-primary text-white">
                 <i style={{ fontSize: 10 }} className="fas fa-thumbs-up"></i>
               </button>
 
               <span className="pl-3">{post.like.length + post.tym.length}</span>
+
+
+
               <div className="ml-1">
                 <p>{post.likes}</p>
               </div>
+
+
+              {tymlike ? <>
+
+                <div style={{ background: 'rgb(91, 205, 166)', width: "500px", borderRadius: "10px" }}>
+
+                  {liketym.tym?.map((itemmm: any) => {
+
+                    return (
+
+                      <>
+                        <div style={{ display: 'flex', gap: '15px', alignItems: "center", padding: "10px", color: "black" }}>
+                          <div style={{ position: "relative" }}>
+                            <img style={{ width: "40px", borderRadius: "20px" }} src={itemmm.avatar} alt="" />
+                            <img style={{ width: '20px', position: 'absolute', bottom: '0', right: "0", borderRadius: "20px" }} src={likeIcons} alt="" />
+                          </div>
+                          <span>{itemmm.username}</span>
+                        </div>
+                      </>
+
+                    )
+                  })}
+                  {liketym.like?.map((itemmm: any) => {
+
+                    return (
+
+                      <>
+                        <div style={{ display: 'flex', gap: '15px', alignItems: "center", padding: "10px", color: "black" }}>
+                          <div style={{ position: "relative" }}>
+                            <img style={{ width: "40px", borderRadius: "20px" }} src={itemmm.avatar} alt="" />
+                            <img style={{ width: '20px', position: 'absolute', bottom: '0', right: "0", borderRadius: "20px" }} src={tymIcons} alt="" />
+                          </div>
+                          <span>{itemmm.username}</span>
+                        </div>
+                      </>
+
+                    )
+                  })}
+
+
+
+
+                </div>
+
+
+
+              </> : ""}
+
+
+
+
+
             </div>
           </div>
           <div className="flex items-center space-x-2">
             <span className="pl-3"> {post.cmt.length}</span>
             <button>{post.comments} Comments </button>
-            
+
           </div>
         </div>
         <div className="flex space-x-3 text-gray-500 text-sm font-thin">
-        <Popover content={content}>
-                    <button
-                      onMouseEnter={() =>
-                        navigate({
-                          search: createSearchParams({
-                            postId: post._id,
-                          }).toString(),
-                        })
-                      }
-                      // onMouseLeave={ ()=> navigate({
-                      //     search: createSearchParams({
-                      //       postId: "",
-                      //     }).toString(),
-                      //   })}
-                      className="flex-1 flex items-center h-8 focus:outline-none focus:bg-gray-200 justify-center space-x-2 hover:bg-gray-100 rounded-md"
-                    >
-                      <div>
-                        <i
-                          className={`fas fa-thumbs-up ${post.like.includes(user._id) ||
-                            post.tym.includes(user._id)
-                            ? 'text-blue-500'
-                            : ''
-                            }`}
-                        ></i>
-                      </div>
-                      <div>
-                        {/* đây này */}
-                        <p className="font-semibold">Like</p>
-                      </div>
-                    </button>
-                  </Popover>
+          <Popover content={content}>
+            <button
+              onMouseEnter={() =>
+                navigate({
+                  search: createSearchParams({
+                    postId: post._id,
+                  }).toString(),
+                })
+              }
+              // onMouseLeave={ ()=> navigate({
+              //     search: createSearchParams({
+              //       postId: "",
+              //     }).toString(),
+              //   })}
+              className="flex-1 flex items-center h-8 focus:outline-none focus:bg-gray-200 justify-center space-x-2 hover:bg-gray-100 rounded-md"
+            >
+              <div>
+
+                {post.tym.includes(user._id) ?
+                  <div className='flex-1 flex items-center h-8 focus:outline-none focus:bg-gray-200 justify-center space-x-2 hover:bg-gray-100 rounded-md'>
+
+                    <img style={{ width: "22px" }} src={tymIcons} alt="" />
+                    <p className="font-semibold">Tym</p>
+                  </div> :
+
+                  <div className='flex-1 flex items-center h-8 focus:outline-none focus:bg-gray-200 justify-center space-x-2 hover:bg-gray-100 rounded-md'>
+                    <i className={`fas fa-thumbs-up ${post.like.includes(user._id)
+                      ? 'text-blue-500'
+                      : ''
+                      }`}></i>
+                    <div>
+
+                      <p className="font-semibold">Like</p>
+                    </div>
+                  </div>}
+
+              </div>
+            </button>
+          </Popover>
 
           <button
             onClick={() => {
@@ -570,164 +642,164 @@ const Post: React.FC<IProps> = (props) => {
               <p className="font-semibold">Comment </p>
             </div>
           </button>
-          
+
         </div>
         {open ? <>
-                    <div className="">
-                      {dataCommentPost?.map((itm: any) => {
-                        console.log(dataCommentPost, 'dataCommentPost');
-                        return (
-                          <div
-                            className="overflow-y-auto border-b border-[#ccc] pb-5"
-                            key={itm._id}
-                          >
-                            <div style={{justifyContent:"space-between"}} className="flex items-center">
-                              <div>
-                            <div className="flex mt-4  items-center gap-5">
-                              <div className="w-10 h-10">
-                                <img
-                                  onClick={() =>
-                                    navigate('/profile/' + itm.idUser._id)
-                                  }
-                                  src={itm.idUser.avatar}
-                                  className="w-full cursor-pointer h-full rounded-full"
-                                  alt="dp"
-                                />
-                              </div>
-                              <p className="font-bold text-md">
-                                {itm.idUser.username}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-5">
-                              <div>
-                                <p>{itm.comment}đá </p>
-                                <img
-                                  className="w-[80px] pt-3 rounded-md"
-                                  src={itm.image} 
-                                  alt=""
-                                />
-                              </div>
-                              </div>
-                              </div>
-                              <div style={{right:'0'}} className="">
-                                {itm.idUser._id == user._id && (
-                                  <div className=" space-x-5">
-                                    <Button
-                                      onClick={() =>
-                                        removeCommentThisPost(itm._id, itm.idPost)
-                                      }
-                                      className="bg-red-400 text-white"
-                                    >
-                                      Delete
-                                    </Button>
-                                    <Button
-                                      onClick={() => {
-                                        navigate({
-                                          search: createSearchParams({
-                                            postId: itm.idPost,
-                                            isEdit: itm._id,
-                                          }).toString(),
-                                        });
-                                        editCommentThisPost(itm._id, itm.idPost);
-                                      }}
-                                      className="bg-blue-400 text-white"
-                                    >
-                                      Update
-                                    </Button>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                    <div className=" z-50 bg-white w-[100%] shadow-2xl bottom-0">
-                      <Form
-                        name="basic"
-                        form={form}
-                        initialValues={{ remember: true }}
-                        onFinish={onFinish}
-                        onFinishFailed={onFinishFailed}
-                        autoComplete="off"
-                      >
-                        <div className="">
-                          <div className="">
-                            <Form.Item
-                              name="username"
-                              rules={[
-                                {
-                                  required: true,
-                                  message: 'Please input your comment!',
-                                },
-                              ]}
-                            >
-                              <Input.TextArea
-                                className="w-full font-bold text-black"
-                                placeholder={
-                                  isEdit
-                                    ? dataIdComment.comment
-                                    : 'Enter your comment !'
-                                }
-                              />
-                            </Form.Item>
-                          </div>
-                          <div className="">
-                            <label
-                              htmlFor="enterFile"
-                              className="font-bold text-lg underline cursor-pointer"
-                            >
-                              Select photo
-                            </label>
-                            <input
-                              onChange={(event) => handleFileChange(event)}
-                              type="file"
-                              className="hidden opacity-0"
-                              id="enterFile"
-                              name=""
-                            />
-                            {dataFile && (
-                              <img className="w-[80px] mb-5" src={dataFile} alt="" />
-                            )}
-                          </div>
+          <div className="">
+            {dataCommentPost?.map((itm: any) => {
+              console.log(dataCommentPost, 'dataCommentPost');
+              return (
+                <div
+                  className="overflow-y-auto border-b border-[#ccc] pb-5"
+                  key={itm._id}
+                >
+                  <div style={{ justifyContent: "space-between" }} className="flex items-center">
+                    <div>
+                      <div className="flex mt-4  items-center gap-5">
+                        <div className="w-10 h-10">
+                          <img
+                            onClick={() =>
+                              navigate('/profile/' + itm.idUser._id)
+                            }
+                            src={itm.idUser.avatar}
+                            className="w-full cursor-pointer h-full rounded-full"
+                            alt="dp"
+                          />
                         </div>
-                        <div className="flex justify-between">
+                        <p className="font-bold text-md">
+                          {itm.idUser.username}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-5">
+                        <div>
+                          <p>{itm.comment}</p>
+                          <img
+                            className="w-[80px] pt-3 rounded-md"
+                            src={itm.image}
+                            alt=""
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div style={{ right: '0' }} className="">
+                      {itm.idUser._id == user._id && (
+                        <div className=" space-x-5">
                           <Button
-                            type="primary"
-                            htmlType="submit"
-                            className="mb-2 mx-5"
+                            onClick={() =>
+                              removeCommentThisPost(itm._id, itm.idPost)
+                            }
+                            className="bg-red-400 text-white"
                           >
-                            {isEdit ? 'Edit' : 'Submit'}
+                            Delete
                           </Button>
-                          {isEdit && (
-                            <Button
-                              onClick={() => {
-                                navigate({
-                                  search: createSearchParams({
-                                    postId: dataPageQuery,
-                                    isEdit: '',
-                                  }).toString(),
-                                });
-                                setDataFile(null);
-                                setDataIdComment({
-                                  comment: '',
-                                  image: '',
-                                });
-                              }}
-                              htmlType="button"
-                              className="mb-2 mr-5 bg-red-500 text-white font-bold "
-                            >
-                              {isEdit ? 'X' : ''}
-                            </Button>
-                          )}
+                          <Button
+                            onClick={() => {
+                              navigate({
+                                search: createSearchParams({
+                                  postId: itm.idPost,
+                                  isEdit: itm._id,
+                                }).toString(),
+                              });
+                              editCommentThisPost(itm._id, itm.idPost);
+                            }}
+                            className="bg-blue-400 text-white"
+                          >
+                            Update
+                          </Button>
                         </div>
-                      </Form>
+                      )}
                     </div>
-                  </>
-                  : ""}
-                  
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div className=" z-50 bg-white w-[100%] shadow-2xl bottom-0">
+            <Form
+              name="basic"
+              form={form}
+              initialValues={{ remember: true }}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              autoComplete="off"
+            >
+              <div className="">
+                <div className="">
+                  <Form.Item
+                    name="username"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please input your comment!',
+                      },
+                    ]}
+                  >
+                    <Input.TextArea
+                      className="w-full font-bold text-black"
+                      placeholder={
+                        isEdit
+                          ? dataIdComment.comment
+                          : 'Enter your comment !'
+                      }
+                    />
+                  </Form.Item>
+                </div>
+                <div className="">
+                  <label
+                    htmlFor="enterFile"
+                    className="font-bold text-lg underline cursor-pointer"
+                  >
+                    Select photo
+                  </label>
+                  <input
+                    onChange={(event) => handleFileChange(event)}
+                    type="file"
+                    className="hidden opacity-0"
+                    id="enterFile"
+                    name=""
+                  />
+                  {dataFile && (
+                    <img className="w-[80px] mb-5" src={dataFile} alt="" />
+                  )}
+                </div>
+              </div>
+              <div className="flex justify-between">
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className="mb-2 mx-5"
+                >
+                  {isEdit ? 'Edit' : 'Submit'}
+                </Button>
+                {isEdit && (
+                  <Button
+                    onClick={() => {
+                      navigate({
+                        search: createSearchParams({
+                          postId: dataPageQuery,
+                          isEdit: '',
+                        }).toString(),
+                      });
+                      setDataFile(null);
+                      setDataIdComment({
+                        comment: '',
+                        image: '',
+                      });
+                    }}
+                    htmlType="button"
+                    className="mb-2 mr-5 bg-red-500 text-white font-bold "
+                  >
+                    {isEdit ? 'X' : ''}
+                  </Button>
+                )}
+              </div>
+            </Form>
+          </div>
+        </>
+          : ""}
+
       </div>
-      
+
     </div>
   );
 };

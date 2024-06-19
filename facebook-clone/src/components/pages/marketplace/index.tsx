@@ -25,6 +25,7 @@ import { AiOutlineCloseCircle } from 'react-icons/ai';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 import { useAppSelector } from '../../../store';
+import { Pagination } from 'antd/lib';
 const MarketplacePage: React.FC = () => {
   const [dataProduct, setDataProduct] = useState([]);
   const [openProduct, setOpenProduct] = useState(false);
@@ -36,6 +37,7 @@ const MarketplacePage: React.FC = () => {
   const { user: userInfo } = useAppSelector(
     (state: any) => state.persistedReducer.auth
   );
+  
   const [queryParameters] = useSearchParams();
   const isEditMyPro: any = queryParameters.get('isEditMyPro');
   const [openMyNewBlog, setOpenMyNewBlog] = useState(false);
@@ -44,6 +46,19 @@ const MarketplacePage: React.FC = () => {
   const navigate = useNavigate();
   const isCreateLoading = '';
   const [form] = Form.useForm();
+
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = dataProduct?.slice(startIndex, endIndex);
+  const handleChangePage = (page: number) => {
+    setCurrentPage(page);
+  };
+  
+
+  console.log("dataProduct",dataProduct)
   const openNewBlog = () => {
     setOpenMyNewBlog(true);
   };
@@ -311,7 +326,7 @@ const MarketplacePage: React.FC = () => {
       },
     },
     {
-      title: 'action',
+      title: 'Action',
       render: ({ key }: any) => {
         return (
           <div className="space-x-5">
@@ -399,7 +414,7 @@ const MarketplacePage: React.FC = () => {
                   },
                 ]}
               >
-                <Input placeholder="Tên sản phẩm" size="large" />
+                <Input placeholder="Tên sản phẩm " size="large" />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -453,12 +468,18 @@ const MarketplacePage: React.FC = () => {
                   name="images"
                   className="w-full"
                   label="Hình ảnh sản phẩm"
+                  
                   rules={[
                     {
+                      required:true,
                       message: 'Không được để trống hình ảnh sản phẩm',
                     },
                   ]}
+
+              
+
                 >
+                  
                   <input
                     type="file"
                     onChange={(e) => handleOnChange(e)}
@@ -570,7 +591,7 @@ const MarketplacePage: React.FC = () => {
         <Table dataSource={dataSourceNew} columns={columnsNew} />
       </Drawer>
       <Drawer
-        title={' sản phẩm yêu thích của bạn'}
+        title={' Your favorite products'}
         width={666}
         destroyOnClose
         onClose={closeNewProduct}
@@ -589,14 +610,18 @@ const MarketplacePage: React.FC = () => {
             href="/chuyen-muc/san-pham-ban-chay.html"
             title="Sản phẩm bán chạy"
           >
-            Trao đổi<span> mua bán</span>
+            TO <span> EXCHANGE</span>
           </a>
         </div>
         <div className="product-block">
           <ul>
-            {dataProduct?.map((items: any) => {
+            {paginatedData?.map((items: any) => {
+              
               return (
                 <li key={items._id}>
+          
+                  <Link to={'/marketplace/' + items._id}>
+
                   <div className="product">
                     <div className="pic-news">
                       <a href="/san-pham/cay-hai-duong.html">
@@ -615,7 +640,7 @@ const MarketplacePage: React.FC = () => {
                       </a>
                     </h3>{' '}
                     <div className="price-product">
-                      {items.sale?.toLocaleString()} đ
+                      {items.sale === 0 ? "Thỏa thuận" : `${items.sale?.toLocaleString()} đ`} 
                     </div>
                     <div className="cart-product">
                       <Link to={'/marketplace/' + items._id}>
@@ -623,12 +648,24 @@ const MarketplacePage: React.FC = () => {
                       </Link>
                     </div>
                   </div>
+                  </Link>
                 </li>
               );
             })}
           </ul>
         </div>
+        <Pagination
+        style={{marginBottom:"100px"}}
+              showQuickJumper
+              pageSize={itemsPerPage}
+              defaultCurrent={1}
+              current={currentPage}
+              total={dataProduct?.length}
+              onChange={handleChangePage}
+            />
       </div>
+      
+      
 
       <div className="col-left">
         <div className="block-col">
@@ -637,29 +674,31 @@ const MarketplacePage: React.FC = () => {
               <ul className="accordian-ul">
                 <li className="active">
                   <h3>
-                    <span className="circle-arrow">Cá nhân</span>
+                    <span className="circle-arrow">Individual</span>
                   </h3>
                   <ul>
                     <li>
                       <a onClick={openNewProduct} className="cursor-pointer">
-                        <span className="small-arrow">Sản phẩm yêu thích</span>
+                        <span className="small-arrow">Favorite product</span>
                       </a>
                     </li>
                   </ul>
                 </li>
                 <li className="active">
                   <h3>
-                    <span className="circle-arrow">Sản phẩm</span>
+                    <span className="circle-arrow">Product</span>
                   </h3>
                   <ul>
                     <li>
                       <a className="cursor-pointer" onClick={openNewBlog}>
                         <span className="small-arrow">
-                          Sản phầm bạn đã đăng
+                        The product you posted
                         </span>
                       </a>
                     </li>
-                    <li>
+                    <li 
+                     style={{color:"black",background:"#B22222",borderRadius:"20px"}}
+                    >
                       <a
                         className="cursor-pointer"
                         onClick={() => {
@@ -667,7 +706,10 @@ const MarketplacePage: React.FC = () => {
                           setOpenProduct(true);
                         }}
                       >
-                        <span className="small-arrow">Thêm mới sản phẩm</span>
+                        <span
+                       
+                        
+                        className="small-arrow">Add new products</span>
                       </a>
                     </li>
                   </ul>
@@ -677,6 +719,7 @@ const MarketplacePage: React.FC = () => {
           </div>
         </div>
       </div>
+
     </div>
   );
 };

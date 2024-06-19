@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useAppSelector } from '../../../store';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useHoook } from '../profile/useHoook';
 
 const PrevFriend = () => {
   const [data, setData] = useState([]);
@@ -21,19 +22,25 @@ const PrevFriend = () => {
   }, [id]);
   console.log("data",data)
 
+  // const {selectedTab, setSelectedTab} = useHoook()
+
+
   return (
     <div>
       <div className="col-span-2">
         <div className="bg-white rounded-lg p-3 text-sm text-gray-600 shadow">
           <div className="mb-2 flex justify-between items-center">
             <div>
-              <p className="font-bold text-xl text-gray-800">Bạn bè</p>
-              <p>{data?.length} Người bạn</p>
+              <p className="font-bold text-xl text-gray-800">Friend</p>
+              <p>{data?.length} Friend</p>
             </div>
             <div>
-              <p onClick={()=>navigate('/profile/friends')} className="text-blue-500 text-lg font-medium">
-                Xem tất cả bạn bè
+              <p onClick={()=>navigate('')} className="text-blue-500 text-lg font-medium">
+              See all friends
               </p>
+              
+
+
             </div>
           </div>
           <div className='grid grid-cols-3 gap-6'>

@@ -351,7 +351,7 @@ const ProfilePage: React.FC = () => {
               onClick={() => setSelectedTab('friends')}
               className={`text-lg font-semibold ${selectedTab === 'friends' ? 'text-blue-600' : 'text-gray-600'}`}
             >
-              Bạn bè
+              Bạn bè 
             </button>
             <button
               onClick={() => setSelectedTab('gallery')}

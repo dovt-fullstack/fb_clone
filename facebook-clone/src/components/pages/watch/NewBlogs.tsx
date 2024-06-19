@@ -35,6 +35,10 @@ const NewBlogs = () => {
         );
       setDataCategory(listBlogsByIdCate);
     };
+
+// console.log("dataCategory",dataCategory.length)
+
+console.log("paginatedData fefef",paginatedData)
     handelFetchAllCate();
   }, [dataPageQuery]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,13 +49,15 @@ const NewBlogs = () => {
   const handleChangePage = (page: number) => {
     setCurrentPage(page);
   };
+
+  console.log("dataCategory length",dataCategory.length)
 console.log(paginatedData && paginatedData.length,'paginatedData && paginatedData.length')
   return (
     <div>
       <>
         {paginatedData && paginatedData.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-[20px] gap-y-[30px] my-[30px]">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-[20px] gap-y-[30px] my-[30px] ">
               {paginatedData?.map((item: any) => (
                 <Card
                   onClick={() =>
@@ -76,7 +82,7 @@ console.log(paginatedData && paginatedData.length,'paginatedData && paginatedDat
                   style={{padding:"0px 0px 20px 0px"}}
                     className="custom-title  mb-5"
                     avatar={<Avatar src="/logo_icon.png" />}
-                    title={item.name}
+                    title={item.name} 
                     description={
                       <div className="line-clamp-3 text-base">
                         {parse(item.description)}
@@ -92,6 +98,7 @@ console.log(paginatedData && paginatedData.length,'paginatedData && paginatedDat
               ))}
             </div>
             <Pagination
+            style={{marginBottom:"100px"}}
               showQuickJumper
               pageSize={itemsPerPage}
               defaultCurrent={1}
