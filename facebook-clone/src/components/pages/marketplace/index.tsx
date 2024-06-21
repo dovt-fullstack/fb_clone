@@ -29,6 +29,7 @@ import { Pagination } from 'antd/lib';
 const MarketplacePage: React.FC = () => {
   const [dataProduct, setDataProduct] = useState([]);
   const [openProduct, setOpenProduct] = useState(false);
+  console.log("openProduct",openProduct)
   const [isUpload, setIsUpload] = useState<boolean>(false);
   const [dataProductUser, setDataProductUser] = useState([]);
   const [dataIdProduct, setDataIdProduct] = useState<any>();
@@ -89,6 +90,7 @@ const MarketplacePage: React.FC = () => {
       setDataIdProduct(data.data);
     };
     getIdProducto();
+
   }, [isEditMyPro]);
   // api/get-product-user-create
   const fetchDataProductUser = async () => {
@@ -114,6 +116,7 @@ const MarketplacePage: React.FC = () => {
   const fetchAllProduct = async () => {
     const { data } = await axios.get('http://localhost:8000/api/products');
     setDataProduct(data.docs);
+    
   };
   useEffect(() => {
     fetchAllProduct();
@@ -144,10 +147,13 @@ const MarketplacePage: React.FC = () => {
           //
           form.resetFields();
           fetchAllProduct();
-          navigate('/marketplace');
           fetchDataProductUser();
 
+
           toast.success('product created successfully');
+          navigate('/marketplace');
+          setOpenProduct(false)
+
         })
         .catch((error) => {
           console.log(error);
@@ -163,13 +169,16 @@ const MarketplacePage: React.FC = () => {
           form.resetFields();
           fetchAllProduct();
           fetchDataProductUser();
-          navigate('/marketplace');
           toast.success('product edited successfully');
+          navigate('/marketplace');
+          setOpenProduct(false)
+
         })
         .catch((error) => {
           console.log(error);
         });
     }
+    navigate('/marketplace');
   };
 
   const uploadImage = async (formData: FormData) => {
@@ -364,7 +373,7 @@ const MarketplacePage: React.FC = () => {
   return (
     <div className="my-10 mx-4">
       <Drawer
-        title={`${!isEditMyPro ? 'Thêm' : 'Cập nhật'}`}
+        title={`${!isEditMyPro ? 'Thêm ' : 'Cập nhật'}`}
         placement="right"
         width={850}
         destroyOnClose
@@ -381,7 +390,7 @@ const MarketplacePage: React.FC = () => {
               htmlFor="button-submit-form"
               className="bg-primary py-2 px-4 flex justify-center items-center h-[44px] text-white rounded-lg cursor-pointer"
             >
-              {!isCreateLoading && <p>{!isEditMyPro ? 'Thêm' : 'Cập nhật'} </p>}
+              {!isCreateLoading && <p>{!isEditMyPro ? 'Thêm ' : 'Cập nhật'} </p>}
               {isCreateLoading && (
                 <div className="border-t-primary animate-spin w-6 h-6 border-2 border-t-2 border-white rounded-full"></div>
               )}
@@ -616,7 +625,7 @@ const MarketplacePage: React.FC = () => {
         <div className="product-block">
           <ul>
             {paginatedData?.map((items: any) => {
-              
+
               return (
                 <li key={items._id}>
           
@@ -702,8 +711,9 @@ const MarketplacePage: React.FC = () => {
                       <a
                         className="cursor-pointer"
                         onClick={() => {
-                          navigate('/marketplace');
                           setOpenProduct(true);
+
+                          navigate('/marketplace');
                         }}
                       >
                         <span

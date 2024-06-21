@@ -61,6 +61,17 @@ const NewsFeed: React.FC = () => {
   };
 
 
+  
+  const [liketym, setLiketym] = useState<any>([])
+
+  const [tymlike, setTimlike] = useState(true)
+  console.log("tymlike", tymlike)
+  const handleTymLike = (id: any) => {
+    setTimlike(!tymlike)
+    
+  }
+
+
   // useEffect(() => {
   //   const fetchUserPosts = async () => {
   //     try {
@@ -276,6 +287,7 @@ const NewsFeed: React.FC = () => {
         .get('http://localhost:8000/api/post/react-post/' + id + '?status=0')
         .then((res) => {
           console.log(res.data.data.like);
+          setLiketym(res.data.data)
           setDataLike(res.data.data.like);
           setDataTym(res.data.data.tym);
         })
@@ -451,7 +463,7 @@ const NewsFeed: React.FC = () => {
                 <div
                   className="w-8 h-8">
                   <button
-                    onClick={() => handelCheckActionPost(post._id)}
+                    onClick={() => { handelCheckActionPost(post._id) }}
 
                     className="w-full h-full hover:bg-gray-100 rounded-full text-gray-400 focus:outline-none">
                     <i className="fas fa-ellipsis-h"></i>
@@ -493,6 +505,9 @@ const NewsFeed: React.FC = () => {
                         }).toString(),
                       }),
                         showDrawer();
+                      // console.log("handleTymLike",post._id)
+                      handleTymLike(post._id)
+
                       getDataLikeTymThisPost(post._id, '0');
                     }}
                     className="flex items-center"
@@ -515,11 +530,56 @@ const NewsFeed: React.FC = () => {
                       <div className="ml-1">
                         <p>{post.likes}</p>
                       </div>
+                      {tymlike ? <>
+
+                        <div style={{ background: 'rgb(91, 205, 166)', width: "500px", borderRadius: "10px" }}>
+
+                          {liketym.tym?.map((itemmm: any) => {
+
+                            return (
+
+                              <>
+                                <div  key={itemmm._id}  style={{ display: 'flex', gap: '15px', alignItems: "center", padding: "10px", color: "black" }}>
+                                  <div style={{ position: "relative" }}>
+                                    <img style={{ width: "40px", borderRadius: "20px" }} src={itemmm.avatar} alt="" />
+                                    <img style={{ width: '20px', position: 'absolute', bottom: '0', right: "0", borderRadius: "20px" }} src={likeIcons} alt="" />
+                                  </div>
+                                  <span>{itemmm.username}</span>
+                                </div>
+                              </>
+
+                            )
+                          })}
+                          {liketym.like?.map((itemmm: any) => {
+
+                            return (
+
+                              <>
+                                <div key={itemmm._id} style={{ display: 'flex', gap: '15px', alignItems: "center", padding: "10px", color: "black" }}>
+                                  <div style={{ position: "relative" }}>
+                                    <img style={{ width: "40px", borderRadius: "20px" }} src={itemmm.avatar} alt="" />
+                                    <img style={{ width: '20px', position: 'absolute', bottom: '0', right: "0", borderRadius: "20px" }} src={tymIcons} alt="" />
+                                  </div>
+                                  <span>{itemmm.username}</span>
+                                </div>
+                              </>
+
+                            )
+                          })}
+
+
+
+
+                        </div>
+
+
+
+                      </> : ""}
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="pl-3"> {countComment}</span>
-                    <button>{post.comments} Comments </button>
+                    <button>{post.comments}  Comments</button>
 
                   </div>
                 </div>
@@ -593,7 +653,7 @@ const NewsFeed: React.FC = () => {
 
                 {openPostId === post._id && (
                   <div>
-                    {dataCommentPost?.map((itm) => (
+                    {dataCommentPost?.map((itm:any) => (
                       <div key={itm._id} className="overflow-y-auto border-b border-[#ccc] pb-1">
                         <div className="flex items-center justify-between">
                           <div>

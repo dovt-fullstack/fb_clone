@@ -19,6 +19,7 @@ export const ChatContent = ({ messages }: ChatContentProps) => {
   const [dataChat, setDataChat] = useState<any[]>([]);
   const [checkErrorMessage, setCheckErrorMessage] = useState(false);
 
+  console.log("dataChat",dataChat)
   useEffect(() => {
     const getDataUser = async () => {
       const dataIdUser = await axios.get(
@@ -54,7 +55,7 @@ export const ChatContent = ({ messages }: ChatContentProps) => {
       }
     };
     handelGetMessageUser();
-  }, [dataPageQuery, userData._id]);
+  }, [dataPageQuery, userData._id,dataChat]);
   return (
     <div className="flex-1 h-full py-1 overflow-auto px-5 scrollbar-none">
       {checkErrorMessage && <div>No message</div>}
@@ -117,7 +118,7 @@ export const ChatContent = ({ messages }: ChatContentProps) => {
                   minute: '2-digit',
                 })}
               </span>
-              <span className="text-md">{parse(message.content)}</span>
+              <span className="text-md">Tin nhắn:__ {parse(message.content)} </span>
               <div>
                 {message.image && (
                   <Image

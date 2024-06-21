@@ -28,6 +28,7 @@ import ForgotPassword from '../components/pages/ForgotPassword';
 import NewDetails from '../components/pages/watch/NewDetails';
 import MyData from '../components/pages/watch/MyData';
 import MaketDetails from '../components/pages/marketplace/MaketDetails';
+import PublicRoute from './PublicRouter';
 
 const Routers: React.FC = () => {
   return (
@@ -54,9 +55,9 @@ const Routers: React.FC = () => {
       <Route
         path={MARKETPLACE}
         element={
-          <PrivateRoute layout={MarketplacePageLayout}>
+          <PublicRoute layout={MarketplacePageLayout}>
             <MarketplacePage />
-          </PrivateRoute>
+          </PublicRoute>
         }
       />
       <Route

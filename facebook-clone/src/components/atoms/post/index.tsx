@@ -498,7 +498,6 @@ const Post: React.FC<IProps> = (props) => {
                 }).toString(),
 
               }),
-
                 handleTymLike(post._id)
               getDataLikeTymThisPost(post._id, '0');
             }}

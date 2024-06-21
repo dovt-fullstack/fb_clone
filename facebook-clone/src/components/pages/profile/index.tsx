@@ -10,9 +10,21 @@ import { toast } from 'react-toastify';
 import { createSearchParams, useNavigate, useParams } from 'react-router-dom';
 import { SupportBot } from '../../../features';
 import { useHoook } from './useHoook';
+import UserProfile from './UserProfile';
 const ProfilePage: React.FC = () => {
   const [dataPrevFriend, setDataPrevFriend] = useState([]);
 const { id } = useParams();
+interface IntroData {
+  name: string;
+  address: string;
+  where: string;
+  yearold: number; // Chỉnh sửa kiểu dữ liệu yearold từ 0 thành number
+  sex: string;
+  workplace: string;
+  lat: number; // Chỉnh sửa kiểu dữ liệu lat và lng từ 0 thành number
+  lng: number;
+  default: boolean;
+}
 
   useEffect(() => {
     const fetchDataFriend = async () => {
@@ -24,10 +36,6 @@ const { id } = useParams();
     fetchDataFriend();
   }, [id]);
   console.log("data",dataPrevFriend)
-
-
-
-
 
 
 
@@ -49,30 +57,26 @@ const { id } = useParams();
   // const [selectedTab, setSelectedTab] = useState('posts');
   const [intro, setIntro] = useState<any[]>([])
   const [openIntro, setOpenIntro] = useState(false)
-  const [updateIntro, setUpdateIntro] = useState<{
-    _id: string;
-    address: string;
-    sex: string;
-    userId: string;
-    where: string;
-    workplace: string;
-    yearold: number;
-  }>({
-    _id: '',
+  const [updateIntro, setUpdateIntro] = useState<IntroData>({
+    name: '',
     address: '',
-    sex: '',
-    userId: '',
     where: '',
-    workplace: '',
     yearold: 0,
+    sex: '',
+    workplace: '',
+    lat: 0,
+    lng: 0,
+    default: false,
   });
   
+
+  console.log("updateIntro",updateIntro)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setUpdateIntro(prevState => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -86,9 +90,24 @@ const { id } = useParams();
       console.error('Error updating intro:', error);
     }
   };
+  console.log("user._iduser._iduser._id : _",user._id)
+
+  useEffect(() => {
+    const fetchUserIntro = async () => {
+      try {
+        const response = await axios.get<any>(`http://localhost:8000/api/address/get/${user._id}`);
+        setIntro(response.data.docs); // Lưu các thông tin intro từ server vào state
+      } catch (error) {
+        console.error('Error fetching user intro:', error);
+      }
+    };
+
+    if (user) {
+      fetchUserIntro();
+    }
+  }, [user._id]);
 
 
-  console.log("9999999",selectedTab)
 
 
 const showDrawer = () => {
@@ -116,21 +135,7 @@ useEffect(() => {
   
 }, [user]);
 
-useEffect(() => {
-  const fetchUserPosts = async () => {
-    try {
-      const response = await axios.get<any[]>(`http://localhost:8000/api/address/get/${user._id}`);
-      setIntro(response.data.docs); // Lưu các bài đăng của người dùng vào state
-    } catch (error) {
-      console.error('Error fetching user posts:', error);
-    }
-  };
 
-  if (user) {
-    fetchUserPosts();
-  }
-}, [user._id]);
-console.log("intro", intro)
 
 
 const filllterrr = userPosts.filter(items => items.image != null)
@@ -439,6 +444,7 @@ return (
               )}
             </div>
           </div>
+
         </div>
         <div className="max-w-5xl h-full mx-auto">
           <div className="flex flex-col space-y-2 mt-3 items-center justify-center pb-3 border-b-2">
@@ -675,7 +681,49 @@ return (
             })}
 
             <div className="mt-10">
-              <PrevFriend/>
+            <div>
+      <div className="col-span-2">
+        <div className="bg-white rounded-lg p-3 text-sm text-gray-600 shadow">
+          <div className="mb-2 flex justify-between items-center">
+            <div>
+              <p className="font-bold text-xl text-gray-800">Friend</p>
+              <p>{data?.length} Friend</p>
+            </div>
+            <button
+                onClick={() => setSelectedTab('friends')}
+                className={ ` text-lg font-semibold text-blue-500`}
+              >
+                See all friends 
+              </button>
+          </div>
+          <div className='grid grid-cols-3 gap-6'>
+            {dataPrevFriend &&
+              dataPrevFriend.slice(0,9).map((items: any, index:any) => {
+                console.log(items, 'o');
+                return (
+                  <div key={items._id}>
+                    <div onClick={()=>navigate('/profile/' + items._id)} className="mt-3 cursor-pointer">
+                      <img
+                        className="w-[130px] rounded-md h-[130px]"
+                        src={
+                          items.avatar != null && items.avatar != ''
+                            ? items.avatar
+                            : 'https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI='
+                        }
+                        alt=""
+                      />
+                      <p className="pt-2 pl-2 font-medium text-lg">
+                        {items.username}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      </div>
+    </div>
+              
             </div>
           </div>
           <div className="col-span-3">
