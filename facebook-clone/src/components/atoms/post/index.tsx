@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { I } from '../../../types/post';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -22,6 +22,7 @@ import { useAppSelector } from '../../../store';
 interface IProps {
   post: any;
   dataPost: any;
+
 }
 import likeIcons from '../../../assets/like.png';
 import tymIcons from '../../../assets/thumbs-up.png';
@@ -29,16 +30,18 @@ const Post: React.FC<IProps> = (props) => {
 
 
   const [tymlike, setTimlike] = useState(true)
-  console.log("tymlike", tymlike)
+
   const [queryParameters] = useSearchParams();
   const [open, setOpen] = useState(false);
   const [countLike, setCountLike] = useState(0);
+
   const { user } = useAppSelector((state: any) => state.persistedReducer.auth);
   const [dataCommentPost, setDataCommentPost] = useState<any[]>([]);
   const dataPageQuery: any = queryParameters.get('postId');
   const isCheckLike: any = queryParameters.get('isCheckLike');
   const isEdit: any = queryParameters.get('isEdit');
-  const { post, dataPost } = props;
+  const { post, dataPost,fetchPostByUser } = props;
+
   const [dataLike, setDataLike] = useState([]);
   const [dataTym, setDataTym] = useState([]);
   const [form] = Form.useForm();
@@ -195,7 +198,7 @@ const Post: React.FC<IProps> = (props) => {
           idUser: user._id,
         })
         .then((ok: any) => {
-          toast.success(' đã gửi bình luận');
+          toast.success(' Sent comment');
           form.resetFields();
           setDataFile(null);
           handelGetCommentThisPost(dataPageQuery);
@@ -211,7 +214,7 @@ const Post: React.FC<IProps> = (props) => {
           image: dataFile || '',
         })
         .then((ok: any) => {
-          toast.success('Edited comment');
+          toast.success('Comment sent');
           form.resetFields();
           setDataFile(null);
           handelGetCommentThisPost(dataPageQuery);
@@ -222,9 +225,13 @@ const Post: React.FC<IProps> = (props) => {
     }
     // post/comment-post
   };
-  const handelActionThisPost = (action: string) => {
+  const [action, setAction] = useState("")
+
+
+  const handelActionThisPost = () => {
     console.log('This post');
     if (action == '1') {
+      console.log('1')
       axios
         .get(
           'http://localhost:8000/api/post/like-post/' +
@@ -235,6 +242,9 @@ const Post: React.FC<IProps> = (props) => {
         .then((ok: any) => {
           console.log('oji post');
           countLike == 0 ? setCountLike(1) : setCountLike(0);
+          // getDataLikeTymThisPost(dataPageQuery, '0');
+          fetchPostByUser()
+          setAction('')
         })
         .catch((error: any) => {
           console.log('Error:', error);
@@ -249,14 +259,32 @@ const Post: React.FC<IProps> = (props) => {
         )
         .then((ok: any) => {
           console.log('oji post');
+          
           countLike == 0 ? setCountLike(1) : setCountLike(0);
+          
+          setAction('')
+          fetchPostByUser()
+
         })
         .catch((error: any) => {
           console.log('Error:', error);
         });
+        
     }
+    fetchPostByUser()
     // post/like-post
   };
+  useEffect(() => {
+   
+    if(action !== ""){
+      handelActionThisPost()
+
+    }
+  }, [action])
+
+
+
+
 
 
   const onFinishFailed = (errorInfo: any) => {
@@ -266,7 +294,11 @@ const Post: React.FC<IProps> = (props) => {
     <div className="flex items-center gap-5">
       <div>
         <img
-          onClick={() => handelActionThisPost('1')}
+          onClick={() =>{
+
+           setAction('1')
+           handelActionThisPost()
+          }}
           src={likeIcons}
           className="w-[30px] cursor-pointer hover:scale-110 "
           alt="2"
@@ -275,7 +307,9 @@ const Post: React.FC<IProps> = (props) => {
       </div>
       <div>
         <img
-          onClick={() => handelActionThisPost('2')}
+          onClick={() =>{ 
+            handelActionThisPost()
+            setAction('2')}}
           src={tymIcons}
           className="w-[30px] cursor-pointer hover:scale-110 "
           alt="2"
@@ -583,6 +617,7 @@ const Post: React.FC<IProps> = (props) => {
         <div className="flex space-x-3 text-gray-500 text-sm font-thin">
           <Popover content={content}>
             <button
+              // onClick={handelActionThisPost()}
               onMouseEnter={() =>
                 navigate({
                   search: createSearchParams({
@@ -590,6 +625,7 @@ const Post: React.FC<IProps> = (props) => {
                   }).toString(),
                 })
               }
+
               // onMouseLeave={ ()=> navigate({
               //     search: createSearchParams({
               //       postId: "",
@@ -743,10 +779,13 @@ const Post: React.FC<IProps> = (props) => {
                     />
                   </Form.Item>
                 </div>
-                <div className="">
+
+                <div style={{ textAlign: "center" }} className="">
                   <label
+                    style={{ fontFamily: "Lucida Console" }}
+
                     htmlFor="enterFile"
-                    className="font-bold text-lg underline cursor-pointer"
+                    className="font-bold text-lg underline cursor-pointer "
                   >
                     Select photo
                   </label>
@@ -762,8 +801,9 @@ const Post: React.FC<IProps> = (props) => {
                   )}
                 </div>
               </div>
-              <div className="flex justify-between">
+              <div className="flex ">
                 <Button
+                  style={{ justifyContent: 'center', marginLeft: '285px' }}
                   type="primary"
                   htmlType="submit"
                   className="mb-2 mx-5"
@@ -786,6 +826,7 @@ const Post: React.FC<IProps> = (props) => {
                       });
                     }}
                     htmlType="button"
+                    style={{}}
                     className="mb-2 mr-5 bg-red-500 text-white font-bold "
                   >
                     {isEdit ? 'X' : ''}

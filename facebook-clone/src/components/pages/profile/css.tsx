@@ -176,6 +176,7 @@ const ProfilePage: React.FC = () => {
               backgroundRepeat: 'no-repeat',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
+              
             }}
           >
             <div
@@ -190,7 +191,7 @@ const ProfilePage: React.FC = () => {
               >
                 <img
                   className="w-full h-full rounded-full cursor-pointer hover:opacity-20"
-                  src={data?.avatar}
+                  src='{data?.avatar}'
                   alt="dp"
                 />
                 {checkHover && id === user._id && (

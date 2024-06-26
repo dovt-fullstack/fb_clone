@@ -118,7 +118,7 @@ export const ChatContent = ({ messages }: ChatContentProps) => {
                   minute: '2-digit',
                 })}
               </span>
-              <span className="text-md">Tin nhắn:__ {parse(message.content)} </span>
+              <span className="text-md">{parse(message.content)} </span>
               <div>
                 {message.image && (
                   <Image

@@ -170,15 +170,15 @@ const MyData = () => {
           </Form.Item>
           <Form.Item
             className="dark:text-white"
-            label="Tên bài viết"
+            label="Article name"
             name="name"
             rules={[
-              { required: true, message: 'Tên bài viết không được bỏ trống!' },
+              { required: true, message: 'Article title cannot be left blank!' },
               {
                 validator: (_, value) => {
                   if (value.trim() === '') {
                     return Promise.reject(
-                      'Tên bài viết không được chứa toàn khoảng trắng!'
+                      'The article name cannot contain all spaces!'
                     );
                   }
                   return Promise.resolve();
@@ -186,17 +186,17 @@ const MyData = () => {
               },
             ]}
           >
-            <Input size="large" placeholder="Tên bài viết" />
+            <Input size="large" placeholder="Article name" />
           </Form.Item>
           <div className="grid grid-cols-[1fr,1fr] gap-5">
             <Form.Item
               name="category"
               label="Article category name"
               rules={[
-                { required: true, message: 'Danh mục bài viết là bắt buộc' },
+                { required: true, message: 'Article categories are required' },
               ]}
             >
-              <Select placeholder="Danh mục bài viết" size="large">
+              <Select placeholder="List of articles" size="large">
                 {dataCategory?.docs?.map((category: any) => (
                   <Option value={category._id} key={category._id}>
                     <span className="text-sm capitalize">{category.name}</span>
@@ -208,7 +208,7 @@ const MyData = () => {
               name="is_active"
               label="Post status"
               rules={[
-                { required: true, message: 'Trạng thái bài viết là bắt buộc' },
+                { required: true, message: 'Post status is required' },
               ]}
             >
               <Select placeholder="Post status" size="large">
@@ -221,7 +221,7 @@ const MyData = () => {
             className="dark:text-white mb-17"
             label="Article description"
             name="description"
-            rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+            rules={[{ required: true, message: 'Not be empty!' }]}
           >
             <ReactQuill
               className="h-[250px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"
@@ -241,7 +241,7 @@ const MyData = () => {
           </Form.Item>
           <Form.Item>
             <Button className="!w-full mt-5 py-2" htmlType="submit">
-              sửa bài viết
+            Edit Post
             </Button>
           </Form.Item>
         </Form>

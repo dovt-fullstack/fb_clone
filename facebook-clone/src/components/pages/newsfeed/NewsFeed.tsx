@@ -63,12 +63,15 @@ const NewsFeed: React.FC = () => {
 
   
   const [liketym, setLiketym] = useState<any>([])
+  const [selectedPostId, setSelectedPostId] = useState(null);
 
   const [tymlike, setTimlike] = useState(true)
-  console.log("tymlike", tymlike)
   const handleTymLike = (id: any) => {
+    setSelectedPostId(id)
+
     setTimlike(!tymlike)
-    
+  
+
   }
 
 
@@ -178,7 +181,7 @@ const NewsFeed: React.FC = () => {
           idUser: user._id,
         })
         .then((ok: any) => {
-          toast.success(' đã gửi bình luận');
+          toast.success(' Sent comment');
           form.resetFields();
           setDataFile(null);
           handelGetCommentThisPost(dataPageQuery);
@@ -195,7 +198,7 @@ const NewsFeed: React.FC = () => {
           image: dataFile || '',
         })
         .then((ok: any) => {
-          toast.success('Edited comment');
+          toast.success('Comment sent');
           form.resetFields();
           setDataFile(null);
           handelGetCommentThisPost(dataPageQuery);
@@ -507,6 +510,7 @@ const NewsFeed: React.FC = () => {
                         showDrawer();
                       // console.log("handleTymLike",post._id)
                       handleTymLike(post._id)
+                      console.log("post._id2",post._id)
 
                       getDataLikeTymThisPost(post._id, '0');
                     }}
@@ -530,7 +534,7 @@ const NewsFeed: React.FC = () => {
                       <div className="ml-1">
                         <p>{post.likes}</p>
                       </div>
-                      {tymlike ? <>
+                      {selectedPostId === post._id  ? <>
 
                         <div style={{ background: 'rgb(91, 205, 166)', width: "500px", borderRadius: "10px" }}>
 
@@ -542,7 +546,7 @@ const NewsFeed: React.FC = () => {
                                 <div  key={itemmm._id}  style={{ display: 'flex', gap: '15px', alignItems: "center", padding: "10px", color: "black" }}>
                                   <div style={{ position: "relative" }}>
                                     <img style={{ width: "40px", borderRadius: "20px" }} src={itemmm.avatar} alt="" />
-                                    <img style={{ width: '20px', position: 'absolute', bottom: '0', right: "0", borderRadius: "20px" }} src={likeIcons} alt="" />
+                                    <img style={{ width: '20px', position: 'absolute', bottom: '0', right: "0", borderRadius: "20px" }} src={tymIcons} alt="" />
                                   </div>
                                   <span>{itemmm.username}</span>
                                 </div>
@@ -558,7 +562,7 @@ const NewsFeed: React.FC = () => {
                                 <div key={itemmm._id} style={{ display: 'flex', gap: '15px', alignItems: "center", padding: "10px", color: "black" }}>
                                   <div style={{ position: "relative" }}>
                                     <img style={{ width: "40px", borderRadius: "20px" }} src={itemmm.avatar} alt="" />
-                                    <img style={{ width: '20px', position: 'absolute', bottom: '0', right: "0", borderRadius: "20px" }} src={tymIcons} alt="" />
+                                    <img style={{ width: '20px', position: 'absolute', bottom: '0', right: "0", borderRadius: "20px" }} src={likeIcons} alt="" />
                                   </div>
                                   <span>{itemmm.username}</span>
                                 </div>
@@ -571,8 +575,6 @@ const NewsFeed: React.FC = () => {
 
 
                         </div>
-
-
 
                       </> : ""}
                     </div>
@@ -694,7 +696,7 @@ const NewsFeed: React.FC = () => {
                                   }}
                                   className="bg-blue-400 text-white"
                                 >
-                                  Chỉnh sửa
+                                  Update
                                 </Button>
                               </div>
                             )}

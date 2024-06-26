@@ -27,9 +27,12 @@ import { toast } from 'react-toastify';
 import { useAppSelector } from '../../../store';
 import { Pagination } from 'antd/lib';
 const MarketplacePage: React.FC = () => {
+  const [value, setValue] = useState<string | number | undefined>(undefined);
+
+
   const [dataProduct, setDataProduct] = useState([]);
   const [openProduct, setOpenProduct] = useState(false);
-  console.log("openProduct",openProduct)
+  console.log("dataProduct", dataProduct)
   const [isUpload, setIsUpload] = useState<boolean>(false);
   const [dataProductUser, setDataProductUser] = useState([]);
   const [dataIdProduct, setDataIdProduct] = useState<any>();
@@ -38,7 +41,7 @@ const MarketplacePage: React.FC = () => {
   const { user: userInfo } = useAppSelector(
     (state: any) => state.persistedReducer.auth
   );
-  
+
   const [queryParameters] = useSearchParams();
   const isEditMyPro: any = queryParameters.get('isEditMyPro');
   const [openMyNewBlog, setOpenMyNewBlog] = useState(false);
@@ -57,9 +60,9 @@ const MarketplacePage: React.FC = () => {
   const handleChangePage = (page: number) => {
     setCurrentPage(page);
   };
-  
 
-  console.log("dataProduct",dataProduct)
+
+  console.log("dataProduct", dataProduct)
   const openNewBlog = () => {
     setOpenMyNewBlog(true);
   };
@@ -116,7 +119,7 @@ const MarketplacePage: React.FC = () => {
   const fetchAllProduct = async () => {
     const { data } = await axios.get('http://localhost:8000/api/products');
     setDataProduct(data.docs);
-    
+
   };
   useEffect(() => {
     fetchAllProduct();
@@ -373,7 +376,7 @@ const MarketplacePage: React.FC = () => {
   return (
     <div className="my-10 mx-4">
       <Drawer
-        title={`${!isEditMyPro ? 'Thêm ' : 'Cập nhật'}`}
+        title={`${!isEditMyPro ? 'Add ' : 'Update'}`}
         placement="right"
         width={850}
         destroyOnClose
@@ -408,14 +411,14 @@ const MarketplacePage: React.FC = () => {
             <Col span={12}>
               <Form.Item
                 name="name"
-                label="Tên sản phẩm"
+                label="Product's name"
                 rules={[
-                  { required: true, message: 'Tên sản phẩm là bắt buộc!' },
+                  { required: true, message: 'Product names cannot contain all spaces!' },
                   {
                     validator: (_, value) => {
                       if (value.trim() === '') {
                         return Promise.reject(
-                          'Tên sản phẩm không được chứa toàn khoảng trắng!'
+                          'Product names cannot contain all spaces!'
                         );
                       }
                       return Promise.resolve();
@@ -423,15 +426,15 @@ const MarketplacePage: React.FC = () => {
                   },
                 ]}
               >
-                <Input placeholder="Tên sản phẩm " size="large" />
+                <Input placeholder="Product's name " size="large" />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
                 name="is_active"
-                label="Trạng thái sản phẩm"
+                label="Product status"
                 rules={[
-                  { required: true, message: 'Trạng thái sản phẩm là bắt buộc' },
+                  { required: true, message: 'Product status is required' },
                 ]}
               >
                 <Select value={true} placeholder="Công Khai" size="large">
@@ -443,29 +446,38 @@ const MarketplacePage: React.FC = () => {
           <Row gutter={16}></Row>
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item name="sale" label=" giá sản phẩm">
-                <InputNumber
-                  placeholder="Giá sản phẩm"
-                  className="w-full"
-                  formatter={(value: any) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                  parser={(value: string | undefined) => {
-                    if (!value) return 0; // trả về 0 nếu giá trị không hợp lệ
-                    return parseInt(value.replace(/\$\s?|(,*)/g, ''), 10); // chuyển đổi giá trị thành số nguyên
-                  }}
-                  onChange={(value: number | string | undefined) => {
-                    if (isNaN(Number(value))) {
-                      return;
-                    }
-                    // Xử lý giá trị nếu cần
-                  }}
-                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                    const key = e.key;
-                    // Chỉ cho phép nhập số
-                    if (!/[0-9]/.test(key)) {
-                      e.preventDefault();
-                    }
-                  }}
-                />
+            
+              <Form.Item name="sale" label=" Product price" required>
+                
+                <div>
+                  <InputNumber
+                    placeholder="Product price"
+                    className="w-full"
+
+                    value={value}
+                    formatter={(value: any) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={(value: string | undefined) => {
+                      if (!value) return 0; // return 0 if the value is invalid
+                      return parseInt(value.replace(/\$\s?|(,*)/g, ''), 10); // convert value to integer
+                    }}
+                    onChange={(value: number | string | undefined) => {
+                      if (isNaN(Number(value))) {
+                        return;
+                      }
+                      setValue(value);
+                    }}
+                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                      const key = e.key;
+                      // Allow only numbers
+                      if (!/[0-9]/.test(key)) {
+                        e.preventDefault();
+                      }
+                    }}
+                    
+                  />
+                </div>
+                {value === undefined && <span style={{ fontWeight: "700" }} > Đang để thỏa thuận : </span>}
+
 
               </Form.Item>
             </Col>
@@ -476,19 +488,19 @@ const MarketplacePage: React.FC = () => {
                 <Form.Item
                   name="images"
                   className="w-full"
-                  label="Hình ảnh sản phẩm"
-                  
+                  label="Product images"
+
                   rules={[
                     {
-                      required:true,
-                      message: 'Không được để trống hình ảnh sản phẩm',
+                      required: true,
+                      message: 'Product images cannot be left blank',
                     },
                   ]}
 
-              
+
 
                 >
-                  
+
                   <input
                     type="file"
                     onChange={(e) => handleOnChange(e)}
@@ -516,7 +528,7 @@ const MarketplacePage: React.FC = () => {
                         />
                       </svg>
                     </p>
-                    <p className="ant-upload-text text-center">Tải hình ảnh</p>
+                    <p className="ant-upload-text text-center">Download images</p>
                   </label>
                 </Form.Item>
               )}
@@ -568,15 +580,15 @@ const MarketplacePage: React.FC = () => {
             <Col span={24}>
               <Form.Item
                 name="description"
-                label="Mô tả sản phẩm"
+                label="Product Description"
                 rules={[
                   {
                     required: true,
-                    message: 'Mô tả sản phẩm là bắt buộc',
+                    message: 'Product description is required',
                   },
                 ]}
               >
-                <Input.TextArea rows={4} placeholder="Mô tả Phòng" />
+                <Input.TextArea rows={4} placeholder="Room Description" />
               </Form.Item>
             </Col>
           </Row>
@@ -628,35 +640,35 @@ const MarketplacePage: React.FC = () => {
 
               return (
                 <li key={items._id}>
-          
+
                   <Link to={'/marketplace/' + items._id}>
 
-                  <div className="product">
-                    <div className="pic-news">
-                      <a href="/san-pham/cay-hai-duong.html">
-                        <img
-                          className="w-[330px] h-[220px]"
-                          src={items?.images[0]?.url}
-                          alt="Cây hải đường"
-                        />
-                      </a>
+                    <div className="product">
+                      <div className="pic-news">
+                        <a href="/san-pham/cay-hai-duong.html">
+                          <img
+                            className="w-[330px] h-[220px]"
+                            src={items?.images[0]?.url}
+                            alt="Cây hải đường"
+                          />
+                        </a>
+                      </div>
+                      <h3>
+                        <a href="/san-pham/cay-hai-duong.html">
+                          {items.name.length > 30
+                            ? items.name.slice(0, 30) + '...'
+                            : items.name}
+                        </a>
+                      </h3>{' '}
+                      <div className="price-product">
+                        {items.sale === 0 ? "Thỏa thuận" : `${items.sale?.toLocaleString()} đ`}
+                      </div>
+                      <div className="cart-product">
+                        <Link to={'/marketplace/' + items._id}>
+                          <i className="fa fa-eye" />
+                        </Link>
+                      </div>
                     </div>
-                    <h3>
-                      <a href="/san-pham/cay-hai-duong.html">
-                        {items.name.length > 30
-                          ? items.name.slice(0, 30) + '...'
-                          : items.name}
-                      </a>
-                    </h3>{' '}
-                    <div className="price-product">
-                      {items.sale === 0 ? "Thỏa thuận" : `${items.sale?.toLocaleString()} đ`} 
-                    </div>
-                    <div className="cart-product">
-                      <Link to={'/marketplace/' + items._id}>
-                        <i className="fa fa-eye" />
-                      </Link>
-                    </div>
-                  </div>
                   </Link>
                 </li>
               );
@@ -664,17 +676,17 @@ const MarketplacePage: React.FC = () => {
           </ul>
         </div>
         <Pagination
-        style={{marginBottom:"100px"}}
-              showQuickJumper
-              pageSize={itemsPerPage}
-              defaultCurrent={1}
-              current={currentPage}
-              total={dataProduct?.length}
-              onChange={handleChangePage}
-            />
+          style={{ marginBottom: "100px" }}
+          showQuickJumper
+          pageSize={itemsPerPage}
+          defaultCurrent={1}
+          current={currentPage}
+          total={dataProduct?.length}
+          onChange={handleChangePage}
+        />
       </div>
-      
-      
+
+
 
       <div className="col-left">
         <div className="block-col">
@@ -701,12 +713,12 @@ const MarketplacePage: React.FC = () => {
                     <li>
                       <a className="cursor-pointer" onClick={openNewBlog}>
                         <span className="small-arrow">
-                        The product you posted
+                          The product you posted
                         </span>
                       </a>
                     </li>
-                    <li 
-                     style={{color:"black",background:"#B22222",borderRadius:"20px"}}
+                    <li
+                      style={{ color: "black", background: "#B22222", borderRadius: "20px" }}
                     >
                       <a
                         className="cursor-pointer"
@@ -717,9 +729,9 @@ const MarketplacePage: React.FC = () => {
                         }}
                       >
                         <span
-                       
-                        
-                        className="small-arrow">Add new products</span>
+
+
+                          className="small-arrow">Add new products</span>
                       </a>
                     </li>
                   </ul>

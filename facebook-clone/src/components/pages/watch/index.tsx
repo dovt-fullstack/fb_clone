@@ -431,12 +431,12 @@ const WatchPage: React.FC = () => {
             label="Article name"
             name="name"
             rules={[
-              { required: true, message: 'Tên bài viết không được bỏ trống!' },
+              { required: true, message: 'Article title cannot be left blank!' },
               {
                 validator: (_, value) => {
                   if (value.trim() === '') {
                     return Promise.reject(
-                      'Tên bài viết không được chứa toàn khoảng trắng!'
+                      'The article name cannot contain all spaces!'
                     );
                   }
                   return Promise.resolve();
@@ -444,14 +444,14 @@ const WatchPage: React.FC = () => {
               },
             ]}
           >
-            <Input maxLength={40} size="large" placeholder="Tên bài viết" />
+            <Input maxLength={40} size="large" placeholder="Article name" />
           </Form.Item>
           <div className="grid grid-cols-[1fr,1fr] gap-5">
             <Form.Item
               name="category"
               label="Article category name"
               rules={[
-                { required: true, message: 'Danh mục bài viết là bắt buộc' },
+                { required: true, message: 'Article categories are required' },
               ]}
             >
               <Select placeholder="NEWS CATEGORY" size="large">
@@ -466,7 +466,7 @@ const WatchPage: React.FC = () => {
               name="is_active"
               label="Post status"
               rules={[
-                { required: true, message: 'Trạng thái bài viết là bắt buộc' },
+                { required: true, message: 'Post status is required' },
               ]}
             >
               <Select placeholder="Post status" size="large">
@@ -479,7 +479,7 @@ const WatchPage: React.FC = () => {
             className="dark:text-white mb-17"
             label="Article description"
             name="description"
-            rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+            rules={[{ required: true, message: 'Not be empty!' }]}
           >
             <ReactQuill
               className="h-[250px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"

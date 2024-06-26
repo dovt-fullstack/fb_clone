@@ -46,7 +46,7 @@ const PostContainer: React.FC<IProps> = (props) => {
       >
         {dataPost.length ? (
           dataPost.map((post, idx) => (
-            <Post key={idx} post={post} dataPost={dataPost} />
+            <Post key={idx} post={post} dataPost={dataPost} fetchPostByUser={fetchPostByUser}/>
           ))
         ) : (
           <p>No posts yet!</p>

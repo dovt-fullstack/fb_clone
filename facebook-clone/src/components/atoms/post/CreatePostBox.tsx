@@ -125,14 +125,14 @@ const CreatePostBox: React.FC = () => {
         <>
 
           <div style={{
-            padding:"20px 80px 120px 68px",
-            margin:"-13px -22px 12px -31px",
-            background:"#3CB371",
-            position:"relative",
-            boxShadow:"0px -1px 7px 27px rgba(60,64,67,.102), 0 2px 6px 2px rgba(60,64,67,.149)",
-            borderRadius:"20px"
+            padding: "20px 80px 120px 68px",
+            margin: "-13px -22px 12px -31px",
+            background: "rgb(86 183 129)",
+            position: "relative",
+            boxShadow: "0px -1px 7px 27px rgba(60,64,67,.102), 0 2px 6px 2px rgba(60,64,67,.149)",
+            borderRadius: "20px"
           }}>
-            <div style={{ display: "flex", justifyContent: "space-between",paddingBottom:"50px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", paddingBottom: "50px" }}>
               <div style={{ display: "flex", gap: "13px", alignItems: "center" }}>
                 <img onClick={onClose} style={{ width: "10px", height: "10px" }} src="https://cdn-icons-png.flaticon.com/128/1828/1828778.png" alt="" />
                 <span style={{}}>Create a new post</span>
@@ -175,25 +175,30 @@ const CreatePostBox: React.FC = () => {
                     </Form.Item>
                   </Col>
                 </Row>
-                <div style={{textAlign:"center"}}>
-                <input style={{margin:'auto'}}
-                  onChange={(event: any) => {
-                    handleFileChange(event);
-                  }}
-                  type="file"
-                  name=""
-                  id="updateAvatars"
-                  className="hidden"
-                />
-                {dataPageQuery == 1 && dataPost && (
-                  <img className=" mt-5" src={imageDetails} />
-                )}
-                <Button
-                  htmlType="submit"
-                  className="mt-5 bg-green-500 text-white"
-                >
-                  Submit
-                </Button>
+                <div style={{ textAlign: "center" }}>
+                   <label
+                  style={{fontFamily:"Lucida Console"}}
+                    htmlFor="enterFile"
+                    className=" font-bold text-lg underline cursor-pointer "
+                  >
+                    Select photo
+                  </label>
+                  <input
+                    onChange={(event) => handleFileChange(event)}
+                    type="file"
+                    className="hidden opacity-0"
+                    id="enterFile"
+                    name=""
+                  />
+                  {dataPageQuery == 1 && dataPost && (
+                    <img className=" mt-5" src={imageDetails} />
+                  )}
+                  <Button
+                    htmlType="submit"
+                    className="mt-5 bg-green-500 text-white"
+                  >
+                    Submit
+                  </Button>
                 </div>
               </Form>
             </div>
@@ -227,7 +232,7 @@ const CreatePostBox: React.FC = () => {
               <p className="font-semibold">Create Video</p>
             </div>
           </button>
-          
+
           <button className="flex-1 flex items-center h-8 focus:outline-none focus:bg-gray-200 justify-center space-x-2 hover:bg-gray-100 rounded-md">
             <div>
               <i className="fas fa-images text-green-500"></i>

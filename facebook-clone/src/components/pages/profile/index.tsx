@@ -11,6 +11,7 @@ import { createSearchParams, useNavigate, useParams } from 'react-router-dom';
 import { SupportBot } from '../../../features';
 import { useHoook } from './useHoook';
 import UserProfile from './UserProfile';
+import anhbia from "../../../../public/imgg/anhbia.jpg"
 const ProfilePage: React.FC = () => {
   const [dataPrevFriend, setDataPrevFriend] = useState([]);
 const { id } = useParams();
@@ -230,6 +231,8 @@ const handelEditDescription = (event: any) => {
     });
 
     getDataUser()
+    getDataUser()
+
     
 };
 const actionFriend = (action: any) => {
@@ -351,8 +354,8 @@ return (
         <div
           className="h-96 max-h-96 w-full rounded-lg relative"
           style={{
-            backgroundImage: `url(${data.coverImage})`,
-
+            backgroundImage: `url(${data.coverImage || anhbia})`,
+            
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
@@ -498,7 +501,7 @@ return (
                     }
                     className="px-3 py-1.5 rounded-md bg-gray-500 hover:bg-gray-600 text-white font-semibold focus:outline-none"
                   >
-                    <i className="fas fa-plus-circle  mr-2"></i>Thêm tiểu sử
+                    <i className="fas fa-plus-circle  mr-2"></i>Add biography
                   </button>
 
                   <div
