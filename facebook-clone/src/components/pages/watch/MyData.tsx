@@ -130,7 +130,7 @@ const MyData = () => {
   ];
   const navigate = useNavigate();
   const onClose = () => {
-    navigate('/watch');
+    navigate('/forum');
   };
   return (
     <div>

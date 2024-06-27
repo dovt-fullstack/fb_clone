@@ -292,7 +292,7 @@ const Navbar: React.FC = () => {
               </div>
             </div>
           </Link>
-          <Link to="/watch">
+          <Link to="/forum">
             {/* <Link to="/groups"> */}
             <div className={`w-24 h-12 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-100 ${pathName === 'watch' ? 'bg-white' : ''}`}>
               <div className=" h-auto relative flex items-center justify-center">
@@ -303,7 +303,7 @@ const Navbar: React.FC = () => {
                   className={`${pathName === 'watch' ? 'text-primary' : 'text-gray-400'
                     }`}
                 >
-                  <span style={{ color: "black", fontWeight: "800", width: '50px' }}>Watch</span>
+                  <span style={{ color: "black", fontWeight: "800", width: '50px' }}>Forum</span>
                 </div>
               </div>
             </div>
